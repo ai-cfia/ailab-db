@@ -2,3 +2,4 @@
 .pgpassfile
 dumps/**
 reports/**
+.vscode
