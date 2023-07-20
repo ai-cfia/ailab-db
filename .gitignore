@@ -3,3 +3,4 @@
 dumps/**
 reports/**
 .vscode
+**/__pycache__/**
