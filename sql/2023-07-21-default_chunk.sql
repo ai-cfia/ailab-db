@@ -1,4 +1,4 @@
-create table default_chunk as
+create materialized view default_chunk as
 	select distinct(d.url), l.id, l.chunk_id  
 	from documents d,
 	  LATERAL (
