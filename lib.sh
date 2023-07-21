@@ -8,6 +8,5 @@ export PGHOST
 export PGPASSFILE
 export PGPASSWORD
 
-PSQL_ADMIN="psql -v ON_ERROR_STOP=1 -U postgres --single-transaction"
-LOUIS_SCHEMA=louis_v003
+PSQL_ADMIN="psql -v ON_ERROR_STOP=1 -U postgres --single-transaction -d $PGBASE"
 TODAY=`date +%Y-%m-%d`
