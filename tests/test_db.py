@@ -41,3 +41,18 @@ class DBTest(unittest.TestCase):
         # print([(r['title'], r['subtitle'], r['url'], r['last_updated'], r['score'], r['scores'])for r in result])
         self.assertEqual(result[0]['title'], "Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency")
 
+    def test_weighted_search_with_empty_query(self):
+        self.execute('sql/2023-07-19-modified-documents.sql')
+        self.execute('sql/2023-07-19-weighted_search.sql')
+        
+        weights = json.dumps({ 'recency': 0.4, 'traffic': 0.4, 'current': 0.2})
+        self.cursor.execute("SELECT * FROM search(%s::vector, %s::float, %s::integer, %s::jsonb)", (
+            None, MATCH_THRESHOLD, MATCH_COUNT, weights))
+        result = self.cursor.fetchall()
+        print([(r['title'], r['subtitle'], r['url'], r['last_updated'], r['score'], r['scores']) for r in result])
+        self.assertEqual(len(result), MATCH_COUNT, "Should return 10 results")
+        urls = dict([(r['url'], True) for r in result])
+        self.assertEqual(len(urls.keys()), MATCH_COUNT, "All urls should be unique")
+
+    
+    
