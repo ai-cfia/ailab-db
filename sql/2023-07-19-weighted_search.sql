@@ -1,25 +1,19 @@
 CREATE OR REPLACE FUNCTION search(
+    query text,
 	query_embedding vector, 
 	match_threshold double precision, 
 	match_count integer,
 	weights JSONB
 ) 
-RETURNS TABLE(
-    id uuid, 
-    url text, 
-    title text, 
-    subtitle text, 
-    content text, 
-    tokens_count integer, 
-    last_updated text, 
-    score double precision,
-    scores jsonb
-)
+RETURNS JSONB
 AS
 $BODY$
 DECLARE
     similarity_search boolean;
+    query_id uuid;
+    query_result JSONB;
 BEGIN
+
     create temp table weights (
         score_type score_type,
         weight double precision
@@ -35,9 +29,17 @@ BEGIN
         similarity_search := false;
     else
         similarity_search := true;
+        insert into query(query, embedding) values (query, query_embedding) 
+            on conflict do nothing
+            returning id, result into query_id, query_result;
+        
+        if query_result is not null then
+            return query_result;
+        end if;
     end if;
 
     if similarity_search then
+        
         create temp table similarity as
             -- to use the index, must use a match_threshold where condition, an order by and a limit
             with selected_chunks as (
@@ -78,23 +80,31 @@ BEGIN
                 where s.score_type in (select w.score_type from weights w);   
     end if;
 
-    return query
-        with matches as (
-            select m.id, m.chunk_id,
-                sum(m.score * w.weight) as score,
-                jsonb_object_agg(m.score_type, m.score) as scores
-                from measurements m
-                inner join weights w on m.score_type = w.score_type
-                group by m.id, m.chunk_id
-                order by score desc
-                limit match_count
-        )
-        select d.id, d.url, d.title, d.subtitle, d.content, d.tokens_count, d.last_updated, m.score, m.scores
+    with matches as (
+        select m.id, m.chunk_id,
+            sum(m.score * w.weight) as score,
+            jsonb_object_agg(m.score_type, m.score) as scores
+            from measurements m
+            inner join weights w on m.score_type = w.score_type
+            group by m.id, m.chunk_id
+            order by score desc
+            limit match_count
+    )
+    select json_agg(r) as search from (
+        select query_id, d.id, d.url, d.title, d.subtitle, d.content, d.tokens_count, d.last_updated, m.score, m.scores
             from matches m
             inner join documents d on m.id = d.id 
             and m.chunk_id = d.chunk_id
             order by m.score desc
-            limit match_count;
+            limit match_count
+    ) r into query_result;
+    
+    if query_id is not null then
+        update query set result = query_result where id = query_id;
+    end if;
+
+    return query_result;
+
 END;
 $BODY$
 LANGUAGE plpgsql;
@@ -108,5 +118,8 @@ $COMMENT$
     similarity search is done on chunks from each document.
 
     There are multiple chunks per document and each chunk has a vector embeddings.
+
+    When no embeddings is provided, the search is performed using the weighted measurements only.
+
 $COMMENT$;
 
