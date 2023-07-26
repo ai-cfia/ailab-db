@@ -1,4 +1,3 @@
-drop view if exists documents;
 CREATE OR REPLACE VIEW documents
 AS SELECT 
     crawl.id,
