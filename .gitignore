@@ -2,3 +2,6 @@
 .pgpassfile
 dumps/**
 reports/**
+.vscode
+**/__pycache__/**
+**/**.swp
