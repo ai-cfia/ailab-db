@@ -4,7 +4,7 @@ with urls as (
 	from crawl
 	where url = 'https://inspection.canada.ca/plant-health/seeds/seed-testing-and-grading/seeds-identification/eng/1333136604307/1333136685768'
 )
-select * from urls where url like '/plant-health%'
+select * from urls where url like '/plant-health%';
 
 with start_page as (
 	select id
@@ -25,12 +25,15 @@ max_row_numbers as (
 	select id, max(row_number) as max_row_number from headers_with_rows group by id
 ),
 pairwise as (
-	select headers_with_rows.id, row_number as row_number_start, row_number+1 as row_number_end from headers_with_rows 
-	inner join max_row_numbers on headers_with_rows.id = max_row_numbers.id 
+	select h2, headers_with_rows.id, row_number as row_number_start, row_number+1 as row_number_end
+	from headers_with_rows
+	inner join max_row_numbers on headers_with_rows.id = max_row_numbers.id
 	where row_number < max_row_number
 )
-select pairwise.id, row_number_start, row_number_end, cast(
-	xpath('//h2[' || row_number_start || '] | //*[following-sibling::h2[' || row_number_start || '] and preceding-sibling::h2['|| row_number_end || ']]', html_content::xml) 
+select pairwise.id, h2, row_number_start, row_number_end, cast(
+	xpath('//h2[' || row_number_start || ']/following::p[1]', html_content::xml) 
  as text[])
-	from pairwise
-inner join html_content on pairwise.id = html_content.id
+	from pairwise inner join html_content on pairwise.id = html_content.id
+	where h2 <> 'Identification features' or h2 <> 'Photos'
+	
+	;
