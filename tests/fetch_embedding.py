@@ -1,9 +1,9 @@
-import dotenv
-dotenv.load_dotenv()
 
 import openai
 import os 
 import sys
+import dotenv
+dotenv.load_dotenv()
 
 openai.api_type = "azure"
 openai.api_key = os.environ["OPENAI_API_KEY"]

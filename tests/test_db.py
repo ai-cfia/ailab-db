@@ -1,12 +1,11 @@
-import dotenv
-dotenv.load_dotenv()
-
 import os
 import unittest
 import psycopg
 import json
 from psycopg.rows import dict_row
 
+import dotenv
+dotenv.load_dotenv()
 
 LOUIS_DSN = os.getenv("LOUIS_DSN")
 MATCH_THRESHOLD = 0.5
@@ -33,14 +32,16 @@ class DBTest(unittest.TestCase):
         
         embeddings = json.load(open('tests/embeddings/president.json'))
         query = 'who is the president of the CFIA?'
-        weights = json.dumps({ 'similarity': 0.6, 'recency': 0.2, 'traffic': 0.0, 'current': 0.1})
-        self.cursor.execute("SELECT * FROM search(%s, %s::vector, %s::float, %s::integer, %s::jsonb)", (
-            query, embeddings, MATCH_THRESHOLD, MATCH_COUNT, weights))
+        weights = json.dumps(
+            {'similarity': 0.6, 'recency': 0.2, 'traffic': 0.0, 'current': 0.1})
+        self.cursor.execute(
+            "SELECT * FROM search(%s, %s::vector, %s::float, %s::integer, %s::jsonb)", (
+                query, embeddings, MATCH_THRESHOLD, MATCH_COUNT, weights))
         results = self.cursor.fetchall()
         result = results[0]['search']
-        # self.assertEqual(len(result), MATCH_COUNT)
-        # print([(r['title'], r['subtitle'], r['url'], r['last_updated'], r['score'], r['scores'])for r in result])
-        self.assertEqual(result[0]['title'], "Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency")
+        self.assertEqual(
+            result[0]['title'], 
+            "Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency")
         
         query_id = result[0]['query_id']
         self.cursor.execute("SELECT * FROM query where id = %s::uuid", (query_id,))
@@ -56,14 +57,22 @@ class DBTest(unittest.TestCase):
         # self.execute('sql/2023-07-19-weighted_search.sql')
         
         weights = json.dumps({ 'recency': 0.4, 'traffic': 0.4, 'current': 0.2})
-        self.cursor.execute("SELECT * FROM search(%s, %s::vector, %s::float, %s::integer, %s::jsonb)", (
-            None, None, MATCH_THRESHOLD, MATCH_COUNT, weights))
+        self.cursor.execute(
+            "SELECT * FROM search(%s, %s::vector, %s::float, %s::integer, %s::jsonb)", (
+                None, None, MATCH_THRESHOLD, MATCH_COUNT, weights))
         result = self.cursor.fetchall()[0]['search']
-        print([(r['title'], r['subtitle'], r['url'], r['last_updated'], r['score'], r['scores']) for r in result])
         self.assertEqual(len(result), MATCH_COUNT, "Should return 10 results")
         urls = dict([(r['url'], True) for r in result])
         self.assertEqual(len(urls.keys()), MATCH_COUNT, "All urls should be unique")
     
 
-    
+    def test_every_crawl_doc_should_have_at_least_one_chunk(self):
+        self.cursor.execute("""
+            SELECT count(*) 
+            FROM crawl LEFT JOIN chunk ON crawl.id = chunk.crawl_id 
+            WHERE chunk.id IS NULL""")
+        result = self.cursor.fetchall()
+        self.assertEqual(
+            result[0]['count'], 0, 
+            "Every crawl doc should have at least one chunk")
     
