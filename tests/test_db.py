@@ -9,7 +9,7 @@ import dotenv
 dotenv.load_dotenv()
 
 def raise_error(message):
-    raise SystemExit(message)
+    raise Exception(message)
 
 LOUIS_DSN = os.getenv("LOUIS_DSN") or raise_error("LOUIS_DSN is not set")
 LOUIS_SCHEMA = os.getenv("LOUIS_SCHEMA") or raise_error("LOUIS_SCHEMA is not set")
@@ -33,11 +33,23 @@ class DBTest(unittest.TestCase):
 
     def upgrade_schema(self):
         if LOUIS_SCHEMA == 'louis_v004':
+            self.execute('sql/2023-07-11-hotfix-xml-not-well-formed.sql')
+            self.execute('sql/2023-07-11-populate-link.sql')
             self.execute('sql/2023-07-12-score-current.sql')
             self.execute('sql/2023-07-19-modify-score_type-add-similarity.sql')
             self.execute('sql/2023-07-19-modified-documents.sql')
             self.execute('sql/2023-07-19-weighted_search.sql')
             self.execute('sql/2023-07-21-default_chunk.sql')
+
+    def test_well_formed_xml(self):
+        self.upgrade_schema()
+        # SELECT count(*) FROM crawl WHERE NOT xml_is_well_formed(html_content);  
+        self.cursor.execute("""
+            SELECT count(*) 
+            FROM crawl 
+            WHERE NOT xml_is_well_formed(html_content);""")
+        result = self.cursor.fetchall()
+        self.assertEqual(result[0]['count'], 0, "All xml should be well formed")
 
     def test_weighted_search(self):
         self.upgrade_schema()
