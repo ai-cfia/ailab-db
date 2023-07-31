@@ -28,8 +28,8 @@ class DBTest(unittest.TestCase):
         self.connection.close()
 
     def test_weighted_search(self):
-        # self.execute('sql/2023-07-19-modified-documents.sql')
-        # self.execute('sql/2023-07-19-weighted_search.sql')
+        self.execute('sql/2023-07-19-modified-documents.sql')
+        self.execute('sql/2023-07-19-weighted_search.sql')
         
         embeddings = json.load(open('tests/embeddings/president.json'))
         query = 'who is the president of the CFIA?'
@@ -54,8 +54,8 @@ class DBTest(unittest.TestCase):
         self.assertEqual(len(result[0]['result']), MATCH_COUNT)
 
     def test_weighted_search_with_empty_query(self):
-        # self.execute('sql/2023-07-19-modified-documents.sql')
-        # self.execute('sql/2023-07-19-weighted_search.sql')
+        self.execute('sql/2023-07-19-modified-documents.sql')
+        self.execute('sql/2023-07-19-weighted_search.sql')
         
         weights = json.dumps({ 'recency': 0.4, 'traffic': 0.4, 'current': 0.2})
         self.cursor.execute(
