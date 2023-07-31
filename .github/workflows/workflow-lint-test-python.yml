@@ -26,3 +26,5 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+      env:
+        LOUIS_DSN: ${{ secrets.LOUIS_DSN }}
