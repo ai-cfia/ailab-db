@@ -5,3 +5,4 @@ reports/**
 .vscode
 **/__pycache__/**
 **/**.swp
+**/**.dump

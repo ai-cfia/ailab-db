@@ -32,6 +32,7 @@ class DBTest(unittest.TestCase):
         self.connection.close()
 
     def upgrade_schema(self):
+        return
         if LOUIS_SCHEMA == 'louis_v004':
             self.execute('sql/2023-07-11-hotfix-xml-not-well-formed.sql')
             self.execute('sql/2023-07-11-populate-link.sql')
