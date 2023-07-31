@@ -1,4 +1,5 @@
-drop table links;
+drop table if exists links;
+
 create temporary table links as
 		select id, t.token as url_path from (
 			select id, unnest(cast(xpath('//a/@href', html_content::xml) as text[])) as url from crawl
