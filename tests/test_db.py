@@ -68,7 +68,8 @@ class DBTest(unittest.TestCase):
     
 
     @unittest.skip("we have to re-chunk the documents using louis-crawler first")
-    @pytest.mark.skip(reason="we have to re-chunk the documents using louis-crawler first")
+    @pytest.mark.skip(
+        reason="we have to re-chunk the documents using louis-crawler first")
     def test_every_crawl_doc_should_have_at_least_one_chunk(self):
         self.cursor.execute("""
             SELECT count(*) 
