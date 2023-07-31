@@ -8,7 +8,10 @@ from psycopg.rows import dict_row
 import dotenv
 dotenv.load_dotenv()
 
-LOUIS_DSN = os.getenv("LOUIS_DSN")
+def raise_error(message):
+    raise SystemExit(message)
+
+LOUIS_DSN = os.getenv("LOUIS_DSN") or raise_error("LOUIS_DSN is not set")
 MATCH_THRESHOLD = 0.5
 MATCH_COUNT = 10
 
