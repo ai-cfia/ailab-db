@@ -10,8 +10,6 @@ create temporary table destinations as
 			select id, f.* from crawl c, ts_debug('simple', c.url) f
 		) as t where t.alias = 'url_path';
 	
-select d. from destinations d, links l where links.url_path = destinations.url_path;
-
 insert into link(source_crawl_id, destination_crawl_id)
 	select links.id as source_crawl_id, destinations.id as destination_crawl_id 
 		from links inner join destinations on links.url_path = destinations.url_path
