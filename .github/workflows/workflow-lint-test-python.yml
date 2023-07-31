@@ -28,3 +28,4 @@ jobs:
         pytest
       env:
         LOUIS_DSN: ${{ secrets.LOUIS_DSN }}
+        LOUIS_SCHEMA: ${{ secrets.LOUIS_SCHEMA }}

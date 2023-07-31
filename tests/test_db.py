@@ -12,13 +12,14 @@ def raise_error(message):
     raise SystemExit(message)
 
 LOUIS_DSN = os.getenv("LOUIS_DSN") or raise_error("LOUIS_DSN is not set")
+LOUIS_SCHEMA = os.getenv("LOUIS_SCHEMA") or raise_error("LOUIS_SCHEMA is not set")
 MATCH_THRESHOLD = 0.5
 MATCH_COUNT = 10
 
 class DBTest(unittest.TestCase):
 
     def execute(self, filename):
-        query = open('sql/2023-07-19-weighted_search.sql').read()
+        query = open(filename).read()
         self.cursor.execute(query)
 
     def setUp(self):
@@ -30,9 +31,16 @@ class DBTest(unittest.TestCase):
         self.cursor.close()
         self.connection.close()
 
+    def upgrade_schema(self):
+        if LOUIS_SCHEMA == 'louis_v004':
+            self.execute('sql/2023-07-12-score-current.sql')
+            self.execute('sql/2023-07-19-modify-score_type-add-similarity.sql')
+            self.execute('sql/2023-07-19-modified-documents.sql')
+            self.execute('sql/2023-07-19-weighted_search.sql')
+            self.execute('sql/2023-07-21-default_chunk.sql')
+
     def test_weighted_search(self):
-        self.execute('sql/2023-07-19-modified-documents.sql')
-        self.execute('sql/2023-07-19-weighted_search.sql')
+        self.upgrade_schema()
         
         embeddings = json.load(open('tests/embeddings/president.json'))
         query = 'who is the president of the CFIA?'
@@ -57,8 +65,7 @@ class DBTest(unittest.TestCase):
         self.assertEqual(len(result[0]['result']), MATCH_COUNT)
 
     def test_weighted_search_with_empty_query(self):
-        self.execute('sql/2023-07-19-modified-documents.sql')
-        self.execute('sql/2023-07-19-weighted_search.sql')
+        self.upgrade_schema()
         
         weights = json.dumps({ 'recency': 0.4, 'traffic': 0.4, 'current': 0.2})
         self.cursor.execute(
