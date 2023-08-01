@@ -6,3 +6,5 @@ reports/**
 **/__pycache__/**
 **/**.swp
 **/**.dump
+dist
+louis/louis_db_rngadam.egg-info
