@@ -1,11 +1,7 @@
 # Workflow
 
-## From scratch, with empty db
-
-Edit lib.sh to point to the right database
+## Installing python package
 
 ```
-./setup-db.sh
+pip install git+https://github.com/ai-cfia/louis-db@v0.0.5-alpha2
 ```
-
-## load

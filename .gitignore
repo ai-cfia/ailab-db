@@ -7,4 +7,5 @@ reports/**
 **/**.swp
 **/**.dump
 dist
-louis/louis_db_rngadam.egg-info
+**/**.egg-info
+

@@ -57,14 +57,14 @@ def store_chunk_item(cursor, item):
             " RETURNING id",
             data
         )
-        data['chunk_id'] = cursor.fetchone()['chunk_id']
+        data['chunk_id'] = cursor.fetchone()['id']
         cursor.execute(
             "INSERT INTO token (chunk_id, tokens, encoding)"
-                " VALUES (%(chunk_id)s::UUID, %(tokens)s::vector, %(encoding)s)"
+                " VALUES (%(chunk_id)s::UUID, %(tokens)s, %(encoding)s)"
             " RETURNING id",
             data
         )
-        data['token_id'] = cursor.fetchone()['token_id']
+        data['token_id'] = cursor.fetchone()['id']
 
         return item
     except psycopg.IntegrityError:
