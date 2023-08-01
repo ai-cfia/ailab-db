@@ -1,21 +1,18 @@
 """Database functions for the Louis project."""
+import logging
 import os
 import urllib
-import logging
-
-LOGGER = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
-
-import psycopg
-import psycopg.sql as sql
-
-from pgvector.psycopg import register_vector
 
 import numpy as np
-
+import psycopg
+import psycopg.sql as sql
+from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 
 from louis.models import openai
+
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 def raise_error(message):
     raise Exception(message)
@@ -50,7 +47,8 @@ def store_chunk_item(cursor, item):
                 'encoding': 'cl100k_base'
         }
         cursor.execute(
-            "SELECT id FROM crawl WHERE url = %(url)s ORDER BY last_updated DESC LIMIT 1",
+            """SELECT id FROM crawl WHERE url = %(url)s
+               ORDER BY last_updated DESC LIMIT 1""",
             data
         )
         data['crawl_id'] = cursor.fetchone()['id']
@@ -78,7 +76,9 @@ def store_crawl_item(cursor, item):
     """Process a CrawlItem and insert it into the database."""
     try:
         cursor.execute(
-            "INSERT INTO crawl (url, title, lang, html_content, last_crawled, last_updated) VALUES (%s, %s, %s, %s, %s, %s)",
+            """INSERT INTO crawl
+               (url, title, lang, html_content, last_crawled, last_updated)
+               VALUES (%s, %s, %s, %s, %s, %s)""",
             (
                 item["url"],
                 item["title"],
@@ -123,18 +123,21 @@ def link_pages(cursor, source_url, destination_url):
         'destination_url': destination_url,
     }
     cursor.execute(
-        "SELECT id FROM crawl WHERE url = %(source_url)s ORDER BY last_updated DESC LIMIT 1",
+        """SELECT id FROM crawl
+           WHERE url = %(source_url)s ORDER BY last_updated DESC LIMIT 1""",
         data
     )
     data['source_crawl_id'] = cursor.fetchone()['id']
     cursor.execute(
-        "SELECT id FROM crawl WHERE url = %(destination_url)s ORDER BY last_updated DESC LIMIT 1",
+        """SELECT id FROM crawl
+           WHERE url = %(destination_url)s ORDER BY last_updated DESC LIMIT 1""",
         data
     )
     data['destination_crawl_id'] = cursor.fetchone()['id']
     cursor.execute(
         "INSERT INTO link (source_crawl_id, destination_crawl_id)"
-        " VALUES (%(source_crawl_id)s, %(destination_crawl_id)s) ON CONFLICT DO NOTHING",
+        " VALUES (%(source_crawl_id)s, %(destination_crawl_id)s)"
+        " ON CONFLICT DO NOTHING",
         data
     )
 
@@ -223,7 +226,10 @@ def match_documents(cursor, query_embedding):
     }
 
     # cursor.callproc('match_documents', data)
-    cursor.execute("SELECT * FROM match_documents(%(query_embedding)s::vector, %(match_threshold)s, %(match_count)s)", data)
+    cursor.execute(
+        "SELECT * FROM match_documents"
+        "(%(query_embedding)s::vector, %(match_threshold)s, %(match_count)s)",
+        data)
 
     # turn into list of dict now to preserve dictionaries
     return [dict(r) for r in cursor.fetchall()]
@@ -241,7 +247,9 @@ def match_documents_from_text_query(cursor, query):
     db_data = results.fetchone()
     if not db_data:
         data['embedding'] = openai.fetch_embedding(data['tokens'])
-        results = cursor.execute('INSERT INTO query(query, tokens, embedding) VALUES(%(query)s, %(tokens)s, %(embedding)s) RETURNING id', data)
+        results = cursor.execute(
+            "INSERT INTO query(query, tokens, embedding)"
+            " VALUES(%(query)s, %(tokens)s, %(embedding)s) RETURNING id", data)
         data['query_id'] = results.fetchone()['id']
     else:
         data.update(db_data)

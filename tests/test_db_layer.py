@@ -45,16 +45,22 @@ class TestDBLayer(unittest.TestCase):
     def test_fetch_crawl_row(self):
         """sample test to check if fetch_crawl_row works"""
         with db.cursor(self.connection) as cursor:
-            row = db.fetch_crawl_row(cursor, "https://inspection.canada.ca/a-propos-de-l-acia/structure-organisationnelle/mandat/fra/1299780188624/1319164463699")
+            row = db.fetch_crawl_row(
+                cursor,
+                "https://inspection.canada.ca/a-propos-de-l-acia/structure-organisationnelle/mandat/fra/1299780188624/1319164463699"
+                )
             self.connection.rollback()
         self.assertEqual(row['url'], "https://inspection.canada.ca/a-propos-de-l-acia/structure-organisationnelle/mandat/fra/1299780188624/1319164463699")
-        self.assertEqual(row['title'], "Mandat - Agence canadienne d'inspection des aliments")
+        self.assertEqual(
+            row['title'],
+            "Mandat - Agence canadienne d'inspection des aliments")
 
     def test_fetch_chunk_row(self):
         """sample test to check if fetch_chunk_row works"""
         with db.cursor(self.connection) as cursor:
-            # select id from chunk join crawl ON public.chunk.crawl_id = public.crawl.id where url = 'https://inspection.canada.ca/splash'
-            row = db.fetch_chunk_token_row(cursor, "postgresql://inspection.canada.ca/public/chunk/469812c5-190c-4e56-9f88-c8621592bcb5")
+            row = db.fetch_chunk_token_row(
+                cursor,
+                "postgresql://inspection.canada.ca/public/chunk/469812c5-190c-4e56-9f88-c8621592bcb5")
             self.connection.rollback()
         self.assertEqual(len(row['tokens']), 76)
         self.assertEqual(str(row['chunk_id']), "469812c5-190c-4e56-9f88-c8621592bcb5")
@@ -66,7 +72,7 @@ class TestDBLayer(unittest.TestCase):
         with db.cursor(self.connection) as cursor:
             cursor.execute(embedding_table.format(embedding_model='test-model'))
             rows = db.fetch_chunk_id_without_embedding(cursor, 'test-model')
-            entity_id = rows[0]
+            _entity_id = rows[0]
             self.connection.rollback()
 
     def test_create_postgresql_url(self):
@@ -85,12 +91,17 @@ class TestDBLayer(unittest.TestCase):
 
     def test_match_documents_text_query(self):
         with db.cursor(self.connection) as cursor:
-            docs = db.match_documents_from_text_query(cursor, 'what are the cooking temperatures for e.coli?')
+            docs = db.match_documents_from_text_query(
+                cursor,
+                'what are the cooking temperatures for e.coli?')
             self.connection.rollback()
         self.assertEqual(len(docs), 10)
 
     def test_president_of_cfia(self):
         with db.cursor(self.connection) as cursor:
-            docs = db.match_documents_from_text_query(cursor, 'who is the president of the CFIA?')
+            docs = db.match_documents_from_text_query(
+                cursor, 'who is the president of the CFIA?')
             self.connection.rollback()
-        self.assertEqual(docs[0]['title'], 'Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency')
+        self.assertEqual(
+            docs[0]['title'],
+            'Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency')

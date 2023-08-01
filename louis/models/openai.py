@@ -5,11 +5,14 @@ import tiktoken
 
 # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/embeddings?tabs=python
 
-def raise_error(message):
-    raise Exception(message)
+def safe_get(key):
+    value = os.environ.get(key)
+    if not value:
+        raise Exception(f"Environment variable {key} not defined")
+    return value
 
-OPENAPI_API_KEY = os.environ.get("OPENAI_API_KEY") or raise_error("OPENAI_API_KEY not defined")
-AZURE_OPENAI_SERVICE = os.environ.get("AZURE_OPENAI_SERVICE") or raise_error("AZURE_OPENAI_SERVICE not defined") 
+OPENAPI_API_KEY = safe_get("OPENAI_API_KEY")
+AZURE_OPENAI_SERVICE = safe_get("AZURE_OPENAI_SERVICE")
 
 openai.api_type = "azure"
 openai.api_key = OPENAPI_API_KEY
