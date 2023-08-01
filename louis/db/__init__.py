@@ -17,12 +17,15 @@ from psycopg.rows import dict_row
 
 from louis.models import openai
 
-LOUIS_DSN = os.environ.get("LOUIS_DSN")
-LOUIS_SCHEMA = os.environ.get("LOUIS_SCHEMA")
+def raise_error(message):
+    raise Exception(message)
+
+LOUIS_DSN = os.environ.get("LOUIS_DSN") or raise_error("LOUIS_DSN is not set")
+LOUIS_SCHEMA = os.environ.get("LOUIS_SCHEMA") or raise_error("LOUIS_SCHEMA is not set")
 
 def connect_db():
     """Connect to the postgresql database and return the connection."""
-    print(f"Connecting to {LOUIS_SCHEMA}")
+    # print(f"Connecting to {LOUIS_SCHEMA}")
     connection = psycopg.connect(
         conninfo=LOUIS_DSN,
         row_factory=dict_row,
@@ -245,4 +248,3 @@ def match_documents_from_text_query(cursor, query):
     docs = match_documents(cursor, data['embedding'])
 
     return docs
-
