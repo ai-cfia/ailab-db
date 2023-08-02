@@ -11,11 +11,11 @@ def safe_get(key):
         raise Exception(f"Environment variable {key} not defined")
     return value
 
-OPENAPI_API_KEY = safe_get("OPENAI_API_KEY")
+OPENAI_API_KEY = safe_get("OPENAI_API_KEY")
 AZURE_OPENAI_SERVICE = safe_get("AZURE_OPENAI_SERVICE")
 
 openai.api_type = "azure"
-openai.api_key = OPENAPI_API_KEY
+openai.api_key = OPENAI_API_KEY
 openai.api_base = f"https://{AZURE_OPENAI_SERVICE}.openai.azure.com"
 openai.api_version = "2023-05-15"
 
