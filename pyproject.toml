@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "louis_db"
+version = "0.0.5"
+authors = [
+  { name="Ricky Ng-Adam", email="ricky.ng-adam@inspection.gc.ca" },
+]
+description = "Database python layer for Louis project"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dynamic = ["dependencies"]
+
+[tool.setuptools]
+packages = ["louis", "louis.db", "louis.models"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+# [tool.setuptools.packages.find]
+# where = ["louis"]
+
+[project.urls]
+"Homepage" = "https://github.com/ai-cfia/louis-db"
+"Bug Tracker" = "https://github.com/ai-cfia/louis-db/issues"

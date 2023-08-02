@@ -5,3 +5,7 @@ reports/**
 .vscode
 **/__pycache__/**
 **/**.swp
+**/**.dump
+dist
+**/**.egg-info
+
