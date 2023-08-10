@@ -1,6 +1,6 @@
 import os
 import unittest
-import pytest
+
 import psycopg
 import json
 from psycopg.rows import dict_row
@@ -28,6 +28,7 @@ class DBTest(unittest.TestCase):
         self.cursor.execute("SET search_path TO louis_v004, public")
 
     def tearDown(self):
+        self.connection.rollback()
         self.cursor.close()
         self.connection.close()
 
@@ -91,14 +92,13 @@ class DBTest(unittest.TestCase):
         self.assertEqual(len(urls.keys()), MATCH_COUNT, "All urls should be unique")
 
 
-    @unittest.skip("we have to re-chunk the documents using louis-crawler first")
-    @pytest.mark.skip(
-        reason="we have to re-chunk the documents using louis-crawler first")
+    @unittest.skip("issue #8: we have to re-chunk the documents using louis-crawler first")
     def test_every_crawl_doc_should_have_at_least_one_chunk(self):
+        self.execute('sql/2023-08-09-html_content-table.sql')
         self.cursor.execute("""
-            SELECT count(*)
-            FROM crawl LEFT JOIN chunk ON crawl.id = chunk.crawl_id
-            WHERE chunk.id IS NULL""")
+            select count(*)
+                from crawl left join documents on crawl.id = documents.id
+                where documents.id is null""")
         result = self.cursor.fetchall()
         self.assertEqual(
             result[0]['count'], 0,
