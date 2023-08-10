@@ -1,4 +1,4 @@
-DIRNAME=`dirname $0`
+DIRNAME=$(dirname `realpath $0`)
 PARENT_DIR=$DIRNAME/..
 PROJECT_DIR=`realpath $PARENT_DIR`
 ENV_FILE=$PROJECT_DIR/.env
