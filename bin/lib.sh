@@ -6,7 +6,7 @@ ENV_FILE=$PROJECT_DIR/.env
 if [ -f "$ENV_FILE" ]; then
   . $ENV_FILE
 else
-  echo "WARNING: File $ENV_FILE does not exist, relying on environment variables"
+echo "WARNING: File $ENV_FILE does not exist, relying on environment variables"
 fi
 
 REQUIRED_ENVIRONMENT_VARIABLES="LOUIS_DSN PGBASE PGUSER PGPASSWORD PGHOST OPENAI_API_KEY AZURE_OPENAI_SERVICE LOUIS_SCHEMA"
@@ -17,6 +17,7 @@ for VARIABLE in $REQUIRED_ENVIRONMENT_VARIABLES; do
     fi
 done
 
+export PGOPTIONS="--search_path=$LOUIS_SCHEMA,public"
 export PGBASE
 export PGDATABASE
 export PGHOST

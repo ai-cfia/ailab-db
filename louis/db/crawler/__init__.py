@@ -143,44 +143,34 @@ def fetch_chunk_id_without_embedding(cursor, embedding_model='ada_002'):
     cursor.execute(query)
     return [chunk_id['chunk_id'] for chunk_id in cursor.fetchall()]
 
-def fetch_crawl_row_by_url(cursor, url):
-    """Fetch the most recent crawl row for a given url."""
-    data = {
-        'url': url
-    }
-    cursor.execute(
-        "SELECT * FROM crawl WHERE url = %(url)s ORDER BY last_updated DESC LIMIT 1",
-        data
-    )
-    if cursor.rowcount == 0:
-        raise db.DBError("No crawl found for url: {}".format(url))
-    return cursor.fetchone()
-
 def fetch_crawl_row(cursor, url):
     """Fetch the most recent crawl row for a given url."""
-    data = db.parse_postgresql_url(url)
+    if url.startswith('postgresql://'):
+        data = db.parse_postgresql_url(url)
 
-    cursor.execute(
-        "SELECT * FROM crawl WHERE id = %(id)s ORDER BY last_updated DESC LIMIT 1",
-        data
-    )
+        cursor.execute(
+            "SELECT * FROM crawl WHERE id = %(id)s ORDER BY last_updated DESC LIMIT 1",
+            data
+        )
+    else:
+        data = {'url': url}
+        cursor.execute(
+            "SELECT * FROM crawl WHERE url = %(url)s ORDER BY last_updated DESC LIMIT 1",
+            data
+        )
     if cursor.rowcount == 0:
-        raise db.DBError("No crawl found for id: {}".format(id))
+        raise db.DBError("No crawl found for id: {}".format(data))
     return cursor.fetchone()
 
 def fetch_chunk_token_row(cursor, url):
     """Fetch the most recent chunk token for a given chunk id."""
-
-    # TODO: eventually we could generalize the use of these postgresql
-    # url to data but for now keep it simple
     data = db.parse_postgresql_url(url)
     cursor.execute(
         "SELECT chunk.id as chunk_id, token.id as token_id, tokens FROM chunk"
         " JOIN token ON chunk.id = token.chunk_id"
-        " JOIN crawl ON chunk.crawl_id = crawl.id"
         " WHERE chunk.id = %(id)s LIMIT 1",
         data
     )
     # psycopg.extras.DictRow is not a real dict and will convert
     # to string as a list so we force convert to dict
-    return dict(cursor.fetchone())
+    return cursor.fetchone()

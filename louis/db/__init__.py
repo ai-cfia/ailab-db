@@ -40,10 +40,10 @@ def cursor(connection):
     """Return a cursor for the given connection."""
     return connection.cursor()
 
-def create_postgresql_url(dbname, tablename, id, parameters=None):
+def create_postgresql_url(dbname, tablename, entity_id, parameters=None):
     if parameters is None:
-        return f'postgresql://{dbname}/{LOUIS_SCHEMA}/{tablename}/{id}'
-    return f'postgresql://{dbname}/{LOUIS_SCHEMA}/{tablename}/{id}?{urllib.parse.urlencode(parameters)}'
+        return f'postgresql://{dbname}/{LOUIS_SCHEMA}/{tablename}/{entity_id}'
+    return f'postgresql://{dbname}/{LOUIS_SCHEMA}/{tablename}/{entity_id}?{urllib.parse.urlencode(parameters)}'
 
 
 def parse_postgresql_url(url):
