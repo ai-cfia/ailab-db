@@ -3,6 +3,9 @@ import os
 import openai
 import tiktoken
 
+import dotenv
+dotenv.load_dotenv()
+
 # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/embeddings?tabs=python
 
 def safe_get(key):
