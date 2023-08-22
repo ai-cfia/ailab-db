@@ -1,4 +1,5 @@
 """Database functions for the Louis project."""
+import hashlib
 import logging
 import os
 import urllib
@@ -57,3 +58,10 @@ def parse_postgresql_url(url):
         'id': path_split[3],
         'parameters': urllib.parse.parse_qs(parsed.query)
     }
+
+def hash(text):
+    """Return the hash of the given text.
+
+    We hash using the Python library to remove a roundtrip to the database
+    """
+    return hashlib.md5(text.encode()).hexdigest()
