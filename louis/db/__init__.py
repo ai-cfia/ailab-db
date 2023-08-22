@@ -32,7 +32,8 @@ def connect_db():
         row_factory=dict_row,
         autocommit=False,
         options=f"-c search_path={LOUIS_SCHEMA},public")
-    assert connection.info.encoding == 'utf-8', 'Encoding is not UTF8: ' + connection.info.encoding
+    assert connection.info.encoding == 'utf-8', (
+        'Encoding is not UTF8: ' + connection.info.encoding)
     # psycopg.extras.register_uuid()
     register_vector(connection)
     return connection

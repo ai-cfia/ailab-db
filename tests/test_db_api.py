@@ -68,4 +68,7 @@ class TestDBAPI(unittest.TestCase):
         result = self.cursor.fetchall()[0]['search']
         self.assertEqual(len(result), test.MATCH_COUNT, "Should return 10 results")
         urls = dict([(r['url'], True) for r in result])
-        self.assertEqual(len(urls.keys()), test.MATCH_COUNT, "All urls should be unique")
+        self.assertEqual(
+            len(urls.keys()),
+            test.MATCH_COUNT,
+            "All urls should be unique")

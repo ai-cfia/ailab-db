@@ -121,7 +121,10 @@ def store_crawl_item(cursor, item):
         cursor.execute(
             """INSERT INTO crawl
                (url, title, lang, md5hash, last_crawled, last_updated)
-               VALUES (%(url)s, %(title)s, %(lang)s, %(html_content_md5hash)s, %(last_crawled)s, %(last_updated)s)""",
+               VALUES (
+                %(url)s, %(title)s, %(lang)s, %(html_content_md5hash)s,
+                %(last_crawled)s, %(last_updated)s)
+            """,
             item
         )
         return item
@@ -141,21 +144,28 @@ def store_embedding_item(cursor, item):
         query = psycopg.sql.SQL(
                 'INSERT INTO {embedding_model} (token_id, embedding)'
                 ' VALUES (%(token_id)s, %(embedding)s::vector)'
-            ).format(embedding_model=psycopg.sql.Identifier(data['embedding_model'])).as_string(cursor)
+            ).format(
+                embedding_model=psycopg.sql.Identifier(
+                data['embedding_model'])
+            ).as_string(cursor)
         cursor.execute(
            query,
             data
         )
         return item
     except psycopg.IntegrityError as e:
-        raise db.DBError("Error storing embedding item for token %s" % item['token_id']) from e
+        raise db.DBError(
+            "Error storing embedding item for token %s" % item['token_id']) from e
 
 def fetch_crawl_ids_without_chunk(cursor):
     """Fetch all crawl ids without an embedding."""
     query = psycopg.sql.SQL(
-        "SELECT crawl.id FROM crawl"
-        " LEFT JOIN html_content_to_chunk ON crawl.md5hash = html_content_to_chunk.html_content_md5hash"
-        " WHERE chunk_id IS NULL"
+        """
+        SELECT crawl.id FROM crawl
+         LEFT JOIN html_content_to_chunk
+         ON crawl.md5hash = html_content_to_chunk.html_content_md5hash
+         WHERE chunk_id IS NULL
+        """
     ).as_string(cursor)
     cursor.execute(query)
     return [crawl_id['id'] for crawl_id in cursor.fetchall()]

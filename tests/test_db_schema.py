@@ -15,7 +15,8 @@ class TestDBSchema(unittest.TestCase):
 
     def test_schema(self):
         """sample test to check if the schema is correct and idempotent"""
-        with open(f"dumps/{test.LOUIS_SCHEMA}/schema.sql", encoding='utf-8') as schema_file:
+        schema_filename = f"dumps/{test.LOUIS_SCHEMA}/schema.sql"
+        with open(schema_filename, encoding='utf-8') as schema_file:
             schema = schema_file.read()
             schema = schema.replace(test.LOUIS_SCHEMA, 'test')
         with db.cursor(self.connection) as cursor:

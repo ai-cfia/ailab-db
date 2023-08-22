@@ -38,7 +38,7 @@ CREATE table if not EXISTS html_content (
 );
 
 ALTER TABLE crawl
-    ADD COLUMN md5hash CHAR(32);
+    ADD COLUMN IF NOT EXISTS md5hash CHAR(32);
 
 -- the tables crawl and chunk already contain data so we need to move the data to the new table first before applying constraints
 -- on duplicate key value
