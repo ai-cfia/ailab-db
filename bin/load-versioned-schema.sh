@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 SOURCE_SCHEMA=$1
-SOURCE_DIR=$DIRNAME/dumps/$1
+SOURCE_DIR=$PROJECT_DIR/dumps/$1
 if [ ! -d "$SOURCE_DIR" ]; then
     echo "Directory does not exist: $SOURCE_DIR"
     exit 1

@@ -27,7 +27,14 @@ export PGHOST
 export PGPASSFILE
 export PGPASSWORD
 
-PSQL_ADMIN="psql -v ON_ERROR_STOP=1 -U postgres --single-transaction -d $PGBASE"
+VERSION15=`psql --version | grep 15.`
+
+if [ -z "$VERSION15" ]; then
+    echo "postgresql-client-15 required"
+    exit 1
+fi
+
+PSQL_ADMIN="psql -v ON_ERROR_STOP=1 --single-transaction -d $PGBASE"
 TODAY=`date +%Y-%m-%d`
 
 if [ -z "$PGDUMP_FILENAME" ]; then
