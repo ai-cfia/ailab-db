@@ -9,13 +9,13 @@ else
 echo "WARNING: File $ENV_FILE does not exist, relying on environment variables"
 fi
 
-REQUIRED_ENVIRONMENT_VARIABLES="LOUIS_DSN PGBASE PGUSER PGPASSWORD PGHOST OPENAI_API_KEY AZURE_OPENAI_SERVICE LOUIS_SCHEMA"
-for VARIABLE in $REQUIRED_ENVIRONMENT_VARIABLES; do
-    if [ -z "${!VARIABLE}" ]; then
-        echo "Environment variable $VARIABLE is not set"
-        exit 1
-    fi
-done
+# REQUIRED_ENVIRONMENT_VARIABLES="LOUIS_DSN PGBASE PGUSER PGPASSWORD PGHOST OPENAI_API_KEY AZURE_OPENAI_SERVICE LOUIS_SCHEMA"
+# for VARIABLE in $REQUIRED_ENVIRONMENT_VARIABLES; do
+#     if [ -z "${!VARIABLE}" ]; then
+#         echo "Environment variable $VARIABLE is not set"
+#         exit 1
+#    fi
+# done
 
 export PGOPTIONS="--search_path=$LOUIS_SCHEMA,public"
 export PGBASE

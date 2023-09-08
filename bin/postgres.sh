@@ -12,8 +12,11 @@ fi
 STATUS=`docker inspect louis-db-server -f '{{.State.Status}}'`
 
 if [ "$STATUS" = "exited" ]; then
+    echo container exist but as exited, restarting
     docker start louis-db-server
 elif [ "$STATUS" != "running" ]; then
+    # check PGPASWORD before using it
+    echo container does not exist, creating
     docker run --name louis-db-server \
         -e POSTGRES_PASSWORD=$PGPASSWORD \
         --network louis_network \

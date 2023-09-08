@@ -6,7 +6,7 @@ if [ -z "$PGBASE" ]; then
     exit 1
 fi
 DOCKER_EXEC="docker exec -it louis-db-server"
-$DOCKER_EXEC createdb -E utf-8 $PGBASE
+$DOCKER_EXEC createdb -E utf-8 -U postgres $PGBASE 
 $DOCKER_EXEC $PSQL_ADMIN -c "CREATE USER $USER; ALTER USER $USER WITH SUPERUSER;"
 $DOCKER_EXEC pip install pgxnclient
 $DOCKER_EXEC pgxn install vector
