@@ -9,6 +9,7 @@ else
 echo "WARNING: File $ENV_FILE does not exist, relying on environment variables"
 fi
 
+# This section got replaced by the "is_parameter_empty" function
 # REQUIRED_ENVIRONMENT_VARIABLES="LOUIS_DSN PGBASE PGUSER PGPASSWORD PGHOST OPENAI_API_KEY AZURE_OPENAI_SERVICE LOUIS_SCHEMA"
 # for VARIABLE in $REQUIRED_ENVIRONMENT_VARIABLES; do
 #     if [ -z "${!VARIABLE}" ]; then
@@ -16,6 +17,17 @@ fi
 #         exit 1
 #    fi
 # done
+
+# check if given parameter is defined or empty
+is_parameter_empty () {
+  if [ -z "$1" ]; then
+    # Parameter is not defined or empty.
+    return 0
+  else
+    # Parameter is defined and not empty.
+    return 1
+  fi
+}
 
 export PGOPTIONS="--search_path=$LOUIS_SCHEMA,public"
 export PGBASE
