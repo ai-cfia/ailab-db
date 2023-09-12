@@ -9,23 +9,17 @@ else
 echo "WARNING: File $ENV_FILE does not exist, relying on environment variables"
 fi
 
-# This section got replaced by the "is_parameter_empty" function
-# REQUIRED_ENVIRONMENT_VARIABLES="LOUIS_DSN PGBASE PGUSER PGPASSWORD PGHOST OPENAI_API_KEY AZURE_OPENAI_SERVICE LOUIS_SCHEMA"
-# for VARIABLE in $REQUIRED_ENVIRONMENT_VARIABLES; do
-#     if [ -z "${!VARIABLE}" ]; then
-#         echo "Environment variable $VARIABLE is not set"
-#         exit 1
-#    fi
-# done
+check_environment_variables_defined () {
+  variable_not_set=0
+  for VARIABLE in "$@"; do
+      if [ -z "${!VARIABLE}" ]; then
+          echo "Environment variable $VARIABLE is not set"
+          variable_not_set=1
+    fi
+  done
 
-# check if given parameter is defined or empty
-is_parameter_empty () {
-  if [ -z "$1" ]; then
-    # Parameter is not defined or empty.
-    return 0
-  else
-    # Parameter is defined and not empty.
-    return 1
+  if [ $variable_not_set -eq 1 ]; then
+    exit 1
   fi
 }
 
