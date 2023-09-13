@@ -21,6 +21,7 @@ check_environment_variables_defined () {
     done
 
     if [ $variable_not_set -eq 1 ]; then
+        echo "One or more variables are not defined, the program cannot continue"
         exit 1
     fi
 }

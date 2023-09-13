@@ -1,11 +1,10 @@
-DIRNAME=`dirname $0`
+#!/bin/bash
+DIRNAME=$(dirname "$0")
 . $DIRNAME/lib.sh
 
-if [ -z "$PGBASE" ]; then
-    echo "PGBASE is not set"
-    exit 1
-fi
-DOCKER_EXEC="docker exec -it louis-db-server"
+check_environment_variables_defined PGBASE DB_SERVER_CONTAINER_NAME PSQL_ADMIN
+
+DOCKER_EXEC="docker exec -it $DB_SERVER_CONTAINER_NAME"
 $DOCKER_EXEC createdb -E utf-8 -U postgres $PGBASE 
 $DOCKER_EXEC $PSQL_ADMIN -c "CREATE USER $USER; ALTER USER $USER WITH SUPERUSER;"
 $DOCKER_EXEC pip install pgxnclient
