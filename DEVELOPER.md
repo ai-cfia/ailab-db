@@ -5,6 +5,26 @@
 ### Run latest schema locally
 
 * Setup .env environment variables
+  * LOUIS_DSN: Data Source Name (DSN) used for configuring a database connection in Louis's system.
+
+  * PGBASE: the base directory where PostgreSQL related files or resources are stored or accessed.
+
+  * PGUSER: the username or role required to authenticate and access a PostgreSQL database.
+
+  * PGHOST: the hostname or IP address of the server where the PostgreSQL database is hosted.
+
+  * PGPASSWORD: the password for authentication when connecting to the PostgreSQL database.
+
+  * PGDATA: path to the directory where PostgreSQL data files are stored.
+
+  * OPENAI_API_KEY: the API key required for authentication when making requests to the OpenAI API.
+
+  * AZURE_OPENAI_SERVICE: information related to an Azure-based service for OpenAI.
+
+  * LOUIS_SCHEMA: the Louis schema within database.
+
+  * DB_SERVER_CONTAINER_NAME: name of your database server container.
+
 * Run database locally (see bin/postgres.sh)
 * Restore latest schema dump
 
