@@ -26,7 +26,7 @@ check_environment_variables_defined () {
     fi
 }
 
-export PGOPTIONS="--search_path=$LOUIS_SCHEMA,public"
+export PGOPTIONS="--search_path=$LOUIS_SCHEMA"
 export PGBASE
 export PGDATABASE
 export PGHOST
