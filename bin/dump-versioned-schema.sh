@@ -4,7 +4,7 @@ DIRNAME=`dirname $0`
 
 if [ -z $2 ]; then
     echo "usage: $0 source_schema output_schema"
-    echo "exemple: louis_v005 to louis_v006"
+    echo "example: $0 louis_v005 to louis_v006"
     exit 1
 fi
 
