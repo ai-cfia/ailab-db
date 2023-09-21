@@ -2,7 +2,7 @@
 DIRNAME=$(dirname "$0")
 . $DIRNAME/lib.sh
 
-check_environment_variables_defined PGBASE DB_SERVER_CONTAINER_NAME PSQL_ADMIN
+check_environment_variables_defined PGBASE DB_SERVER_CONTAINER_NAME PSQL_ADMIN PGPASSWORD USER
 
 # set -x -e  
 DOCKER_EXEC="docker exec -it $DB_SERVER_CONTAINER_NAME"  
@@ -22,7 +22,7 @@ END
 \$do\$;"
 
 ## Print all existing users
-# $DOCKER_EXEC psql -U postgres -c '\du'  
+$DOCKER_EXEC psql -U postgres -c '\du'  
 
 ## Check if database already exist  
 DB_EXISTS=$($DOCKER_EXEC psql -U "$USER" -d "$PGBASE" -tAc "SELECT 1 FROM pg_database WHERE datname='$PGBASE'" | tr -d '\r')  
@@ -36,7 +36,7 @@ else
 fi
 
 ## Print all existing databases
-# $DOCKER_EXEC psql -U postgres -c '\l'
+$DOCKER_EXEC psql -U postgres -c '\l'
 
 $DOCKER_EXEC pip install pgxnclient
 
@@ -50,7 +50,7 @@ else
     docker exec -u 0 -it "$DB_SERVER_CONTAINER_NAME" pgxn install vector  
 fi  
 
-$DOCKER_EXEC psql -U postgres -v ON_ERROR_STOP=1 --single-transaction -d inspection -c 'SET search_path TO public; CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE EXTENSION IF NOT EXISTS vector;'
+$DOCKER_EXEC psql -U postgres -v ON_ERROR_STOP=1 --single-transaction -d $PGBASE -c 'SET search_path TO public; CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE EXTENSION IF NOT EXISTS vector;'
 
 # $DOCKER_EXEC $PSQL_ADMIN -c "SET search_path TO public; CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"; CREATE EXTENSION IF NOT EXISTS vector;"
 # User creation
