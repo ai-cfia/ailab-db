@@ -1,5 +1,9 @@
-DIRNAME=`dirname $0`
+#!/bin/bash
+DIRNAME=$(dirname "$0")
 . $DIRNAME/lib.sh
+
+## To debug
+# set -x -e  
 
 if [ -z "$1" ]; then
     echo "usage: $0 target_schema"
@@ -27,11 +31,12 @@ fi
 # $PSQL_ADMIN -d $PGBASE -c "select * from csv_to_schema('$TARGET_SCHEMA', '$SOURCE_DIR', array['crawl', 'chunk', 'token', 'ada_002', 'link', 'score', 'query'])"
 
 TABLE_LIST=$SOURCE_DIR/tables.txt
+echo $TABLE_LIST
 if [ ! -f "$TABLE_LIST" ]; then
     echo "File defining list of table and their load order does not exist: $TABLE_LIST"
     exit 1
 fi
-TABLES=`cat $TABLE_LIST`
+TABLES=$(cat "$TABLE_LIST")
 
 # we check that there's a csv file for each table
 for table in $TABLES; do
@@ -52,7 +57,7 @@ for file in $SOURCE_DIR/*.csv; do
     fi
 done
 
-CSV_TO_SCHEMA_PSQL=`mktemp`
+CSV_TO_SCHEMA_PSQL=$(mktemp)
 echo "" > $CSV_TO_SCHEMA_PSQL
 # echo "set session_replica_role = 'replica';" >> $CSV_TO_SCHEMA_PSQL
 for table in $TABLES; do

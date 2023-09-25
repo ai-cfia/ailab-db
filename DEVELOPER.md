@@ -11,9 +11,13 @@
 
   * PGUSER: the username or role required to authenticate and access a PostgreSQL database.
 
+  * USER: the username required for validation and access
+
   * PGHOST: the hostname or IP address of the server where the PostgreSQL database is hosted.
 
-  * PGPASSWORD: the password for authentication when connecting to the PostgreSQL database.
+  * PGPASSWORD: the password for the user authentication when connecting to the PostgreSQL database.
+
+  * POSTGRES_PASSWORD: the password for the database, for authentication when connecting to the PostgreSQL database.
 
   * PGDATA: path to the directory where PostgreSQL data files are stored.
 
