@@ -1,4 +1,5 @@
-DIRNAME=`dirname $0`
+#!/bin/bash
+DIRNAME=$(dirname "$0")
 . $DIRNAME/lib.sh
 
 $PSQL_ADMIN -f $DIRNAME/sql/fix-utf8-template.sql

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION schema_to_csv(schema_source TEXT, path TEXT) RETURNS void AS $$
+CREATE OR REPLACE FUNCTION public.schema_to_csv(schema_source TEXT, path TEXT) RETURNS void AS $$
 declare
    tables RECORD;
    statement TEXT;
@@ -17,4 +17,3 @@ END LOOP;
 return;
 end;
 $$ LANGUAGE plpgsql;
-
