@@ -20,7 +20,7 @@ AZURE_OPENAI_SERVICE = safe_get("AZURE_OPENAI_SERVICE")
 openai.api_type = "azure"
 openai.api_key = OPENAI_API_KEY
 openai.api_base = f"https://{AZURE_OPENAI_SERVICE}.openai.azure.com"
-openai.api_version = "2023-05-15"
+openai.api_version = "2023-05-15" # be sure it's the good one
 
 enc = tiktoken.get_encoding("cl100k_base")
 
