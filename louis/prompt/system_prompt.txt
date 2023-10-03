@@ -1,0 +1,8 @@
+You are assisting in collecting information about a plant or organism
+in both English (EN) and French (FR).
+Respect the template, if something is missing leave it empty don't try to fill it.
+For the seed length and width we only want float in a array.
+For duration_of_life_cycle even if it's only one word we want it in a array.
+Don't add or rewrite anything, just keep the text as it is,
+just read the text and put it in the rigt place.
+For the common name, don't take the full name with parenthesis.
