@@ -28,18 +28,11 @@ def load_json_template():
     return content
 
 ### Step 1: Connect to the database
-PGHOST= os.environ.get('PGHOST')
-PGBASE=os.environ.get('PGBASE')
-PGUSER=os.environ.get('PGUSER')
-POSTGRES_PASSWORD=os.environ.get('POSTGRES_PASSWORD')
-
 LOUIS_SCHEMA= os.environ.get('LOUIS_SCHEMA')
 LOUIS_DSN = os.environ.get("LOUIS_DSN")
 PGUSER=os.environ.get('PGUSER')
 
 def connect_db():
-    """Connect to the postgresql database and return the connection."""
-    # print(f"Connecting to {LOUIS_SCHEMA}")
     connection = psycopg.connect(
     conninfo=LOUIS_DSN,
     row_factory=dict_row,
@@ -47,7 +40,6 @@ def connect_db():
     options=f"-c search_path={LOUIS_SCHEMA},public")
     assert connection.info.encoding == 'utf-8', (
     'Encoding is not UTF8: ' + connection.info.encoding)
-    # psycopg.extras.register_uuid()
     register_vector(connection)
     return connection
 
@@ -56,24 +48,43 @@ cursor = database.cursor()
 
 ### Step 2: Get a list of all the seeds
 seed_list = []
-wanted_files_number = "10"
-cursor.execute("SELECT REGEXP_REPLACE(UNNEST(REGEXP_MATCHES(content, '<i lang=\"la\">(.*?)</i>', 'g')),'<[^>]+>','','g') AS seed_name FROM html_content WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed' LIMIT " + wanted_files_number +";")
+wanted_files_number = 1
+
+query = f"""
+    SELECT
+        REGEXP_REPLACE(UNNEST(REGEXP_MATCHES
+        (content, '<i lang="la">(.*?)</i>', 'g')),'<[^>]+>','','g') AS seed_name
+    FROM
+        html_content
+    WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
+    LIMIT {wanted_files_number};
+"""
+cursor.execute(query)
 list_seeds_scientific_name = cursor.fetchall()
+
 for rows in list_seeds_scientific_name:
     seed_list.append(rows['seed_name'])
 
-for element in seed_list:
-    print(element)
-print("\n")
+print("\nList of selected seeds :")
+for seed in seed_list:
+    print(seed)
       
 ### Step 3: Get the HTML pages of the seeds
 pages_list = []
 
-for element in seed_list:
-    cursor.execute("SELECT REGEXP_REPLACE(content, '<[^>]+>', '', 'g') AS cleaned_content FROM html_content WHERE content LIKE '%<h1 id=\"wb-cont\" property=\"name\">%<i lang=\"la\">" + element + "</i>%</h1>%';")
+for seed in seed_list:
+    query = """
+        SELECT
+            REGEXP_REPLACE(content, '<[^>]+>', '', 'g') AS cleaned_content
+        FROM
+            html_content
+        WHERE content
+            LIKE '%<h1 id="wb-cont" property="name">%<i lang="la">""" + seed + """</i>%</h1>%';
+    """
+    cursor.execute(query)
     web_pages_fr_en = cursor.fetchall()
+    
     all_language_page = ""
-
     for row in web_pages_fr_en:
         web_text = row.get('cleaned_content')
         all_language_page += web_text
@@ -93,6 +104,8 @@ openai.api_version = "2023-05-15"
 openai.api_key = OPENAI_API_KEY
 
 ### Step 5: Ask ChatGPT to parse the files and give you JSON
+directory_path = "../data"
+
 def json_file_exists(directory_path, file_name):
     """
     Check if a JSON file exists in the specified directory.
@@ -106,8 +119,6 @@ def json_file_exists(directory_path, file_name):
     """
     file_path = os.path.join(directory_path, file_name)
     return os.path.exists(file_path)
-
-directory_path = "../data"
 
 compteur = 0
 for element in seed_list:
@@ -129,28 +140,27 @@ for element in seed_list:
         )
         # Missing IMAGES and SOURCE, will use SQL for this.
         print("Chat answer: \n" + response.choices[0].message.content + "\n")
-        ### Step 5: Translate the JSON into data for the database
-        directory_path = "../data"
-        # Convert the JSON string to a Python list of dictionaries
+
+        ### Step 6: Translate the JSON into data for the database
         data = json.loads(response.choices[0].message.content)
+
         # Function to decode Unicode escape sequences in French text
         def decode_french_text(text):
             return text.encode('latin1').decode('unicode-escape')
-        # Check if the data is a list and if it has at least one dictionary
+        
         if isinstance(data, list) and len(data) > 0:
-            # Get the first dictionary in the list
             first_dict = data[0]
-            
-            # Get the value associated with the key "scientific_name" from the first dictionary
-            filename_key = "scientific_name"  # Replace with the actual key you want to use
-            file_name = first_dict.get(filename_key, "no_name.json")  # Use a default filename if the key is not found
+            filename_key = "scientific_name"
+            file_name = first_dict.get(filename_key, "no_data.json") 
             # Decode the file name if it contains Unicode escape sequences
             file_name = decode_french_text(file_name)
         else:
-            file_name = "no_data"  # Use a default filename if there's no valid data
+            # Use a default filename if there's no valid data
+            file_name = "no_data"  
         file_name += ".json"
         file_path = f"{directory_path}/{file_name}"
         with open(file_path, "w") as json_file:
-            json.dump(data, json_file, ensure_ascii=False)  # Use ensure_ascii=False to allow non-ASCII characters
+            # Use ensure_ascii=False to allow non-ASCII characters
+            json.dump(data, json_file, ensure_ascii=False)  
         print(f"JSON data written to {file_path}")
     compteur = compteur + 1
