@@ -15,11 +15,12 @@ def safe_get(key):
     return value
 
 OPENAI_API_KEY = safe_get("OPENAI_API_KEY")
-AZURE_OPENAI_SERVICE = safe_get("AZURE_OPENAI_SERVICE")
+AZURE_OPENAI_ENDPOINT = safe_get("AZURE_OPENAI_ENDPOINT")
+OPENAI_API_ENGINE = safe_get('OPENAI_API_ENGINE')
 
 openai.api_type = "azure"
 openai.api_key = OPENAI_API_KEY
-openai.api_base = f"https://{AZURE_OPENAI_SERVICE}.openai.azure.com"
+openai.api_base = f"{AZURE_OPENAI_ENDPOINT}"
 openai.api_version = "2023-05-15"
 
 enc = tiktoken.get_encoding("cl100k_base")
@@ -27,8 +28,8 @@ enc = tiktoken.get_encoding("cl100k_base")
 def fetch_embedding(tokens):
     """Fetch embedding for a list of tokens from the Microsoft Azure OpenAI API"""
     response = openai.Embedding.create(
-        input=tokens,
-        engine="ada"
+        input = tokens,
+        engine = OPENAI_API_ENGINE
     )
     embeddings = response['data'][0]['embedding']
     return embeddings

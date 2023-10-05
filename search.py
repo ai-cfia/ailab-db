@@ -1,14 +1,16 @@
 # Name of this file: search.py
 # Location: at the root of the project
-# How to execute: python3 -m search.py
+# How to execute: python3 -m search.py query
  
 
 #This is used to load the .env file
-import dotenv
-dotenv.load_dotenv()
-import louis.db as db
-from louis.models import openai
 import sys
+import dotenv
+import louis.models.openai as openai
+import louis.db as db
+
+dotenv.load_dotenv()
+
 
 def search(cursor, query_embedding):
     """Match documents with a given query."""
@@ -17,12 +19,19 @@ def search(cursor, query_embedding):
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
         'match_count': 10,
-        'weights': "1"
+        'weights': {
+            "1",
+            "1", 
+            "1", 
+            "1", 
+            "1"
+        }
     }
 
     cursor.execute(
         "SELECT * FROM search"
-        "(%(text)s::text, %(query_embedding)s::vector, %(match_threshold)s, %(match_count)s::integer, %(weights)s::JSONB)",
+        "(%(text)s::text, %(query_embedding)s::vector, %(match_threshold)s,"\
+              "%(match_count)s::integer, %(weights)s::JSONB)",
         data)
     
     # turn into list of dict now to preserve dictionaries
