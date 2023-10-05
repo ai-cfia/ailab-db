@@ -56,14 +56,16 @@ cursor = database.cursor()
 
 ### Step 2: Get a list of all the seeds
 seed_list = []
-cursor.execute("SELECT REGEXP_REPLACE(UNNEST(REGEXP_MATCHES(content, '<i lang=\"la\">(.*?)</i>', 'g')),'<[^>]+>','','g') AS seed_name FROM html_content WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed' LIMIT 5;")
+wanted_files_number = "10"
+cursor.execute("SELECT REGEXP_REPLACE(UNNEST(REGEXP_MATCHES(content, '<i lang=\"la\">(.*?)</i>', 'g')),'<[^>]+>','','g') AS seed_name FROM html_content WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed' LIMIT " + wanted_files_number +";")
 list_seeds_scientific_name = cursor.fetchall()
 for rows in list_seeds_scientific_name:
     seed_list.append(rows['seed_name'])
 
 for element in seed_list:
     print(element)
-
+print("\n")
+      
 ### Step 3: Get the HTML pages of the seeds
 pages_list = []
 
@@ -80,7 +82,7 @@ for element in seed_list:
 cursor.close()
 database.close()
 
-### Step 3: Connect to the OpenAI Azure Chat
+### Step 4: Connect to the OpenAI Azure Chat
 AZURE_OPENAI_ENDPOINT= os.environ.get('AZURE_OPENAI_ENDPOINT')
 OPENAI_API_KEY=os.environ.get('OPENAI_API_KEY')
 OPENAI_API_ENGINE=os.environ.get('OPENAI_API_ENGINE')
@@ -90,23 +92,65 @@ openai.api_base = AZURE_OPENAI_ENDPOINT
 openai.api_version = "2023-05-15"
 openai.api_key = OPENAI_API_KEY
 
-### Step 4: Ask ChatGPT to parse the files and give you JSON
-for page in pages_list:
-    print("Sending request for summary to Azure OpenAI endpoint...\n\n")
-    response = openai.ChatCompletion.create(
-        engine=OPENAI_API_ENGINE,
-        temperature=0,
-        max_tokens=300,
-        messages = [
-            {"role": "system", "content": load_prompt("system_prompt.txt")},
-            {"role": "user", "content": load_prompt("user_prompt.txt") + page + ". The template : " + load_json_template()}
-        ]
-    )
-    ## Missing IMAGES and SOURCE, will use SQL for this.
+### Step 5: Ask ChatGPT to parse the files and give you JSON
+def json_file_exists(directory_path, file_name):
+    """
+    Check if a JSON file exists in the specified directory.
 
-    ## TXT then check if exist
-    ## Try 5 request at one time
+    Args:
+        directory_path (str): The directory path to check for the JSON file.
+        file_name (str): The name of the JSON file (including the ".json" extension).
 
-    print("Chat answer: " + response.choices[0].message.content + "\n")
+    Returns:
+        bool: True if the JSON file exists, False otherwise.
+    """
+    file_path = os.path.join(directory_path, file_name)
+    return os.path.exists(file_path)
 
-### Step 5: Translate the JSON into data for the database
+directory_path = "../data"
+
+compteur = 0
+for element in seed_list:
+    print("Current seed : " + element)
+    seed_json_path = element + ".json"
+    if json_file_exists(directory_path, seed_json_path):
+        print(f"The JSON file {seed_json_path} exists in {directory_path}, skipping")
+    else:    
+        page = pages_list[compteur]
+        print("Sending request for summary to Azure OpenAI endpoint...\n")
+        response = openai.ChatCompletion.create(
+            engine=OPENAI_API_ENGINE,
+            temperature=0,
+            max_tokens=600,
+            messages = [
+                {"role": "system", "content": load_prompt("system_prompt.txt")},
+                {"role": "user", "content": load_prompt("user_prompt.txt") + "You have to return a JSON files that follow this template :\n\n" + load_json_template() + "\n\nhere is the text to parse" + page}
+            ]
+        )
+        # Missing IMAGES and SOURCE, will use SQL for this.
+        print("Chat answer: \n" + response.choices[0].message.content + "\n")
+        ### Step 5: Translate the JSON into data for the database
+        directory_path = "../data"
+        # Convert the JSON string to a Python list of dictionaries
+        data = json.loads(response.choices[0].message.content)
+        # Function to decode Unicode escape sequences in French text
+        def decode_french_text(text):
+            return text.encode('latin1').decode('unicode-escape')
+        # Check if the data is a list and if it has at least one dictionary
+        if isinstance(data, list) and len(data) > 0:
+            # Get the first dictionary in the list
+            first_dict = data[0]
+            
+            # Get the value associated with the key "scientific_name" from the first dictionary
+            filename_key = "scientific_name"  # Replace with the actual key you want to use
+            file_name = first_dict.get(filename_key, "no_name.json")  # Use a default filename if the key is not found
+            # Decode the file name if it contains Unicode escape sequences
+            file_name = decode_french_text(file_name)
+        else:
+            file_name = "no_data"  # Use a default filename if there's no valid data
+        file_name += ".json"
+        file_path = f"{directory_path}/{file_name}"
+        with open(file_path, "w") as json_file:
+            json.dump(data, json_file, ensure_ascii=False)  # Use ensure_ascii=False to allow non-ASCII characters
+        print(f"JSON data written to {file_path}")
+    compteur = compteur + 1
