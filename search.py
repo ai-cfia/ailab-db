@@ -66,4 +66,5 @@ def search_from_text_query(cursor, query):
 if __name__ == '__main__':
     connection = db.connect_db()
     with db.cursor(connection) as cursor:
-        search_from_text_query(cursor, ' '.join(sys.argv[1:]))
+        d = search_from_text_query(cursor, ' '.join(sys.argv[1:]))
+        print(d)
