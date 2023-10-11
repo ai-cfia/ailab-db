@@ -5,29 +5,32 @@
 ### Run latest schema locally
 
 * Setup .env environment variables
-  * LOUIS_DSN: Data Source Name (DSN) used for configuring a database connection in Louis's system.
+  * LOUIS_DSN: Data Source Name (DSN) used for configuring a database connection in Louis's system. It should follow this pattern, replacing each variable with your own values : 
+  `LOUIS_DSN=postgresql://PGUSER:PGPASSWORD@DB_SERVER_CONTAINER_NAME/PGBASE`
 
-  * PGBASE: the base directory where PostgreSQL related files or resources are stored or accessed.
+  * PGBASE: The base directory where PostgreSQL related files or resources are stored or accessed. it can be the name of your folder followed by test (ex: louis-test).
 
-  * PGUSER: the username or role required to authenticate and access a PostgreSQL database.
+  * PGUSER: The username or role required to authenticate and access a PostgreSQL database.
 
-  * USER: the username required for validation and access
+  * USER: The username required for validation and access, it can be the same as PGUSER.
 
-  * PGHOST: the hostname or IP address of the server where the PostgreSQL database is hosted.
+  * PGHOST: The hostname or IP address of the server where the PostgreSQL database is hosted. If you want to use it locally, it should be `localhost`.
 
-  * PGPASSWORD: the password for the user authentication when connecting to the PostgreSQL database.
+  * PGPASSWORD: The password for the user authentication when connecting to the PostgreSQL database.
 
-  * POSTGRES_PASSWORD: the password for the database, for authentication when connecting to the PostgreSQL database.
+  * POSTGRES_PASSWORD: The password for the database, for authentication when connecting to the PostgreSQL database.
 
-  * PGDATA: path to the directory where PostgreSQL data files are stored.
+  * PGDATA: Path to the directory where PostgreSQL data files are stored. If it's not set, it will automatically select it for you.
 
-  * OPENAI_API_KEY: the API key required for authentication when making requests to the OpenAI API.
+  * OPENAI_API_KEY: The API key required for authentication when making requests to the OpenAI API. It can be found [here](https://portal.azure.com/#home).
 
-  * AZURE_OPENAI_SERVICE: information related to an Azure-based service for OpenAI.
+  * AZURE_OPENAI_ENDPOINT: The link used to call into Azure OpenAI endpoints. It can be found at the same place as the OPENAI_API_KEY.
 
-  * LOUIS_SCHEMA: the Louis schema within database.
+  * OPENAI_API_ENGINE: The name of the model deployment you want to use (ex:ailab-gpt-35-turbo).
 
-  * DB_SERVER_CONTAINER_NAME: name of your database server container.
+  * LOUIS_SCHEMA: The Louis schema within database (ex: louis_v005).
+
+  * DB_SERVER_CONTAINER_NAME: The name of your database server container (ex: louis-db-server).
 
 * Run database locally (see bin/postgres.sh)
 * Restore latest schema dump
