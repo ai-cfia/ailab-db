@@ -1,7 +1,7 @@
 # Name of this file: search.py
 # Location: at the root of the project
 # How to execute: python3 -m search.py query
-
+import os
 import json
 import sys
 import dotenv
@@ -11,24 +11,22 @@ import louis.db as db
 # This is used to load the .env file
 dotenv.load_dotenv()
 
+SEARCH_WEIGHTS = os.environ.get("SEARCH_WEIGHTS") or db.raise_error("SEARCH_WEIGHTS is\
+                                                                     not set")
+
 # Execute the SQL search function 
 def search(cursor, query_embedding):
     """Match documents with a given query."""
     data = {
-        'text': "cat",
+        'text': ' '.join(sys.argv[1:]),
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
         'match_count': 10,
-        'weights': json.dumps({
-            'recency': 1,
-            'traffic': 1, 
-            'current': 1,
-            'typicality': 1,
-            'similarity': 1
-        })
+        'weights': json.dumps(SEARCH_WEIGHTS)
     }
 
     cursor.execute("""
+                   explain analyze
         SELECT * 
         FROM search(%(text)s, %(query_embedding)s::vector, %(match_threshold)s,
                    %(match_count)s, %(weights)s::JSONB)
@@ -66,5 +64,5 @@ def search_from_text_query(cursor, query):
 if __name__ == '__main__':
     connection = db.connect_db()
     with db.cursor(connection) as cursor:
-        d = search_from_text_query(cursor, ' '.join(sys.argv[1:]))
-        print(d)
+        results = search_from_text_query(cursor, ' '.join(sys.argv[1:]))
+        print(results)
