@@ -15,12 +15,12 @@ def safe_get(key):
     return value
 
 OPENAI_API_KEY = safe_get("OPENAI_API_KEY")
-AZURE_OPENAI_ENDPOINT = safe_get("AZURE_OPENAI_ENDPOINT")
+OPENAI_ENDPOINT = safe_get("OPENAI_ENDPOINT")
 OPENAI_API_ENGINE = safe_get('OPENAI_API_ENGINE')
 
 openai.api_type = "azure"
 openai.api_key = OPENAI_API_KEY
-openai.api_base = f"{AZURE_OPENAI_ENDPOINT}"
+openai.api_base = f"{OPENAI_ENDPOINT}"
 openai.api_version = "2023-05-15"
 
 enc = tiktoken.get_encoding("cl100k_base")
