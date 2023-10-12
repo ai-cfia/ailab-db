@@ -8,7 +8,7 @@ from ailab.models import openai
 current_working_directory = os.getcwd()
 seed_data_path = current_working_directory + "/seed-data"
 prompt_path = current_working_directory + "/nachet-data/prompt"
-wanted_files_number = 1
+wanted_files_number = 10
 url_to_seed_mapping = {}
 
 database = db.connect_db()
@@ -44,7 +44,7 @@ for rows in list_seed_url:
         seed_name = seed_name_query[0]['seed_name']
         url_to_seed_mapping[seed_full_url] = seed_name
 
-# Now you have a dictionary where the keys are URLs and the values are seed names
+# Dictionary where the keys are URLs and the values are seed names
 print("\nList of selected seeds :")
 for url, seed_name in url_to_seed_mapping.items():
     print(f"{seed_name}")
@@ -65,14 +65,14 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
     4. Sends the query to the database and fetches the retrieved data.
     5. Concatenates the cleaned content into a single 'page.'
     6. Sends a request to the Azure OpenAI endpoint to get a response.
-    7. Processes the response, extracting the scientific name and saving it as a JSON file.
+    7. Processes the response, extracting the name and saving it as a JSON file.
     """
     for url, seed_name in url_to_seed_mapping.items():
         print("\nCurrent seed : " + seed_name)
         seed_json_path = seed_name + ".json"
 
         if nachet.json_file_exists(seed_data_path, seed_json_path):
-            print(f"The JSON file {seed_json_path} exists in {seed_data_path}, skipping")
+            print(f"JSON file {seed_json_path} exists in {seed_data_path}, skipping")
         else:
             query = """
             SELECT
@@ -105,7 +105,8 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
             FROM (
                 SELECT
                     (regexp_matches(content, 'src="([^"]+)"', 'g')) AS image_links,
-                    (regexp_matches(content, '<figcaption>(.*?)</figcaption>', 'gs')) AS image_descriptions
+                    (regexp_matches(content, '<figcaption>(.*?)</figcaption>', 'gs'))
+                    AS image_descriptions
                 FROM html_content
                 WHERE md5hash = '""" + md5hash + """'
             )
@@ -119,11 +120,11 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
             for row in images_fetch:
                 image_links = row['photo_link']
                 image_descriptions = row['photo_description']
-                image_information += f"Image link: {image_links}\nImage description: {image_descriptions}\n\n"
-            print(image_information)
+                image_information += f"Image link: {image_links}"
+                image_information += f"\nImage description: {image_descriptions}\n\n"
 
             print("Sending request for summary to Azure OpenAI endpoint...\n")
-            response = openai.get_chat_answer(system_prompt, user_prompt, json_template, page, image_information)
+            response = openai.get_chat_answer(system_prompt, user_prompt, json_template, page, image_information)  # noqa: E501
 
             # print("Chat answer: \n" + response.choices[0].message.content + "\n")
             data = json.loads(response.choices[0].message.content)

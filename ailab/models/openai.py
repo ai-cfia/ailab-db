@@ -51,7 +51,14 @@ def get_chat_answer(system_prompt, user_prompt, json_template, page, image_infor
         max_tokens=2000,
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt + "You have to return a JSON files that follow this template :\n\n" + json_template + "\n\nhere is the text to parse" + page + "\n\nAnd here is the images link and description : " + image_information}
+            {
+                "role": "user",
+                "content": (
+                    user_prompt + "Return a JSON file that follows this template:\n\n"
+                    + json_template + "\n\nhere is the text to parse" + page + "\n\n"
+                    "And here is the images descriptions: " + image_information
+                )
+            }
         ]
     )
     return response
