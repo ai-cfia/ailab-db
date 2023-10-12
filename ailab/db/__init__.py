@@ -8,6 +8,8 @@ import psycopg
 from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 
+import dotenv
+dotenv.load_dotenv()
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -21,8 +23,13 @@ class DBMissingEnvironmentVariable(DBError):
 def raise_error(message):
     raise DBMissingEnvironmentVariable(message)
 
-LOUIS_DSN = os.environ.get("LOUIS_DSN") or raise_error("LOUIS_DSN is not set")
-LOUIS_SCHEMA = os.environ.get("LOUIS_SCHEMA") or raise_error("LOUIS_SCHEMA is not set")
+LOUIS_DSN = os.environ.get("LOUIS_DSN")
+if LOUIS_DSN is None:
+    raise ValueError("LOUIS_DSN is not set")
+
+LOUIS_SCHEMA = os.environ.get("LOUIS_SCHEMA")
+if LOUIS_SCHEMA is None:
+    raise ValueError("LOUIS_SCHEMA is not set")
 
 def connect_db():
     """Connect to the postgresql database and return the connection."""

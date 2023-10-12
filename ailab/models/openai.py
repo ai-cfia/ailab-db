@@ -15,11 +15,11 @@ def safe_get(key):
     return value
 
 OPENAI_API_KEY = safe_get("OPENAI_API_KEY")
-AZURE_OPENAI_SERVICE = safe_get("AZURE_OPENAI_SERVICE")
+OPENAI_ENDPOINT = safe_get("OPENAI_ENDPOINT")
 
 openai.api_type = "azure"
 openai.api_key = OPENAI_API_KEY
-openai.api_base = f"https://{AZURE_OPENAI_SERVICE}.openai.azure.com"
+openai.api_base = OPENAI_ENDPOINT
 openai.api_version = "2023-05-15" # be sure it's the good one
 
 enc = tiktoken.get_encoding("cl100k_base")
@@ -41,3 +41,17 @@ def fetch_embedding(tokens):
 def get_tokens_from_text(text):
     tokens = enc.encode(text)
     return tokens
+
+def get_chat_answer(system_prompt, user_prompt, json_template, page):
+    OPENAI_API_ENGINE = safe_get("OPENAI_API_ENGINE")
+
+    response = openai.ChatCompletion.create(
+        engine=OPENAI_API_ENGINE,
+        temperature=0,
+        max_tokens=2000,
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt + "You have to return a JSON files that follow this template :\n\n" + json_template + "\n\nhere is the text to parse" + page}
+        ]
+    )
+    return response
