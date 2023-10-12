@@ -5,34 +5,48 @@ import ailab.db as db
 import ailab.db.nachet as nachet
 from ailab.models import openai
 
-root_path = os.path.abspath(os.sep)
-seed_data_path = "/workspaces/louis-db-1/seed-data"
-prompt_path = "/workspaces/louis-db-1/nachet-data/prompt"
+root_path = os.getcwd()
+seed_data_path = root_path + "/seed-data"
+prompt_path = root_path + "/nachet-data/prompt"
 wanted_files_number = 1
-seed_list = []
+url_to_seed_mapping = {}
 
 database = db.connect_db()
 cursor = db.cursor(database)
 
-### Get a list of all the seeds
-query = f"""
-    SELECT
-        REGEXP_REPLACE(UNNEST(REGEXP_MATCHES
-        (content, '<i lang="la">(.*?)</i>', 'g')),'<[^>]+>','','g') AS seed_name
-    FROM
-        html_content
-    WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
-    LIMIT {wanted_files_number};
+### Get a list of all seeds URL
+query = """
+    SELECT DISTINCT
+        (regexp_matches(filtered_content,
+        'href="([^"]*seeds-identification[^"]*)"', 'g'))[1] AS seeds_url
+    FROM (
+        SELECT content AS filtered_content
+        FROM html_content
+        WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
+    ) AS filtered_data;
 """
 cursor.execute(query)
-list_seeds_scientific_name = cursor.fetchall()
+list_seed_url = cursor.fetchall()
 
-for rows in list_seeds_scientific_name:
-    seed_list.append(rows['seed_name'])
+### Get a name from the seed URL
+for rows in list_seed_url:
+    seed_full_url = "https://inspection.canada.ca" + rows['seeds_url']
+    
+    query = (
+    f"SELECT regexp_replace("
+    f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS seed_name;"
+    )
+    cursor.execute(query)
+    seed_name_query = cursor.fetchall()
+    
+    if seed_name_query:
+        seed_name = seed_name_query[0]['seed_name']
+        url_to_seed_mapping[seed_full_url] = seed_name
 
+# Now you have a dictionary where the keys are URLs and the values are seed names
 print("\nList of selected seeds :")
-for seed in seed_list:
-    print(seed)
+for url, seed_name in url_to_seed_mapping.items():
+    print(f"{seed_name}")
 
 def seed_identification_api(system_prompt, user_prompt, json_template):
     """
@@ -52,20 +66,22 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
     6. Sends a request to the Azure OpenAI endpoint to get a response.
     7. Processes the response, extracting the scientific name and saving it as a JSON file.
     """
-    for seed in seed_list:
-        print("\nCurrent seed : " + seed)
-        seed_json_path = seed + ".json"
+    for url, seed_name in url_to_seed_mapping.items():
+        print("\nCurrent seed : " + seed_name)
+        seed_json_path = seed_name + ".json"
 
         if nachet.json_file_exists(seed_data_path, seed_json_path):
             print(f"The JSON file {seed_json_path} exists in {seed_data_path}, skipping")
         else:
             query = """
-                SELECT
-                    REGEXP_REPLACE(content, '<[^>]+>', '', 'g') AS cleaned_content
-                FROM
-                    html_content
-                WHERE content
-                    LIKE'%<h1 id="wb-cont" property="name">%<i lang="la">""" + seed + """</i>%</h1>%';
+            SELECT
+                REGEXP_REPLACE(hc.content, '<[^>]+>', '', 'g') AS cleaned_content
+            FROM
+                html_content hc
+            INNER JOIN
+                crawl c ON hc.md5hash = c.md5hash
+            WHERE
+                c.url = '""" + url + """';
             """
             cursor.execute(query)
             web_pages_fr_en = cursor.fetchall()
@@ -83,8 +99,7 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
             data = json.loads(response.choices[0].message.content)
 
             if isinstance(data, dict):
-                filename_key = "scientific_name"
-                file_name = data.get(filename_key, "no_data.json")
+                file_name = seed_name
                 file_name = nachet.decode_french_text(file_name)
                 file_name += ".json"
 
