@@ -12,10 +12,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt && sudo apt-get update && sudo apt-get install postgresql-client",
-	"remoteEnv":{
-		"PYTHONPATH": "/workspaces/louis-db"
-	},
+	"postCreateCommand": "pip3 install --user -r requirements.txt && sudo apt-get update && sudo apt-get install -y postgresql-client",
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode":{
