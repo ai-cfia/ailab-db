@@ -7,22 +7,40 @@ import sys
 import dotenv
 import louis.models.openai as openai
 import louis.db as db
+from microbench import MicroBench
+    
+
 
 # This is used to load the .env file
 dotenv.load_dotenv()
-
-SEARCH_WEIGHTS = os.environ.get("SEARCH_WEIGHTS") or db.raise_error("SEARCH_WEIGHTS is\
-                                                                     not set")
+basic_bench = MicroBench()
+RECENCY_WEIGHTS = os.environ.get("RECENCY_WEIGHTS") or \
+    db.raise_error("RECENCY_WEIGHTS is not set")
+TRAFFIC_WEIGHTS = os.environ.get("TRAFFIC_WEIGHTS") or \
+    db.raise_error("TRAFFIC_WEIGHTS is not set")
+CURRENT_WEIGHTS = os.environ.get("CURRENT_WEIGHTS") or \
+    db.raise_error("CURRENT_WEIGHTS is not set")
+TIPICALITY_WEIGHTS = os.environ.get("TIPICALITY_WEIGHTS") or \
+    db.raise_error("TIPICALITY_WEIGHTS is not set")
+SIMILARITY_WEIGHTS = os.environ.get("SIMILARITY_WEIGHTS") or \
+    db.raise_error("SIMILARITY_WEIGHTS is not set")
 
 # Execute the SQL search function 
+@basic_bench
 def search(cursor, query_embedding):
     """Match documents with a given query."""
     data = {
         'text': ' '.join(sys.argv[1:]),
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
-        'match_count': 10,
-        'weights': json.dumps(SEARCH_WEIGHTS)
+        'match_count': 1,
+        'weights': json.dumps({
+            'recency': RECENCY_WEIGHTS,
+            'traffic': TRAFFIC_WEIGHTS, 
+            'current': CURRENT_WEIGHTS,
+            'typicality': TIPICALITY_WEIGHTS,
+            'similarity': SIMILARITY_WEIGHTS
+        })
     }
 
     cursor.execute("""
