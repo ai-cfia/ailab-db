@@ -8,7 +8,7 @@ import dotenv
 import louis.models.openai as openai
 import louis.db as db
 from microbench import MicroBench
-    
+import pandas as pd
 
 
 # This is used to load the .env file
@@ -49,7 +49,7 @@ def search(cursor, query_embedding):
         FROM search(%(text)s, %(query_embedding)s::vector, %(match_threshold)s,
                    %(match_count)s, %(weights)s::JSONB)
     """, data)
-    
+    print(pd.read_json(basic_bench.outfile.getvalue(), lines=True))
     # turn into list of dict now to preserve dictionaries
     return [dict(r) for r in cursor.fetchall()]
 
