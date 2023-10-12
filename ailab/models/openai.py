@@ -42,7 +42,7 @@ def get_tokens_from_text(text):
     tokens = enc.encode(text)
     return tokens
 
-def get_chat_answer(system_prompt, user_prompt, json_template, page):
+def get_chat_answer(system_prompt, user_prompt, json_template, page, image_information):
     OPENAI_API_ENGINE = safe_get("OPENAI_API_ENGINE")
 
     response = openai.ChatCompletion.create(
@@ -51,7 +51,7 @@ def get_chat_answer(system_prompt, user_prompt, json_template, page):
         max_tokens=2000,
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt + "You have to return a JSON files that follow this template :\n\n" + json_template + "\n\nhere is the text to parse" + page}
+            {"role": "user", "content": user_prompt + "You have to return a JSON files that follow this template :\n\n" + json_template + "\n\nhere is the text to parse" + page + "\n\nAnd here is the images link and description : " + image_information}
         ]
     )
     return response

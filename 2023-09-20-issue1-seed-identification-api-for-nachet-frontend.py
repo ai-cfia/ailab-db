@@ -5,9 +5,9 @@ import ailab.db as db
 import ailab.db.nachet as nachet
 from ailab.models import openai
 
-root_path = os.getcwd()
-seed_data_path = root_path + "/seed-data"
-prompt_path = root_path + "/nachet-data/prompt"
+current_working_directory = os.getcwd()
+seed_data_path = current_working_directory + "/seed-data"
+prompt_path = current_working_directory + "/nachet-data/prompt"
 wanted_files_number = 1
 url_to_seed_mapping = {}
 
@@ -15,7 +15,7 @@ database = db.connect_db()
 cursor = db.cursor(database)
 
 ### Get a list of all seeds URL
-query = """
+query = f"""
     SELECT DISTINCT
         (regexp_matches(filtered_content,
         'href="([^"]*seeds-identification[^"]*)"', 'g'))[1] AS seeds_url
@@ -23,7 +23,8 @@ query = """
         SELECT content AS filtered_content
         FROM html_content
         WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
-    ) AS filtered_data;
+    ) AS filtered_data
+    LIMIT {wanted_files_number};
 """
 cursor.execute(query)
 list_seed_url = cursor.fetchall()
@@ -75,25 +76,54 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
         else:
             query = """
             SELECT
-                REGEXP_REPLACE(hc.content, '<[^>]+>', '', 'g') AS cleaned_content
+                hc.md5hash,
+                REGEXP_REPLACE(hc.content, '<[^>]+>', '', 'g')
+            AS
+                cleaned_content
             FROM
                 html_content hc
             INNER JOIN
                 crawl c ON hc.md5hash = c.md5hash
             WHERE
-                c.url = '""" + url + """';
+                 c.url = '""" + url + """';
             """
             cursor.execute(query)
             web_pages_fr_en = cursor.fetchall()
-            
+
             all_language_seed_page = ""
             for row in web_pages_fr_en:
                 web_text = row.get('cleaned_content')
                 all_language_seed_page += web_text
             page = all_language_seed_page
+            md5hash = row.get('md5hash') 
+
+            ### Get the images corresponding to the current page
+            query = """
+            SELECT DISTINCT
+                image_links[1] AS photo_link,
+                image_descriptions[1] AS photo_description
+            FROM (
+                SELECT
+                    (regexp_matches(content, 'src="([^"]+)"', 'g')) AS image_links,
+                    (regexp_matches(content, '<figcaption>(.*?)</figcaption>', 'gs')) AS image_descriptions
+                FROM html_content
+                WHERE md5hash = '""" + md5hash + """'
+            )
+            AS extracted_data;
+            """
+            cursor.execute(query)
+            images_fetch = cursor.fetchall()
+
+            image_information = ""
+            
+            for row in images_fetch:
+                image_links = row['photo_link']
+                image_descriptions = row['photo_description']
+                image_information += f"Image link: {image_links}\nImage description: {image_descriptions}\n\n"
+            print(image_information)
 
             print("Sending request for summary to Azure OpenAI endpoint...\n")
-            response = openai.get_chat_answer(system_prompt, user_prompt, json_template, page)
+            response = openai.get_chat_answer(system_prompt, user_prompt, json_template, page, image_information)
 
             # print("Chat answer: \n" + response.choices[0].message.content + "\n")
             data = json.loads(response.choices[0].message.content)
@@ -102,12 +132,12 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
                 file_name = seed_name
                 file_name = nachet.decode_french_text(file_name)
                 file_name += ".json"
-
-                file_path = os.path.join(seed_data_path, file_name)
-                with open(file_path, "w") as json_file:
-                    json.dump(data, json_file, ensure_ascii=False)
-                    
-                print(f"JSON data written to {file_path}")
+# 
+            file_path = os.path.join(seed_data_path, file_name)
+            with open(file_path, "w") as json_file:
+                json.dump(data, json_file, ensure_ascii=False)
+                 
+            print(f"JSON data written to {file_path}")
 
 if __name__ == '__main__':
     system_prompt = nachet.load_prompt("system_prompt.txt", prompt_path)
