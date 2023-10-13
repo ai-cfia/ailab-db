@@ -14,16 +14,13 @@ import pandas as pd
 # This is used to load the .env file
 dotenv.load_dotenv()
 basic_bench = MicroBench()
-RECENCY_WEIGHTS = os.environ.get("RECENCY_WEIGHTS") or \
-    db.raise_error("RECENCY_WEIGHTS is not set")
-TRAFFIC_WEIGHTS = os.environ.get("TRAFFIC_WEIGHTS") or \
-    db.raise_error("TRAFFIC_WEIGHTS is not set")
-CURRENT_WEIGHTS = os.environ.get("CURRENT_WEIGHTS") or \
-    db.raise_error("CURRENT_WEIGHTS is not set")
-TIPICALITY_WEIGHTS = os.environ.get("TIPICALITY_WEIGHTS") or \
-    db.raise_error("TIPICALITY_WEIGHTS is not set")
-SIMILARITY_WEIGHTS = os.environ.get("SIMILARITY_WEIGHTS") or \
-    db.raise_error("SIMILARITY_WEIGHTS is not set")
+WEIGHTS = os.environ.get("WEIGHTS")
+if WEIGHTS:
+    with open(WEIGHTS, 'r') as json_file:
+        json_data = json_file.read()
+    parsed_json = json.loads(json_data)
+else:
+    db.raise_error("WEIGHTS is not set")
 
 # Execute the SQL search function 
 @basic_bench
@@ -34,13 +31,7 @@ def search(cursor, query_embedding):
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
         'match_count': 1,
-        'weights': json.dumps({
-            'recency': RECENCY_WEIGHTS,
-            'traffic': TRAFFIC_WEIGHTS, 
-            'current': CURRENT_WEIGHTS,
-            'typicality': TIPICALITY_WEIGHTS,
-            'similarity': SIMILARITY_WEIGHTS
-        })
+        'weights': json.dumps(parsed_json)
     }
 
     cursor.execute("""
@@ -49,7 +40,6 @@ def search(cursor, query_embedding):
         FROM search(%(text)s, %(query_embedding)s::vector, %(match_threshold)s,
                    %(match_count)s, %(weights)s::JSONB)
     """, data)
-    print(pd.read_json(basic_bench.outfile.getvalue(), lines=True))
     # turn into list of dict now to preserve dictionaries
     return [dict(r) for r in cursor.fetchall()]
 
@@ -84,3 +74,4 @@ if __name__ == '__main__':
     with db.cursor(connection) as cursor:
         results = search_from_text_query(cursor, ' '.join(sys.argv[1:]))
         print(results)
+    print(pd.read_json(basic_bench.outfile.getvalue(), lines=True))
