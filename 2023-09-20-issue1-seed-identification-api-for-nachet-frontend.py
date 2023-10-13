@@ -8,7 +8,7 @@ from ailab.models import openai
 current_working_directory = os.getcwd()
 seed_data_path = current_working_directory + "/seed-data"
 prompt_path = current_working_directory + "/nachet-data/prompt"
-wanted_files_number = 10
+wanted_files_number = 6
 url_to_seed_mapping = {}
 
 database = db.connect_db()
@@ -31,17 +31,17 @@ list_seed_url = cursor.fetchall()
 
 ### Get a name from the seed URL
 for rows in list_seed_url:
-    seed_full_url = "https://inspection.canada.ca" + rows['seeds_url']
-    
+    seed_full_url = "https://inspection.canada.ca" + rows["seeds_url"]
+
     query = (
-    f"SELECT regexp_replace("
-    f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS seed_name;"
+        f"SELECT regexp_replace("
+        f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS seed_name;"
     )
     cursor.execute(query)
     seed_name_query = cursor.fetchall()
-    
+
     if seed_name_query:
-        seed_name = seed_name_query[0]['seed_name']
+        seed_name = seed_name_query[0]["seed_name"]
         url_to_seed_mapping[seed_full_url] = seed_name
 
 # Dictionary where the keys are URLs and the values are seed names
@@ -49,7 +49,8 @@ print("\nList of selected seeds :")
 for url, seed_name in url_to_seed_mapping.items():
     print(f"{seed_name}")
 
-def seed_identification_api(system_prompt, user_prompt, json_template):
+
+def transform_seed_data_into_json(system_prompt, user_prompt, json_template):
     """
     Process seed data using Azure OpenAI endpoint and save results as JSON files.
 
@@ -74,7 +75,8 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
         if nachet.json_file_exists(seed_data_path, seed_json_path):
             print(f"JSON file {seed_json_path} exists in {seed_data_path}, skipping")
         else:
-            query = """
+            query = (
+                """
             SELECT
                 hc.md5hash,
                 REGEXP_REPLACE(hc.content, '<[^>]+>', '', 'g')
@@ -85,20 +87,24 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
             INNER JOIN
                 crawl c ON hc.md5hash = c.md5hash
             WHERE
-                 c.url = '""" + url + """';
+                 c.url = '"""
+                + url
+                + """';
             """
+            )
             cursor.execute(query)
             web_pages_fr_en = cursor.fetchall()
 
             all_language_seed_page = ""
             for row in web_pages_fr_en:
-                web_text = row.get('cleaned_content')
+                web_text = row.get("cleaned_content")
                 all_language_seed_page += web_text
             page = all_language_seed_page
-            md5hash = row.get('md5hash') 
+            md5hash = row.get("md5hash")
 
             ### Get the images corresponding to the current page
-            query = """
+            query = (
+                """
             SELECT DISTINCT
                 image_links[1] AS photo_link,
                 image_descriptions[1] AS photo_description
@@ -108,23 +114,28 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
                     (regexp_matches(content, '<figcaption>(.*?)</figcaption>', 'gs'))
                     AS image_descriptions
                 FROM html_content
-                WHERE md5hash = '""" + md5hash + """'
+                WHERE md5hash = '"""
+                + md5hash
+                + """'
             )
             AS extracted_data;
             """
+            )
             cursor.execute(query)
             images_fetch = cursor.fetchall()
 
             image_information = ""
-            
+
             for row in images_fetch:
-                image_links = row['photo_link']
-                image_descriptions = row['photo_description']
+                image_links = row["photo_link"]
+                image_descriptions = row["photo_description"]
                 image_information += f"Image link: {image_links}"
                 image_information += f"\nImage description: {image_descriptions}\n\n"
 
             print("Sending request for summary to Azure OpenAI endpoint...\n")
-            response = openai.get_chat_answer(system_prompt, user_prompt, json_template, page, image_information)  # noqa: E501
+            response = openai.get_chat_answer(
+                system_prompt, user_prompt, json_template, page, image_information
+            )
 
             # print("Chat answer: \n" + response.choices[0].message.content + "\n")
             data = json.loads(response.choices[0].message.content)
@@ -133,19 +144,20 @@ def seed_identification_api(system_prompt, user_prompt, json_template):
                 file_name = seed_name
                 file_name = nachet.decode_french_text(file_name)
                 file_name += ".json"
-# 
+
             file_path = os.path.join(seed_data_path, file_name)
             with open(file_path, "w") as json_file:
-                json.dump(data, json_file, ensure_ascii=False)
-                 
+                json.dump(data, json_file, ensure_ascii=False, indent=4)
+
             print(f"JSON data written to {file_path}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     system_prompt = nachet.load_prompt("system_prompt.txt", prompt_path)
     user_prompt = nachet.load_prompt("user_prompt.txt", prompt_path)
     json_template = nachet.load_json_template(prompt_path)
 
-    seed_identification_api(system_prompt, user_prompt, json_template)
+    transform_seed_data_into_json(system_prompt, user_prompt, json_template)
 
     cursor.close()
     database.close()
