@@ -1,6 +1,7 @@
 # What is louis-db ?
 
-Louis-db is the database of [Louis](https://github.com/ai-cfia/louis). It includes all of the python and bash scripts as well as sql functions. It uses ada-002 API (Application Programming Interface) for semantic search. 
+Louis-db is the database of [Louis](https://github.com/ai-cfia/louis). It includes all of the python and bash scripts as well as sql functions. It uses ada-002 API (Application Programming Interface) for semantic search. Ada is a model that vectorises text to make a semantic representation out of it. It follows this process : 
+> Taking the text, passing it through the model, putting it in an embedding table that will work like an index.
 
 - The *bin* folder : This folder contains all of the bash scripts that would be useful to set up the database.
 
