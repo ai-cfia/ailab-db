@@ -1,4 +1,5 @@
-from louis.models import openai
+#from louis.models import openai
+import louis.models.openai as openai
 import os
 import json
 import sys
@@ -18,7 +19,7 @@ FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS")
 # }'
 
 if FINESSE_WEIGHTS:
-    if FINESSE_WEIGHTS == 'finesse-weights.json':
+    if os.path.exists(FINESSE_WEIGHTS):
         with open(FINESSE_WEIGHTS, 'r') as json_file:
             json_data = json_file.read()
         parsed_json = json.loads(json_data)
@@ -71,9 +72,8 @@ def match_documents_from_text_query(cursor, query):
 
     return docs
 
-
 def search(cursor, query_embedding):
-    """Match documents with a given query."""
+    """Search matching documents with a given query and return a dict."""
     data = {
         'text': ' '.join(sys.argv[1:]),
         'query_embedding': query_embedding,
@@ -83,6 +83,7 @@ def search(cursor, query_embedding):
     }
 
     cursor.execute("""
+                   explain analyze
         SELECT * 
         FROM search(%(text)s, %(query_embedding)s::vector, %(match_threshold)s,
                    %(match_count)s, %(weights)s::JSONB)
