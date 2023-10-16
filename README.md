@@ -5,7 +5,7 @@ Louis-db is the database of [Louis](https://github.com/ai-cfia/louis). It includ
 
 - The *bin* folder : This folder contains all of the bash scripts that would be useful to set up the database.
 
-- The *louis* folder : This folder contains python files that allows connections to the database or the api.
+- The *louis* folder : This folder is a python module structure that allows connections to the database or the api.
 
 - The *postgres* folder : This folder contains the bash script that will set up the docker container.
 
