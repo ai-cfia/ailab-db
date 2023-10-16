@@ -8,6 +8,8 @@ import psycopg
 from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 
+import dotenv
+dotenv.load_dotenv()
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -26,7 +28,7 @@ LOUIS_SCHEMA = os.environ.get("LOUIS_SCHEMA") or raise_error("LOUIS_SCHEMA is no
 
 def connect_db():
     """Connect to the postgresql database and return the connection."""
-    # print(f"Connecting to {LOUIS_SCHEMA}")
+    print(f"Connecting to {LOUIS_DSN}")
     connection = psycopg.connect(
         conninfo=LOUIS_DSN,
         row_factory=dict_row,
