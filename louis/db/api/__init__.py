@@ -7,23 +7,25 @@ import dotenv
 # This is used to load the .env file
 dotenv.load_dotenv()
 
-FINESSE_WEIGHTS_FILE = os.environ.get("FINESSE_WEIGHTS_FILE")
 FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS")
 
-
-
-if FINESSE_WEIGHTS_FILE:
-    with open(FINESSE_WEIGHTS_FILE, 'r') as json_file:
-        json_data = json_file.read()
-    parsed_json = json.loads(json_data)
-else:
-    db.raise_error("FINESSE_WEIGHTS_FILE is not set")
+# should be something like that : '{
+#     "recency": 1,
+#     "traffic": 1,
+#     "current": 0.5,
+#     "typicality": 0.2,
+#     "similarity": 1
+# }'
 
 if FINESSE_WEIGHTS:
-    test=json.loads(FINESSE_WEIGHTS)
+    if FINESSE_WEIGHTS == 'finesse-weights.json':
+        with open(FINESSE_WEIGHTS, 'r') as json_file:
+            json_data = json_file.read()
+        parsed_json = json.loads(json_data)
+    else:
+        parsed_json=json.loads(FINESSE_WEIGHTS)
 else:
     db.raise_error("FINESSE_WEIGHTS is not set")
-
 
 def match_documents(cursor, query_embedding):
     """Match documents with a given query."""
@@ -77,7 +79,7 @@ def search(cursor, query_embedding):
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
         'match_count': 1,
-        'weights': json.dumps(test)
+        'weights': json.dumps(parsed_json)
     }
 
     cursor.execute("""
