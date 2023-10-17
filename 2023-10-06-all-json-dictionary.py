@@ -23,7 +23,7 @@ for filename in os.listdir(directory):
         # Add the parsed JSON data to the combined dictionary
         combined_data[scientific_name] = json_data
 
-# Write the combined dictionary to a new file named "all.json" without escaping Unicode characters
+# Write the combined dictionary to a new file named "all.json"
 with open(os.path.join(directory, "all.json"), "w", encoding="utf-8") as output_file:
     json.dump(combined_data, output_file, indent=4, ensure_ascii=False)
 
