@@ -83,7 +83,6 @@ def search(cursor, query_embedding):
     }
 
     cursor.execute("""
-                   explain analyze
         SELECT * 
         FROM search(%(text)s, %(query_embedding)s::vector, %(match_threshold)s,
                    %(match_count)s, %(weights)s::JSONB)
@@ -103,7 +102,6 @@ def search_from_text_query(cursor, query):
         WHERE tokens = %(tokens)s::integer[]
     """, data)
     db_data = results.fetchone()
-    
     if not db_data:
         data['embedding'] = openai.fetch_embedding(data['tokens'])
         results = cursor.execute("""
@@ -114,5 +112,4 @@ def search_from_text_query(cursor, query):
     else:
         data.update(db_data)
     docs = search(cursor, data['embedding'])
-
     return docs

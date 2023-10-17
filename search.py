@@ -13,7 +13,7 @@ basic_bench = MicroBench()
 # Execute the SQL search function 
 @basic_bench
 def search(cursor, query):
-    api.search_from_text_query(cursor, query)
+    return api.search_from_text_query(cursor, query)
 
 if __name__ == '__main__':
     connection = db.connect_db()
