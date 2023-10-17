@@ -14,10 +14,11 @@ Louis-db is the database of [Louis](https://github.com/ai-cfia/louis). It includ
 - The *tests* folder : This is the test folder, it allows you to test the code.
 
 Here is the database schema :
-![database schema](database-schema.png)
+![database schema](img/database-schema.png)
 
-If you need to set up the database locally, please follow [this procedure](https://dev.azure.com/CFIA-DevOps-ACIA/AI-Lab/_wiki/wikis/AI-Lab.wiki/1039/Procedure-to-set-up-the-database-locally).
+If you need to set up the database locally, please follow [this procedure](setup-procedure.md).
 
+---
 
 # Workflow
 
