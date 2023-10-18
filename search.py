@@ -19,5 +19,5 @@ if __name__ == '__main__':
     connection = db.connect_db()
     with db.cursor(connection) as cursor:
         results = search(cursor, ' '.join(sys.argv[1:]))
-        print(results)
+    print(results)
     print(pd.read_json(basic_bench.outfile.getvalue(), lines=True))
