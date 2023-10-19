@@ -133,9 +133,18 @@ def transform_seed_data_into_json(
                 image_information += f"\nImage description: {image_descriptions}\n\n"
 
             print("Sending request for summary to Azure OpenAI endpoint...\n")
-            response = openai.get_chat_answer(
-                system_prompt, user_prompt, json_template, page, image_information
+
+            user_prompt = (
+                user_prompt
+                + "Return a JSON file that follows this template:\n\n"
+                + json_template
+                + "\n\nhere is the text to parse"
+                + page
+                + "\n\nAnd here is the images descriptions: "
+                + image_information
             )
+
+            response = openai.get_chat_answer(system_prompt, user_prompt, 2000)
 
             # print("Chat answer: \n" + response.choices[0].message.content + "\n")
             data = json.loads(response.choices[0].message.content)
