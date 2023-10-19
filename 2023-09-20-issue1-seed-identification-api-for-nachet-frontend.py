@@ -37,13 +37,13 @@ def get_seed_name_url(cursor, list_seed_url):
 
         query = (
             f"SELECT regexp_replace("
-            f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS seed_name;"
+            f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS sd_nme;"
         )
         cursor.execute(query)
         seed_name_query = cursor.fetchall()
 
         if seed_name_query:
-            seed_name = seed_name_query[0]["seed_name"]
+            seed_name = seed_name_query[0]["sd_nme"]
             url_to_seed_mapping[seed_full_url] = seed_name
     return url_to_seed_mapping
 
