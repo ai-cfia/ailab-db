@@ -138,9 +138,9 @@ def transform_seed_data_into_json(
                 load_user_prompt
                 + "Return a JSON file that follows this template:\n\n"
                 + json_template
-                + "\n\nhere is the text to parse"
+                + "\n\nhere is the text to parse:\n"
                 + page
-                + "\n\nAnd here is the images descriptions: "
+                + "\n\nAnd here is the images descriptions:\n"
                 + image_information
             )
 
