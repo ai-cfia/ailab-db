@@ -8,49 +8,49 @@ from ailab.models import openai
 current_working_directory = os.getcwd()
 seed_data_path = current_working_directory + "/seed-data"
 prompt_path = current_working_directory + "/nachet-data/prompt"
-wanted_files_number = 6
+wanted_files_number = 5
 url_to_seed_mapping = {}
 
-database = db.connect_db()
-cursor = db.cursor(database)
 
-### Get a list of all seeds URL
-query = f"""
-    SELECT DISTINCT
-        (regexp_matches(filtered_content,
-        'href="([^"]*seeds-identification[^"]*)"', 'g'))[1] AS seeds_url
-    FROM (
-        SELECT content AS filtered_content
-        FROM html_content
-        WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
-    ) AS filtered_data
-    LIMIT {wanted_files_number};
-"""
-cursor.execute(query)
-list_seed_url = cursor.fetchall()
-
-### Get a name from the seed URL
-for rows in list_seed_url:
-    seed_full_url = "https://inspection.canada.ca" + rows["seeds_url"]
-
-    query = (
-        f"SELECT regexp_replace("
-        f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS seed_name;"
-    )
+def get_seed_list_url(cursor):
+    ### Get a list of all seeds URL
+    query = f"""
+        SELECT DISTINCT
+            (regexp_matches(filtered_content,
+            'href="([^"]*seeds-identification[^"]*)"', 'g'))[1] AS seeds_url
+        FROM (
+            SELECT content AS filtered_content
+            FROM html_content
+            WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
+        ) AS filtered_data
+        LIMIT {wanted_files_number};
+    """
     cursor.execute(query)
-    seed_name_query = cursor.fetchall()
-
-    if seed_name_query:
-        seed_name = seed_name_query[0]["seed_name"]
-        url_to_seed_mapping[seed_full_url] = seed_name
-
-# Dictionary where the keys are URLs and the values are seed names
-print("\nList of selected seeds :")
-for url, seed_name in url_to_seed_mapping.items():
-    print(f"{seed_name}")
+    list_seed_url = cursor.fetchall()
+    return list_seed_url
 
 
-def transform_seed_data_into_json(system_prompt, user_prompt, json_template):
+def get_seed_name_url(cursor, list_seed_url):
+    ### Get a name from the seed URL
+    for rows in list_seed_url:
+        seed_full_url = "https://inspection.canada.ca" + rows["seeds_url"]
+
+        query = (
+            f"SELECT regexp_replace("
+            f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS seed_name;"
+        )
+        cursor.execute(query)
+        seed_name_query = cursor.fetchall()
+
+        if seed_name_query:
+            seed_name = seed_name_query[0]["seed_name"]
+            url_to_seed_mapping[seed_full_url] = seed_name
+    return url_to_seed_mapping
+
+
+def transform_seed_data_into_json(
+    cursor, url_to_seed_mapping, system_prompt, user_prompt, json_template
+):
     """
     Process seed data using Azure OpenAI endpoint and save results as JSON files.
 
@@ -157,7 +157,17 @@ if __name__ == "__main__":
     user_prompt = nachet.load_prompt("user_prompt.txt", prompt_path)
     json_template = nachet.load_json_template(prompt_path)
 
-    transform_seed_data_into_json(system_prompt, user_prompt, json_template)
+    nachet_db = db.connect_db()
+    with nachet_db.cursor() as cursor:
+        list_seed_url = get_seed_list_url(cursor)
+        print(list_seed_url)
+        url_to_seed_mapping = get_seed_name_url(cursor, list_seed_url)
+        print(url_to_seed_mapping)
 
-    cursor.close()
-    database.close()
+        print("\nList of selected seeds :")
+        for url, seed_name in url_to_seed_mapping.items():
+            print(f"{seed_name}")
+
+        transform_seed_data_into_json(
+            cursor, url_to_seed_mapping, system_prompt, user_prompt, json_template
+        )
