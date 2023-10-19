@@ -49,7 +49,7 @@ def get_seed_name_url(cursor, list_seed_url):
 
 
 def transform_seed_data_into_json(
-    cursor, url_to_seed_mapping, system_prompt, user_prompt, json_template
+    cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template
 ):
     """
     Process seed data using Azure OpenAI endpoint and save results as JSON files.
@@ -135,7 +135,7 @@ def transform_seed_data_into_json(
             print("Sending request for summary to Azure OpenAI endpoint...\n")
 
             user_prompt = (
-                user_prompt
+                load_user_prompt
                 + "Return a JSON file that follows this template:\n\n"
                 + json_template
                 + "\n\nhere is the text to parse"
@@ -163,7 +163,7 @@ def transform_seed_data_into_json(
 
 if __name__ == "__main__":
     system_prompt = nachet.load_prompt("system_prompt.txt", prompt_path)
-    user_prompt = nachet.load_prompt("user_prompt.txt", prompt_path)
+    load_user_prompt = nachet.load_prompt("user_prompt.txt", prompt_path)
     json_template = nachet.load_json_template(prompt_path)
 
     nachet_db = db.connect_db()
@@ -178,5 +178,5 @@ if __name__ == "__main__":
             print(f"{seed_name}")
 
         transform_seed_data_into_json(
-            cursor, url_to_seed_mapping, system_prompt, user_prompt, json_template
+            cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template
         )
