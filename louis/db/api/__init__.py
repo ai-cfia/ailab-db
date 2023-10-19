@@ -90,8 +90,8 @@ def search(cursor, query_embedding):
     # turn into list of dict now to preserve dictionaries
     return [dict(r) for r in cursor.fetchall()]
 
-# Encode the query before doing the search
 def search_from_text_query(cursor, query):
+    """Encode the query before doing the search and return a dict."""
     data = {
         'query': query,
         'tokens': openai.get_tokens_from_text(query)
