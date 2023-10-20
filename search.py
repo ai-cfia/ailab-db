@@ -12,9 +12,11 @@ import pandas as pd
 class Bench(MicroBench, MBFunctionCall, MBReturnValue):
     pass
 output_file = "benchmark_results.json"
-commit_version = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip().decode('utf-8')
+commit_version = subprocess.check_output(["git", "rev-parse", "HEAD"])\
+    .strip().decode('utf-8')
 
-basic_bench = Bench(outfile=output_file, commit_version=commit_version)
+basic_bench = Bench(outfile=output_file, commit_version=commit_version, \
+                    function_version="0.0.1")
 
 @basic_bench 
 def search(cursor, query):
