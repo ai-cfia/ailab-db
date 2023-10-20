@@ -11,7 +11,7 @@ import pandas as pd
 
 class Bench(MicroBench, MBFunctionCall, MBReturnValue):
     pass
-output_file = "benchmark_results.json"
+output_file = "benchmarking/search_results.json"
 commit_version = subprocess.check_output(["git", "rev-parse", "HEAD"])\
     .strip().decode('utf-8')
 
