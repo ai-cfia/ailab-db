@@ -1,1 +1,1 @@
-Fill in this template with precise information about a plant or organism using the provided text. And then translate it in the wanted language in the JSON (In our case, French as fr).
+Fill in this template with precise information about a plant or organism using the provided text. And then translate it in the desired language (In our case, French as fr).

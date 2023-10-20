@@ -5,14 +5,11 @@ import ailab.db as db
 import ailab.db.nachet as nachet
 from ailab.models import openai
 
-current_working_directory = os.getcwd()
-seed_data_path = current_working_directory + "/seed-data"
-prompt_path = current_working_directory + "/nachet-data/prompt"
-wanted_files_number = 5
-url_to_seed_mapping = {}
+CURRENT_WORKING_DIRECTORY = os.getcwd()
+SEED_DATA_PATH = CURRENT_WORKING_DIRECTORY + "/seed-data"
+PROMPT_PATH = CURRENT_WORKING_DIRECTORY + "/nachet-data/prompt"
 
-
-def get_seed_list_url(cursor):
+def get_seed_list_url(cursor, wanted_files_number):
     ### Get a list of all seeds URL
     query = f"""
         SELECT DISTINCT
@@ -30,8 +27,10 @@ def get_seed_list_url(cursor):
     return list_seed_url
 
 
-def get_seed_name_url(cursor, list_seed_url):
+def create_seed_url_mapping(cursor, list_seed_url):
     ### Get a name from the seed URL
+    url_to_seed_mapping = {}
+
     for rows in list_seed_url:
         seed_full_url = "https://inspection.canada.ca" + rows["seeds_url"]
 
@@ -72,8 +71,10 @@ def transform_seed_data_into_json(
         print("\nCurrent seed : " + seed_name)
         seed_json_path = seed_name + ".json"
 
-        if nachet.json_file_exists(seed_data_path, seed_json_path):
-            print(f"JSON file {seed_json_path} exists in {seed_data_path}, skipping")
+        file_path = os.path.join(SEED_DATA_PATH, seed_json_path)
+    
+        if (os.path.exists(file_path)):
+            print(f"JSON file {seed_json_path} exists in {SEED_DATA_PATH}, skipping")
         else:
             query = (
                 """
@@ -146,7 +147,6 @@ def transform_seed_data_into_json(
 
             response = openai.get_chat_answer(system_prompt, user_prompt, 2000)
 
-            # print("Chat answer: \n" + response.choices[0].message.content + "\n")
             data = json.loads(response.choices[0].message.content)
 
             if isinstance(data, dict):
@@ -154,7 +154,7 @@ def transform_seed_data_into_json(
                 file_name = nachet.decode_french_text(file_name)
                 file_name += ".json"
 
-            file_path = os.path.join(seed_data_path, file_name)
+            file_path = os.path.join(SEED_DATA_PATH, file_name)
             with open(file_path, "w") as json_file:
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
 
@@ -162,15 +162,14 @@ def transform_seed_data_into_json(
 
 
 if __name__ == "__main__":
-    system_prompt = nachet.load_prompt("system_prompt.txt", prompt_path)
-    load_user_prompt = nachet.load_prompt("user_prompt.txt", prompt_path)
-    json_template = nachet.load_json_template(prompt_path)
+    system_prompt = nachet.load_prompt("system_prompt.txt", PROMPT_PATH)
+    load_user_prompt = nachet.load_prompt("user_prompt.txt", PROMPT_PATH)
+    json_template = nachet.load_json_template(PROMPT_PATH)
 
     nachet_db = db.connect_db()
     with nachet_db.cursor() as cursor:
-        list_seed_url = get_seed_list_url(cursor)
-        print(list_seed_url)
-        url_to_seed_mapping = get_seed_name_url(cursor, list_seed_url)
+        list_seed_url = get_seed_list_url(cursor, 5)
+        url_to_seed_mapping = create_seed_url_mapping(cursor, list_seed_url)
         print(url_to_seed_mapping)
 
         print("\nList of selected seeds :")
