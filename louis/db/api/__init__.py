@@ -8,7 +8,8 @@ import dotenv
 # This is used to load the .env file
 dotenv.load_dotenv()
 
-FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS")
+FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS") \
+    or db.raise_db_error("FINESSE_WEIGHTS is not set")
 
 # should be something like that : '{
 #     "recency": 1,
@@ -19,11 +20,11 @@ FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS")
 # }'
 
 if FINESSE_WEIGHTS:
-    if os.path.exists(FINESSE_WEIGHTS):
+    try:
         with open(FINESSE_WEIGHTS, 'r') as json_file:
             json_data = json_file.read()
         parsed_json = json.loads(json_data)
-    else:
+    except OSError:
         parsed_json=json.loads(FINESSE_WEIGHTS)
 else:
     db.raise_error("FINESSE_WEIGHTS is not set")
