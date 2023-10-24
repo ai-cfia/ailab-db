@@ -1,13 +1,13 @@
 # Some notes on interacting with postgresql database
 
-## postgresql extensions
+## Postgresql extensions
 
 ```
 pip install pgxnclient
 pgxn install vector
 ```
 
-## workaround for psycopg2 not finding the socket file
+## Workaround for psycopg not finding the socket file
 
 either build from source:
 
@@ -25,7 +25,7 @@ sudo ln -s /tmp/.s.PGSQL.5432 /var/run/postgresql/.s.PGSQL.5432
 see extensions available: https://pgxn.org/
 
 
-## configuration
+## Configuration
 
 postgresql.conf
 
@@ -33,7 +33,7 @@ postgresql.conf
 log_min_duration_statement = 40
 ```
 
-## testing impact of indexes by flushing cache first
+## Testing impact of indexes by flushing cache first
 
 stop database:
 
@@ -71,7 +71,7 @@ create index.
 
 Repeat operations to clear cache.
 
-## database client
+## Database client
 
 Suggested: https://dbeaver.io/download/
 
