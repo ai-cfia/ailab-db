@@ -19,6 +19,3 @@ def load_json_template(json_path):
     content = json.dumps(data, indent=4)  # Use 'indent' for pretty printing
 
     return content
-
-def decode_french_text(text):
-    return text.encode('latin1').decode('unicode-escape')

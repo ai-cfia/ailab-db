@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 
 import ailab.db as db
 import ailab.db.nachet as nachet
@@ -10,14 +11,15 @@ from ailab.db.nachet.seed_queries import query_get_seed_name
 from ailab.db.nachet.seed_queries import query_get_webpage
 from ailab.db.nachet.seed_queries import query_get_images 
 
-website_url = "https://inspection.canada.ca"
+logging.basicConfig(filename='mylog.log', level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+WEBSITE_URL = "https://inspection.canada.ca"
 
 def create_seed_url_mapping(cursor, list_seed_url):
     ### Get a name from the seed URL
     url_to_seed_mapping = {}
 
     for rows in list_seed_url:
-        seed_full_url = website_url + rows["seeds_url"]
+        seed_full_url = WEBSITE_URL + rows["seeds_url"]
         seed_name_query = query_get_seed_name(cursor, seed_full_url)
 
         if seed_name_query:
@@ -26,7 +28,7 @@ def create_seed_url_mapping(cursor, list_seed_url):
     return url_to_seed_mapping
 
 def transform_seed_data_into_json(
-    cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template, SEED_DATA_PATH
+    cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template, seed_data_path
 ):
     """
     Process seed data using Azure OpenAI endpoint and save results as JSON files.
@@ -46,10 +48,11 @@ def transform_seed_data_into_json(
     7. Processes the response, extracting the name and saving it as a JSON file.
     """
     for url, seed_name in url_to_seed_mapping.items():
-        print("\nCurrent seed : " + seed_name)
+        logging.info("Current seed: %s", seed_name)
+
         seed_json_path = seed_name + ".json"
 
-        file_path = os.path.join(SEED_DATA_PATH, seed_json_path)
+        file_path = os.path.join(seed_data_path, seed_json_path)
     
         if (os.path.exists(file_path)):
             print(f"JSON file {seed_json_path} exists in {SEED_DATA_PATH}, skipping")
@@ -92,14 +95,16 @@ def transform_seed_data_into_json(
 
             if isinstance(data, dict):
                 file_name = seed_name
-                file_name = nachet.decode_french_text(file_name)
+                file_name = file_name.encode('latin1').decode('unicode-escape')
                 file_name += ".json"
 
-            file_path = os.path.join(SEED_DATA_PATH, file_name)
-            with open(file_path, "w") as json_file:
-                json.dump(data, json_file, ensure_ascii=False, indent=4)
+                file_path = os.path.join(SEED_DATA_PATH, file_name)
+                with open(file_path, "w") as json_file:
+                    json.dump(data, json_file, ensure_ascii=False, indent=4)
 
-            print(f"JSON data written to {file_path}")
+                print(f"JSON data written to {file_path}")
+            else:
+                print("Error: 'data' is not a dictionary, so it cannot be serialized to JSON.")
 
 
 if __name__ == "__main__":
@@ -113,8 +118,8 @@ if __name__ == "__main__":
 
     nachet_db = db.connect_db()
     with nachet_db.cursor() as cursor:
-        list_seed_url = seed_urls = query_seeds_urls(cursor, 1)
-        url_to_seed_mapping = create_seed_url_mapping(cursor, list_seed_url)
+        seed_urls = query_seeds_urls(cursor, 1)
+        url_to_seed_mapping = create_seed_url_mapping(cursor, seed_urls)
         print(url_to_seed_mapping)
 
         print("\nList of selected seeds :")
