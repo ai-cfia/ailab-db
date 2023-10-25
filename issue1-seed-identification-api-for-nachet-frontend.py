@@ -5,50 +5,28 @@ import ailab.db as db
 import ailab.db.nachet as nachet
 from ailab.models import openai
 
-CURRENT_WORKING_DIRECTORY = os.getcwd()
-SEED_DATA_PATH = CURRENT_WORKING_DIRECTORY + "/seed-data"
-PROMPT_PATH = CURRENT_WORKING_DIRECTORY + "/nachet-data/prompt"
+from ailab.db.nachet.seed_queries import query_seeds_urls
+from ailab.db.nachet.seed_queries import query_get_seed_name
+from ailab.db.nachet.seed_queries import query_get_webpage
+from ailab.db.nachet.seed_queries import query_get_images 
 
-def get_seed_list_url(cursor, wanted_files_number):
-    ### Get a list of all seeds URL
-    query = f"""
-        SELECT DISTINCT
-            (regexp_matches(filtered_content,
-            'href="([^"]*seeds-identification[^"]*)"', 'g'))[1] AS seeds_url
-        FROM (
-            SELECT content AS filtered_content
-            FROM html_content
-            WHERE md5hash = '1a365c39a8afd80d438ddf1bd3c9afed'
-        ) AS filtered_data
-        LIMIT {wanted_files_number};
-    """
-    cursor.execute(query)
-    list_seed_url = cursor.fetchall()
-    return list_seed_url
-
+website_url = "https://inspection.canada.ca"
 
 def create_seed_url_mapping(cursor, list_seed_url):
     ### Get a name from the seed URL
     url_to_seed_mapping = {}
 
     for rows in list_seed_url:
-        seed_full_url = "https://inspection.canada.ca" + rows["seeds_url"]
-
-        query = (
-            f"SELECT regexp_replace("
-            f"'{seed_full_url}', '.*seeds-identification/([^/]+).*', '\\1') AS sd_nme;"
-        )
-        cursor.execute(query)
-        seed_name_query = cursor.fetchall()
+        seed_full_url = website_url + rows["seeds_url"]
+        seed_name_query = query_get_seed_name(cursor, seed_full_url)
 
         if seed_name_query:
             seed_name = seed_name_query[0]["sd_nme"]
             url_to_seed_mapping[seed_full_url] = seed_name
     return url_to_seed_mapping
 
-
 def transform_seed_data_into_json(
-    cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template
+    cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template, SEED_DATA_PATH
 ):
     """
     Process seed data using Azure OpenAI endpoint and save results as JSON files.
@@ -76,54 +54,17 @@ def transform_seed_data_into_json(
         if (os.path.exists(file_path)):
             print(f"JSON file {seed_json_path} exists in {SEED_DATA_PATH}, skipping")
         else:
-            query = (
-                """
-            SELECT
-                hc.md5hash,
-                REGEXP_REPLACE(hc.content, '<[^>]+>', '', 'g')
-            AS
-                cleaned_content
-            FROM
-                html_content hc
-            INNER JOIN
-                crawl c ON hc.md5hash = c.md5hash
-            WHERE
-                 c.url = '"""
-                + url
-                + """';
-            """
-            )
-            cursor.execute(query)
-            web_pages_fr_en = cursor.fetchall()
+            web_pages = query_get_webpage(cursor, url)
 
             all_language_seed_page = ""
-            for row in web_pages_fr_en:
+            for row in web_pages:
                 web_text = row.get("cleaned_content")
                 all_language_seed_page += web_text
             page = all_language_seed_page
             md5hash = row.get("md5hash")
 
             ### Get the images corresponding to the current page
-            query = (
-                """
-            SELECT DISTINCT
-                image_links[1] AS photo_link,
-                image_descriptions[1] AS photo_description
-            FROM (
-                SELECT
-                    (regexp_matches(content, 'src="([^"]+)"', 'g')) AS image_links,
-                    (regexp_matches(content, '<figcaption>(.*?)</figcaption>', 'gs'))
-                    AS image_descriptions
-                FROM html_content
-                WHERE md5hash = '"""
-                + md5hash
-                + """'
-            )
-            AS extracted_data;
-            """
-            )
-            cursor.execute(query)
-            images_fetch = cursor.fetchall()
+            images_fetch = query_get_images(cursor, md5hash)
 
             image_information = ""
 
@@ -162,13 +103,17 @@ def transform_seed_data_into_json(
 
 
 if __name__ == "__main__":
+    CURRENT_WORKING_DIRECTORY = os.getcwd()
+    SEED_DATA_PATH = CURRENT_WORKING_DIRECTORY + "/seed-data"
+    PROMPT_PATH = CURRENT_WORKING_DIRECTORY + "/nachet-data/prompt"
+
     system_prompt = nachet.load_prompt("system_prompt.txt", PROMPT_PATH)
     load_user_prompt = nachet.load_prompt("user_prompt.txt", PROMPT_PATH)
     json_template = nachet.load_json_template(PROMPT_PATH)
 
     nachet_db = db.connect_db()
     with nachet_db.cursor() as cursor:
-        list_seed_url = get_seed_list_url(cursor, 5)
+        list_seed_url = seed_urls = query_seeds_urls(cursor, 1)
         url_to_seed_mapping = create_seed_url_mapping(cursor, list_seed_url)
         print(url_to_seed_mapping)
 
@@ -177,5 +122,5 @@ if __name__ == "__main__":
             print(f"{seed_name}")
 
         transform_seed_data_into_json(
-            cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template
+            cursor, url_to_seed_mapping, system_prompt, load_user_prompt, json_template, SEED_DATA_PATH
         )
