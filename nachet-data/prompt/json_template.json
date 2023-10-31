@@ -36,8 +36,25 @@
             "fr": ""
         }
     },
+    "similar_species": {
+        "en": [
+            {
+                "name": "",
+                "scientific_name": "",
+                "description": ""
+            }
+        ],
+        "fr": [
+            {
+                "name": "",
+                "scientific_name": "",
+                "description": ""
+            }
+        ]
+    },
     "images": {
         "photos": [],
         "similar_species": []
-    }
+    },
+    "source": ""
 }

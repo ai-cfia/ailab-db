@@ -98,6 +98,8 @@ def transform_seed_data_into_json(
                 + json_template
                 + "\n\nhere is the text to parse:\n"
                 + page
+                + "\n\nhere is the source url of the page:\n"
+                + url
                 + "\n\nAnd here is the images descriptions:\n"
                 + image_information
             )
@@ -133,7 +135,7 @@ if __name__ == "__main__":
 
     nachet_db = db.connect_db()
     with nachet_db.cursor() as cursor:
-        seed_urls = query_seeds_urls(cursor, 10)
+        seed_urls = query_seeds_urls(cursor, 3)
         url_to_seed_mapping = create_seed_url_mapping(cursor, seed_urls)
         logging.info("%s", url_to_seed_mapping)
 
