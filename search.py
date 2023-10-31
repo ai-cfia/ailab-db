@@ -1,6 +1,7 @@
 # Name of this file: search.py
 # Location: at the root of the project
 # How to execute: python3 -m search.py query
+
 import subprocess
 import sys
 import louis.db.api as api
@@ -12,11 +13,10 @@ class Bench(MicroBench, MBFunctionCall, MBReturnValue):
     pass
 
 output_file = "benchmarking/search_results.json"
-commit_version = subprocess.check_output(["git", "rev-parse", "HEAD"])\
-    .strip().decode('utf-8')
-
-basic_bench = Bench(outfile=output_file, commit_version=commit_version,\
-                     function_version="0.0.1")
+commit_version = subprocess.check_output(["git", 
+                                          "rev-parse", "HEAD"]).strip().decode('utf-8')
+basic_bench = Bench(outfile=output_file, commit_version=commit_version,
+                    function_version="0.0.1")
 
 
 def search(cursor, query):
