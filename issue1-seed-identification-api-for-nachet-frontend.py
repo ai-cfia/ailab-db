@@ -66,7 +66,9 @@ def transform_seed_data_into_json(
         file_path = os.path.join(seed_data_path, seed_json_path)
 
         if os.path.exists(file_path):
-            print(f"JSON file {seed_json_path} exists in {seed_data_path}, skipping")
+            logging.info(
+                "JSON file %s exists in %s, skipping", seed_json_path, seed_data_path
+            )
         else:
             web_pages = query_get_webpage(cursor, url)
 
@@ -88,7 +90,7 @@ def transform_seed_data_into_json(
                 image_information += f"Image link: {image_links}"
                 image_information += f"\nImage description: {image_descriptions}\n\n"
 
-            print("Sending request for summary to Azure OpenAI endpoint...\n")
+            logging.info("Sending request for summary to Azure OpenAI endpoint...\n")
 
             user_prompt = (
                 load_user_prompt
@@ -109,13 +111,15 @@ def transform_seed_data_into_json(
                 file_name = file_name.encode("latin1").decode("unicode-escape")
                 file_name += ".json"
 
-                file_path = os.path.join(SEED_DATA_PATH, file_name)
+                file_path = os.path.join(seed_data_path, file_name)
                 with open(file_path, "w") as json_file:
                     json.dump(data, json_file, ensure_ascii=False, indent=4)
 
-                print(f"JSON data written to {file_path}")
+                logging.info("JSON data written to %s", file_path)
             else:
-                print("Error: not a dictionary, so it cannot be serialized to JSON.")
+                logging.error(
+                    "Error: not a dictionary, so it cannot be serialized to JSON."
+                )
 
 
 if __name__ == "__main__":
@@ -129,13 +133,13 @@ if __name__ == "__main__":
 
     nachet_db = db.connect_db()
     with nachet_db.cursor() as cursor:
-        seed_urls = query_seeds_urls(cursor, 3)
+        seed_urls = query_seeds_urls(cursor, 10)
         url_to_seed_mapping = create_seed_url_mapping(cursor, seed_urls)
-        print(url_to_seed_mapping)
+        logging.info("%s", url_to_seed_mapping)
 
-        print("\nList of selected seeds :")
+        logging.info("\nList of selected seeds :")
         for url, seed_name in url_to_seed_mapping.items():
-            print(f"{seed_name}")
+            logging.info("%s", seed_name)
 
         transform_seed_data_into_json(
             cursor,
