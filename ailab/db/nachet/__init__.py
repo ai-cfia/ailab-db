@@ -2,7 +2,7 @@ import os
 import json
 
 
-def load_prompt(filename, prompt_path):
+def load_prompt(prompt_path, filename):
     full_path = os.path.join(prompt_path, filename)
 
     with open(full_path, "r") as file:

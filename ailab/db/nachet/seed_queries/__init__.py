@@ -1,4 +1,4 @@
-def query_seeds_urls(cursor, wanted_files_number):
+def seeds_urls(cursor, wanted_files_number):
     query = """
         SELECT DISTINCT
             (regexp_matches(filtered_content,
@@ -13,7 +13,7 @@ def query_seeds_urls(cursor, wanted_files_number):
     cursor.execute(query, (wanted_files_number,))
     return cursor.fetchall()
 
-def query_get_seed_name(cursor, seed_full_url):
+def get_seed_name(cursor, seed_full_url):
     query = (
         "SELECT regexp_replace("
         "%s, '.*seeds-identification/([^/]+).*', '\\1') AS sd_nme;"
@@ -21,7 +21,7 @@ def query_get_seed_name(cursor, seed_full_url):
     cursor.execute(query, (seed_full_url,))
     return cursor.fetchall()
 
-def query_get_webpage(cursor, url):
+def get_webpage(cursor, url):
     query = """
         SELECT
             hc.md5hash,
@@ -37,7 +37,7 @@ def query_get_webpage(cursor, url):
     web_pages = cursor.fetchall()
     return web_pages
 
-def query_get_images(cursor, md5hash):
+def get_images(cursor, md5hash):
     query = """
     SELECT DISTINCT
         image_links[1] AS photo_link,

@@ -1,15 +1,16 @@
 import os
 import json
 import logging
+import sys
 
 import ailab.db as db
 import ailab.db.nachet as nachet
 from ailab.models import openai
 
-from ailab.db.nachet.seed_queries import query_seeds_urls
-from ailab.db.nachet.seed_queries import query_get_seed_name
-from ailab.db.nachet.seed_queries import query_get_webpage
-from ailab.db.nachet.seed_queries import query_get_images
+from ailab.db.nachet.seed_queries import seeds_urls
+from ailab.db.nachet.seed_queries import get_seed_name
+from ailab.db.nachet.seed_queries import get_webpage
+from ailab.db.nachet.seed_queries import get_images
 
 logging.basicConfig(
     filename="mylog.log",
@@ -25,7 +26,7 @@ def create_seed_url_mapping(cursor, list_seed_url):
 
     for rows in list_seed_url:
         seed_full_url = WEBSITE_URL + rows["seeds_url"]
-        seed_name_query = query_get_seed_name(cursor, seed_full_url)
+        seed_name_query = get_seed_name(cursor, seed_full_url)
 
         if seed_name_query:
             seed_name = seed_name_query[0]["sd_nme"]
@@ -70,7 +71,7 @@ def transform_seed_data_into_json(
                 "JSON file %s exists in %s, skipping", seed_json_path, seed_data_path
             )
         else:
-            web_pages = query_get_webpage(cursor, url)
+            web_pages = get_webpage(cursor, url)
 
             all_language_seed_page = ""
             for row in web_pages:
@@ -80,7 +81,7 @@ def transform_seed_data_into_json(
             md5hash = row.get("md5hash")
 
             ### Get the images corresponding to the current page
-            images_fetch = query_get_images(cursor, md5hash)
+            images_fetch = get_images(cursor, md5hash)
 
             image_information = ""
 
@@ -125,17 +126,30 @@ def transform_seed_data_into_json(
 
 
 if __name__ == "__main__":
-    CURRENT_WORKING_DIRECTORY = os.getcwd()
-    SEED_DATA_PATH = CURRENT_WORKING_DIRECTORY + "/seed-data"
-    PROMPT_PATH = CURRENT_WORKING_DIRECTORY + "/nachet-data/prompt"
+    if len(sys.argv) < 3:
+        print("Usage: " + sys.argv[0] + " SEED_DATA_PATH PROMPT_PATH")
+        print("SEED_DATA_PATH: Directory for storing seeds")
+        print("PROMPT_PATH: Directory containing the API prompt")
+        sys.exit(1)
 
-    system_prompt = nachet.load_prompt("system_prompt.txt", PROMPT_PATH)
-    load_user_prompt = nachet.load_prompt("user_prompt.txt", PROMPT_PATH)
+    SEED_DATA_PATH = sys.argv[1]
+    PROMPT_PATH = sys.argv[2]
+
+    if not os.path.exists(SEED_DATA_PATH):
+        print(f"The directory '{SEED_DATA_PATH}' does not exist.")
+        sys.exit(1)
+
+    if not os.path.exists(PROMPT_PATH):
+        print(f"The directory '{PROMPT_PATH}' does not exist.")
+        sys.exit(1)
+
+    system_prompt = nachet.load_prompt(PROMPT_PATH, "system_prompt.txt")
+    load_user_prompt = nachet.load_prompt(PROMPT_PATH, "user_prompt.txt")
     json_template = nachet.load_json_template(PROMPT_PATH)
 
     nachet_db = db.connect_db()
     with nachet_db.cursor() as cursor:
-        seed_urls = query_seeds_urls(cursor, 3)
+        seed_urls = seeds_urls(cursor, 10)
         url_to_seed_mapping = create_seed_url_mapping(cursor, seed_urls)
         logging.info("%s", url_to_seed_mapping)
 
