@@ -1,4 +1,3 @@
-#from louis.models import openai
 import louis.models.openai as openai
 import os
 import json
@@ -11,13 +10,6 @@ dotenv.load_dotenv()
 FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS") \
     or db.raise_db_error("FINESSE_WEIGHTS is not set")
 
-# should be something like that : '{
-#     "recency": 1,
-#     "traffic": 1,
-#     "current": 0.5,
-#     "typicality": 0.2,
-#     "similarity": 1
-# }'
 
 if FINESSE_WEIGHTS:
     try:
