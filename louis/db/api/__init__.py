@@ -15,9 +15,9 @@ if FINESSE_WEIGHTS:
     try:
         with open(FINESSE_WEIGHTS, 'r') as json_file:
             json_data = json_file.read()
-        parsed_json = json.loads(json_data)
+        FINESSE_JSON_PARSED_WEIGHTS = json.loads(json_data)
     except OSError:
-        parsed_json=json.loads(FINESSE_WEIGHTS)
+        FINESSE_JSON_PARSED_WEIGHTS=json.loads(FINESSE_WEIGHTS)
 else:
     db.raise_error("FINESSE_WEIGHTS is not set")
 
@@ -72,7 +72,7 @@ def search(cursor, query_embedding):
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
         'match_count': 1,
-        'weights': json.dumps(parsed_json)
+        'weights': json.dumps(FINESSE_JSON_PARSED_WEIGHTS)
     }
 
     cursor.execute("""
