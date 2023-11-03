@@ -3,7 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - 34-ruff-fails-version-installed-with-requirementstxt
+      - main
   pull_request:
   # Absence of the branches property under pull_request means it will apply to all branches
 
