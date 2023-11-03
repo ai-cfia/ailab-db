@@ -3,7 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - main
+      - 34-ruff-fails-version-installed-with-requirementstxt
   pull_request:
   # Absence of the branches property under pull_request means it will apply to all branches
 
@@ -19,7 +19,7 @@ jobs:
     uses: ai-cfia/github-workflows/.github/workflows/workflow-build-container.yml@main
     with:
       container-name: ${{ github.event.repository.name }}
-      tag: ${{ github.sha }}    
+      tag: ${{ github.sha }}
     secrets: inherit
 
   deploy:
@@ -30,4 +30,3 @@ jobs:
       container-name: ${{ github.event.repository.name }}
       tag: ${{ github.sha }}
     secrets: inherit
-  
