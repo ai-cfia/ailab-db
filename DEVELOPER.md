@@ -1,4 +1,10 @@
-# Development guidelines for louis-db
+# louis-db
+
+## layers
+
+* louis.db: any interaction with the postgresql database is done here
+* louis.models: interactions with LLM
+  * openai.py: openai API interactions
 
 ## Making changes to the database schema
 
