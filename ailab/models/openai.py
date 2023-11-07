@@ -26,9 +26,11 @@ enc = tiktoken.get_encoding("cl100k_base")
 
 def fetch_embedding(tokens):
     """Fetch embedding for a list of tokens from the Microsoft Azure OpenAI API"""
+    OPENAI_API_ENGINE = safe_get("OPENAI_API_ENGINE")
+    
     response = openai.Embedding.create(
         input=tokens,
-        engine="ada"
+        engine=OPENAI_API_ENGINE
     )
     embeddings = response['data'][0]['embedding']
     return embeddings
