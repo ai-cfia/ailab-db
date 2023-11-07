@@ -122,4 +122,3 @@ $COMMENT$
     When no embeddings is provided, the search is performed using the weighted measurements only.
 
 $COMMENT$;
-

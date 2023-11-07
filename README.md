@@ -1,3 +1,25 @@
+# What is louis-db ?
+
+Louis-db is the database of [Louis](https://github.com/ai-cfia/louis). It includes all of the python and bash scripts as well as sql functions. It uses ada-002 API (Application Programming Interface) for semantic search. Ada is a model that vectorises text to make a semantic representation out of it. It follows this process : 
+> Taking the text, passing it through the model, putting it in an embedding table that will work like an index.
+
+- The *bin* folder : This folder contains all of the bash scripts that would be useful to set up the database.
+
+- The *louis* folder : This folder is a python module structure that allows connections to the database or the api.
+
+- The *postgres* folder : This folder contains the bash script that will set up the docker container.
+
+- The *sql* folder : This folder holds all of the sql functions and scripts.
+
+- The *tests* folder : This is the test folder, it allows you to test the code.
+
+Here is the database schema :
+![database schema](img/database-schema.png)
+
+If you need to set up the database locally, please follow [this procedure](setup-procedure.md).
+
+---
+
 # Workflow
 
 ## Installing python package
