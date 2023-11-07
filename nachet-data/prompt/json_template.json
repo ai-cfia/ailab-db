@@ -1,0 +1,60 @@
+{
+    "scientific_name": "",
+    "family": {
+        "en": "",
+        "fr": ""
+    },
+    "common_name": {
+        "en": "",
+        "fr": ""
+    },
+    "duration_of_life_cycle": {
+        "en": [],
+        "fr": []
+    },
+    "seed_or_fruit_type": {
+        "en": "",
+        "fr": ""
+    },
+    "identification_features": {
+        "seed_length": [],
+        "seed_width": [],
+        "shape": {
+            "en": "",
+            "fr": ""
+        },
+        "surface_texture": {
+            "en": "",
+            "fr": ""
+        },
+        "colour": {
+            "en": "",
+            "fr": ""
+        },
+        "other_features": {
+            "en": "",
+            "fr": ""
+        }
+    },
+    "similar_species": {
+        "en": [
+            {
+                "name": "",
+                "scientific_name": "",
+                "description": ""
+            }
+        ],
+        "fr": [
+            {
+                "name": "",
+                "scientific_name": "",
+                "description": ""
+            }
+        ]
+    },
+    "images": {
+        "photos": [],
+        "similar_species": []
+    },
+    "source": ""
+}
