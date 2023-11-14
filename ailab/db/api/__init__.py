@@ -1,8 +1,8 @@
-import louis.models.openai as openai
+import ailab.models.openai as openai
 import os
 import json
 import sys
-import louis.db as db
+import ailab.db as db
 import dotenv
 # This is used to load the .env file
 dotenv.load_dotenv()
