@@ -3,7 +3,10 @@ import unittest
 import json
 
 import ailab.db as db
-import tests.testing_utils as test
+import ailab.db.api as api
+
+import testing_utils as test
+
 
 class TestDBAPI(unittest.TestCase):
     """Test the database functions"""

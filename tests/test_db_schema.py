@@ -1,7 +1,7 @@
 """test database functions"""
 import unittest
 
-#import testing_utils as test
+import testing_utils as test
 import ailab.db as db
 
 
