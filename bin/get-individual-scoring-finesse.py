@@ -22,6 +22,6 @@ if __name__ == "__main__":
     with db.cursor(connection) as cursor:
         create_individual_scoring(cursor)
         res = finesse.get_individual_scoring(cursor)
-    with open('tests/output/individual_scoring.csv', 'w', newline='') as file:
+    with open('tests/output/individual_scoring.csv', 'r+', newline='') as file:
         df = pd.DataFrame(res)
-        df.to_csv('mon_fichier.csv', index=False)
+        df.to_csv('tests/output/individual_scoring.csv', index=False)
