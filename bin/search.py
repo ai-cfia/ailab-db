@@ -1,8 +1,8 @@
 import subprocess
 import sys
 import logging
-import louis.db.api as api
-import louis.db as db
+import ailab.db.api as api
+import ailab.db as db
 from microbench import MicroBench, MBReturnValue, MBFunctionCall
 import pandas as pd
 
