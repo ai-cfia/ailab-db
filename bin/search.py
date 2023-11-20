@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import json
 import logging
 import ailab.db.api as api
 import ailab.db as db
@@ -33,6 +34,7 @@ if __name__ == "__main__":
     How to execute: python3 -m search.py query"""
     query = " ".join(sys.argv[1:])  
     logging.debug(f"Query is: {query}")
-    init_bench(query)
-    with open(OUTFILE, "r") as result_file:
-        print(pd.read_json(result_file, lines=True))
+    results = init_bench(query)
+    query_file_name = query.replace (" ", "-") + ".json"
+    with open('tests/output/' + query_file_name, 'w+') as result_file:
+        json.dump(results, result_file)
