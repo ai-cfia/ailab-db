@@ -1,24 +1,21 @@
 import ailab.db as db
 
-"""
-ailab-db.imran -> SELECT of the function.
-SQL -> Function (number of chunk)
-Function -> Create view (materials, random)
-We can refresh the vue by using refresh.
-"""
-
-# 1. Chunk Extraction
-## Random chunk
-## Well scored chunk
-
-
-
-
 projectname_db = db.connect_db()
-# with projectname_db.cursor() as cursor:
-#     ## Get random, well scored chunk
-#     None
 
-# 2. Generated Q&A
-# 3. Retrieve Search
-# 4. Score Search
+# Random chunk query
+random_chunk_query = "SELECT * FROM chunks ORDER BY RAND() LIMIT 1"
+
+# Well-scored chunk query (assuming a score threshold of 8)
+well_scored_chunk_query = "SELECT * FROM chunks WHERE score >= 8 ORDER BY score DESC LIMIT 1"
+
+# Executing random chunk query
+with projectname_db.cursor() as cursor:
+    cursor.execute(random_chunk_query)
+    random_chunk = cursor.fetchone()
+    print("Random Chunk:", random_chunk)
+
+# Executing well-scored chunk query
+with projectname_db.cursor() as cursor:
+    cursor.execute(well_scored_chunk_query)
+    well_scored_chunk = cursor.fetchone()
+    print("Well Scored Chunk:", well_scored_chunk)
