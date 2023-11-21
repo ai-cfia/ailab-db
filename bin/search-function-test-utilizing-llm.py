@@ -5,7 +5,9 @@ import json
 import ailab.db as db
 import ailab.db.finesse as finesse
 from ailab.models import openai
+
 from ailab.db.finesse.test_queries import get_random_chunk
+from ailab.db.finesse.test_queries import chunk_test_quality
 
 def main():
     if len(sys.argv) < 2:
@@ -27,20 +29,41 @@ def main():
 
     print("\nSystem Prompt:", system_prompt)
     print("\nUser Prompt:", user_prompt)
-    print("\n")
 
+    # We need to get good chunk, so this is a test to check quality
+    with project_db.cursor() as cursor:
+        chunk = chunk_test_quality(cursor)
+        print("Random Chunk:", chunk)
+
+    """
     # Fetch a random chunk from the database
     with project_db.cursor() as cursor:
         random_chunk = get_random_chunk(cursor)
-        print("Random Chunk:", random_chunk)
+        # print("Random Chunk:", random_chunk)
 
+    print("\n")
+    for chunk in random_chunk:
+        print("Score:", chunk['score'])
+        print("Crawl ID:", chunk['crawl_id'])
+        print("Chunk ID:", chunk['chunk_id'])
+        print("Title:", chunk['title'])
+        print("Crawl URL:", chunk['crawl_url'])
+        print("\nText Content:")
+        print(chunk['text_content'])
+        print("\nHTML content Content:")
+        # print(chunk['page_content'])
+    """
+
+    """
     # Ensure random_chunk is converted to a string
     if random_chunk is not None:
         random_chunk_str = str(random_chunk)
     else:
         print("Random Chunk is NONE")
         # Handle the absence of random chunk appropriately
+    """
 
+    """
     # Construct the user prompt
     if random_chunk_str:
         user_prompt += (
@@ -59,6 +82,7 @@ def main():
 
         # Parse the JSON string into a Python dictionary
         # generated_data = json.loads(response_content)
+    """
 
 if __name__ == "__main__":
     main()
