@@ -34,5 +34,3 @@ if __name__ == "__main__":
     query_file_name = query.replace (" ", "-") + ".json"
     with open('tests/output/' + query_file_name, 'w+') as result_file:
         json.dump(results, result_file, indent=4)
-    with open('/home/vscode/finesse-data' + query_file_name, 'w+') as result_file:
-        json.dump(results, result_file, indent=4)
