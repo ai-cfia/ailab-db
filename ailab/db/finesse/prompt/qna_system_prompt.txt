@@ -1,0 +1,1 @@
+Generate Q&A pairs from search results, ensuring that the language in the Q&A pairs matches that of the search results. Create a single JSON file with appropriate formatting and indentation.
