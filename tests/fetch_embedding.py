@@ -25,3 +25,4 @@ if __name__ == '__main__':
         print('Please provide a text to embed')
         raise SystemExit
     print(fetch_embedding(text))
+    

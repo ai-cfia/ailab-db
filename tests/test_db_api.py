@@ -72,3 +72,4 @@ class TestDBAPI(unittest.TestCase):
             len(urls.keys()),
             test.MATCH_COUNT,
             "All urls should be unique")
+        

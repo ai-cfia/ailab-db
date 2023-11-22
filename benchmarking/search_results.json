@@ -1,2 +1,70 @@
-{"commit_version": "b2badf1069c3feb0475a4b56da8ddb4d61ff06f0", "function_version": "0.0.1", "args": ["\"how to bring a cat from france to canada\""], "kwargs": {}, "function_name": "init_bench", "start_time": "2023-10-30T20:06:34.197284", "finish_time": "2023-10-30T20:06:34.495414", "return_value": [{"search": [{"id": "e9a64ea3-c7c4-4f0e-bd49-c4e1d9de1a7f", "url": "https://inspection.canada.ca/importing-food-plants-or-animals/pets/eng/1326600389775/1326600500578", "score": 3.017821829567311, "title": "Bringing animals to Canada: Importing and travelling with pets - Canadian Food Inspection Agency", "scores": {"current": 1, "recency": 0.8708793589157114, "traffic": 0.8188254189764937, "similarity": 0.8272663498460967, "typicality": 0.004253509145044662}, "content": "Bringing animals to Canada: Importing and travelling with pets If you are travelling with a pet or planning to import an animal to Canada, you will need the right paperwork at the border to meet Canada's import requirements\n If you don't, you risk experiencing delays at the border and your animal may not be allowed into Canada\n Canada has specific import requirements in place to avoid introducing animal diseases to protect its people, plants and animals", "query_id": "9f5e33a0-6b81-48da-9681-349dd6d3bb9c", "subtitle": "Bringing animals to Canada: Importing and travelling with pets", "last_updated": "2022-10-20", "tokens_count": 84}]}]}
-{"commit_version": "f8c9d7a72944fe0c94fd41bccd2633fc17a11d8c", "function_version": "0.0.1", "args": ["\"how to bring a cat from france to canada\""], "kwargs": {}, "function_name": "init_bench", "start_time": "2023-10-31T14:34:26.463150", "finish_time": "2023-10-31T14:34:32.552876", "return_value": [{"search": [{"id": "e9a64ea3-c7c4-4f0e-bd49-c4e1d9de1a7f", "url": "https://inspection.canada.ca/importing-food-plants-or-animals/pets/eng/1326600389775/1326600500578", "score": 3.017821829567311, "title": "Bringing animals to Canada: Importing and travelling with pets - Canadian Food Inspection Agency", "scores": {"current": 1, "recency": 0.8708793589157114, "traffic": 0.8188254189764937, "similarity": 0.8272663498460967, "typicality": 0.004253509145044662}, "content": "Bringing animals to Canada: Importing and travelling with pets If you are travelling with a pet or planning to import an animal to Canada, you will need the right paperwork at the border to meet Canada's import requirements\n If you don't, you risk experiencing delays at the border and your animal may not be allowed into Canada\n Canada has specific import requirements in place to avoid introducing animal diseases to protect its people, plants and animals", "query_id": "b7b0a221-1239-48e9-98f7-016d75946b38", "subtitle": "Bringing animals to Canada: Importing and travelling with pets", "last_updated": "2022-10-20", "tokens_count": 84}]}]}
+{
+    "commit_version": "b2badf1069c3feb0475a4b56da8ddb4d61ff06f0",
+    "function_version": "0.0.1",
+    "args": [
+        "\"how to bring a cat from france to canada\""
+    ],
+    "kwargs": {},
+    "function_name": "init_bench",
+    "start_time": "2023-10-30T20:06:34.197284",
+    "finish_time": "2023-10-30T20:06:34.495414",
+    "return_value": [
+        {
+            "search": [
+                {
+                    "id": "e9a64ea3-c7c4-4f0e-bd49-c4e1d9de1a7f",
+                    "url": "https://inspection.canada.ca/importing-food-plants-or-animals/pets/eng/1326600389775/1326600500578",
+                    "score": 3.017821829567311,
+                    "title": "Bringing animals to Canada: Importing and travelling with pets - Canadian Food Inspection Agency",
+                    "scores": {
+                        "current": 1,
+                        "recency": 0.8708793589157114,
+                        "traffic": 0.8188254189764937,
+                        "similarity": 0.8272663498460967,
+                        "typicality": 0.004253509145044662
+                    },
+                    "content": "Bringing animals to Canada: Importing and travelling with pets If you are travelling with a pet or planning to import an animal to Canada, you will need the right paperwork at the border to meet Canada's import requirements\n If you don't, you risk experiencing delays at the border and your animal may not be allowed into Canada\n Canada has specific import requirements in place to avoid introducing animal diseases to protect its people, plants and animals",
+                    "query_id": "9f5e33a0-6b81-48da-9681-349dd6d3bb9c",
+                    "subtitle": "Bringing animals to Canada: Importing and travelling with pets",
+                    "last_updated": "2022-10-20",
+                    "tokens_count": 84
+                }
+            ]
+        }
+    ]
+}
+{
+    "commit_version": "f8c9d7a72944fe0c94fd41bccd2633fc17a11d8c",
+    "function_version": "0.0.1",
+    "args": [
+        "\"how to bring a cat from france to canada\""
+    ],
+    "kwargs": {},
+    "function_name": "init_bench",
+    "start_time": "2023-10-31T14:34:26.463150",
+    "finish_time": "2023-10-31T14:34:32.552876",
+    "return_value": [
+        {
+            "search": [
+                {
+                    "id": "e9a64ea3-c7c4-4f0e-bd49-c4e1d9de1a7f",
+                    "url": "https://inspection.canada.ca/importing-food-plants-or-animals/pets/eng/1326600389775/1326600500578",
+                    "score": 3.017821829567311,
+                    "title": "Bringing animals to Canada: Importing and travelling with pets - Canadian Food Inspection Agency",
+                    "scores": {
+                        "current": 1,
+                        "recency": 0.8708793589157114,
+                        "traffic": 0.8188254189764937,
+                        "similarity": 0.8272663498460967,
+                        "typicality": 0.004253509145044662
+                    },
+                    "content": "Bringing animals to Canada: Importing and travelling with pets If you are travelling with a pet or planning to import an animal to Canada, you will need the right paperwork at the border to meet Canada's import requirements\n If you don't, you risk experiencing delays at the border and your animal may not be allowed into Canada\n Canada has specific import requirements in place to avoid introducing animal diseases to protect its people, plants and animals",
+                    "query_id": "b7b0a221-1239-48e9-98f7-016d75946b38",
+                    "subtitle": "Bringing animals to Canada: Importing and travelling with pets",
+                    "last_updated": "2022-10-20",
+                    "tokens_count": 84
+                }
+            ]
+        }
+    ]
+}
