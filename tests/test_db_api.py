@@ -13,6 +13,9 @@ class TestDBAPI(unittest.TestCase):
     def setUp(self):
         self.connection = db.connect_db()
         self.cursor = db.cursor(self.connection)
+        # Refresh materialized view
+        self.cursor.execute("REFRESH MATERIALIZED VIEW default_chunk")
+        self.connection.commit()
 
     def tearDown(self):
         self.connection.rollback()

@@ -31,6 +31,6 @@ if __name__ == "__main__":
     query = " ".join(sys.argv[1:])  
     logging.debug(f"Query is: {query}")
     results = init_bench(query)
-    query_file_name = query.replace (" ", "-") + ".json"
+    query_file_name = query + ".json"
     with open('tests/output/' + query_file_name, 'w+') as result_file:
         json.dump(results, result_file, indent=4)
