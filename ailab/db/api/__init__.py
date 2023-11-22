@@ -8,7 +8,7 @@ import dotenv
 dotenv.load_dotenv()
 
 FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS") \
-    or db.raise_db_error("FINESSE_WEIGHTS is not set")
+    or db.raise_error("FINESSE_WEIGHTS is not set")
 
 
 if FINESSE_WEIGHTS:
