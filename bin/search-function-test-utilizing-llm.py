@@ -7,7 +7,11 @@ import ailab.db.finesse as finesse
 from ailab.models import openai
 
 from ailab.db.finesse.test_queries import get_random_chunk
-from ailab.db.finesse.test_queries import chunk_test_quality
+
+TEST_VERSION = "v001"
+WANTED_GENERATED_QUESTIONS = 10
+CHARACTER_LIMIT = 14383
+
 
 def main():
     if len(sys.argv) < 2:
@@ -27,62 +31,64 @@ def main():
     user_prompt = finesse.load_prompt(prompt_path, "qna_user_prompt.txt")
     json_template = finesse.load_json_template(prompt_path)
 
-    print("\nSystem Prompt:", system_prompt)
-    print("\nUser Prompt:", user_prompt)
+    print("System Prompt:", system_prompt + "\n")
+    print("User Prompt:", user_prompt + "\n")
 
-    # We need to get good chunk, so this is a test to check quality
-    with project_db.cursor() as cursor:
-        chunk = chunk_test_quality(cursor)
-        print("Random Chunk:", chunk)
+    average_tokens_by_chunk = 0
+    for i in range(WANTED_GENERATED_QUESTIONS):
+        random_chunk = ""
 
-    """
-    # Fetch a random chunk from the database
-    with project_db.cursor() as cursor:
-        random_chunk = get_random_chunk(cursor)
-        # print("Random Chunk:", random_chunk)
+        # Fetch a random chunk from the database
+        with project_db.cursor() as cursor:
+            random_chunk = get_random_chunk(cursor)
 
-    print("\n")
-    for chunk in random_chunk:
-        print("Score:", chunk['score'])
-        print("Crawl ID:", chunk['crawl_id'])
-        print("Chunk ID:", chunk['chunk_id'])
-        print("Title:", chunk['title'])
-        print("Crawl URL:", chunk['crawl_url'])
-        print("\nText Content:")
-        print(chunk['text_content'])
-        print("\nHTML content Content:")
-        # print(chunk['page_content'])
-    """
+        random_chunk_str = ""
+        if random_chunk is not None:
+            random_chunk_str = str(random_chunk)
+        else:
+            print("Random Chunk is NONE")
+            # Handle the absence of random chunk appropriately
 
-    """
-    # Ensure random_chunk is converted to a string
-    if random_chunk is not None:
-        random_chunk_str = str(random_chunk)
-    else:
-        print("Random Chunk is NONE")
-        # Handle the absence of random chunk appropriately
-    """
+        if random_chunk_str:
+            constructed_user_prompt = ""
+            constructed_user_prompt += (
+                f"\n\nHere is the JSON containing the search:\n{random_chunk_str}"
+                f"\n\nAnd here is the JSON template:\n{json_template}"
+            )
 
-    """
-    # Construct the user prompt
-    if random_chunk_str:
-        user_prompt += (
-            f"\n\nHere is the JSON containing the search:\n{random_chunk_str}"
-            f"\n\nAnd here is the JSON template:\n{json_template}"
-        )
+            total_length = len(system_prompt) + len(constructed_user_prompt)
+            print("Token limit : " + str(CHARACTER_LIMIT))
+            print("Prompt character : " + str(total_length) + "\n")
+            average_tokens_by_chunk += total_length
+            if total_length < CHARACTER_LIMIT:
+                response = openai.get_chat_answer(
+                    system_prompt, constructed_user_prompt, 2000
+                )
+                print("\nResponse from OpenAI:")
+                print(response.choices[0].message.content)
+                print("\n\n")
 
-        # Proceed with the API call
-        response = openai.get_chat_answer(system_prompt, user_prompt, 2000)
-        print("\nResponse from OpenAI:")
-        print(response.choices[0].message.content)
-        print("\n\n")
+                data = json.loads(response.choices[0].message.content)
+                storage_path = "/home/vscode/finesse-data-2/qna"
+                if isinstance(data, dict):
+                    file_number = 1
+                    while True:
+                        file_name = f"qna_{TEST_VERSION}_{file_number}.json"
+                        file_path = os.path.join(storage_path, file_name)
+                        if not os.path.exists(file_path):
+                            break
+                        file_number += 1
+                    for chunk in random_chunk:
+                        data["text_content"] = chunk["text_content"]
 
-        # Assuming response is the API response received
-        # response_content = response.choices[0].message.content
+                    file_path = os.path.join(storage_path, file_name)
+                    with open(file_path, "w") as json_file:
+                        print("File saved into: " + file_path)
+                        json.dump(data, json_file, ensure_ascii=False, indent=4)
 
-        # Parse the JSON string into a Python dictionary
-        # generated_data = json.loads(response_content)
-    """
+    average_tokens_by_chunk = average_tokens_by_chunk / WANTED_GENERATED_QUESTIONS
+    print("Average Tokens send to the API : " + str(average_tokens_by_chunk))
+
 
 if __name__ == "__main__":
     main()
