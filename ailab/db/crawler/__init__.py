@@ -1,7 +1,7 @@
 import psycopg
 import numpy as np
 
-import louis.db as db
+import ailab.db as db
 
 def link_pages(cursor, source_url, destination_url):
     """Link two pages together in the database."""

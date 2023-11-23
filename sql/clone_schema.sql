@@ -189,5 +189,4 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION clone_schema(text, text, boolean)
-  OWNER TO postgres;
+ALTER FUNCTION clone_schema(text, text, boolean);

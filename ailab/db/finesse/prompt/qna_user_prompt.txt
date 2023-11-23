@@ -1,0 +1,1 @@
+Your task is to process a JSON file containing text relevant to a search query. Produce a new JSON file completing all existing keys in the JSON template. Specifically, generate entries for 'question' and 'answer' where 'question' represents a question derived from the text and 'answer' provides an appropriate answer addressing the generated question.

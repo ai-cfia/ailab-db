@@ -1,8 +1,8 @@
 """test database functions"""
 import unittest
 
-import louis.db as db
-import louis.db.crawler as crawler
+import ailab.db as db
+import ailab.db.crawler as crawler
 
 import testing_utils as test
 

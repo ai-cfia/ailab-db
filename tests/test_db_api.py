@@ -2,8 +2,8 @@
 import unittest
 import json
 
-import louis.db as db
-import louis.db.api as api
+import ailab.db as db
+import ailab.db.api as api
 
 import testing_utils as test
 

@@ -2,7 +2,7 @@
 import unittest
 
 import testing_utils as test
-import louis.db as db
+import ailab.db as db
 
 
 class TestDBUtils(unittest.TestCase):
