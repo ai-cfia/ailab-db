@@ -26,4 +26,3 @@ class TestDBUtils(unittest.TestCase):
         self.assertEqual(parsed['tablename'], "chunk")
         self.assertEqual(parsed['id'], entity_uuid)
         self.assertEqual(parsed['parameters']['encoding'][0], "cl100k_base")
-        

@@ -22,4 +22,3 @@ class TestDBSchema(unittest.TestCase):
         with db.cursor(self.connection) as cursor:
             cursor.execute(schema)
             self.connection.rollback()
-            

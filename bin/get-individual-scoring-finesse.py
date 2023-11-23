@@ -26,4 +26,3 @@ if __name__ == "__main__":
     dataframe = pd.DataFrame(results)
     logger.info("Creating " + file)
     dataframe.to_csv(file, index=False)
-    

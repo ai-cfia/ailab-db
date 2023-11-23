@@ -75,4 +75,3 @@ class TestDBCrawler(unittest.TestCase):
             rows = crawler.fetch_chunk_id_without_embedding(cursor, 'test-model')
             _entity_id = rows[0]
             self.connection.rollback()
-            
