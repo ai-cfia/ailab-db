@@ -33,4 +33,6 @@ if __name__ == "__main__":
     results = init_bench(query)
     query_file_name = query + ".json"
     with open('tests/output/' + query_file_name, 'w+') as result_file:
-        json.dump(results, result_file, indent=4)
+        # Extract the list of results
+        result_list = results[0]['search']
+        json.dump(result_list, result_file, indent=4)

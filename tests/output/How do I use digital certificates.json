@@ -1,185 +1,179 @@
 [
     {
-        "search": [
-            {
-                "id": "c2023d0b-0217-41b0-b80b-65ec0846de21",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5272/eng/1467026113151/1467026113683",
-                "score": 2.5876853457995086,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5272 - Request for Documentation Review - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.9200723394310089,
-                    "traffic": 0.34358397713282873,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.01105912377711612
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2023-01-17",
-                "tokens_count": 330
-            },
-            {
-                "id": "c030b557-3653-4ed0-8d2f-7adf30549db0",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5973/eng/1651680834470/1651680834877",
-                "score": 2.5643943843810444,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5973 \u2013 Permission request form for the movement of animals and/or things under the authority of the Health of Animals Act - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.9828750825503562,
-                    "traffic": 0.17777951121687974,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.40961293066780097
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2023-05-04",
-                "tokens_count": 330
-            },
-            {
-                "id": "20f5d8ed-b65d-4a0a-9bcd-2094d1587be7",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5692/eng/1428495377919/1428495379403",
-                "score": 2.5559301947310527,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5692 - Recipient Electronic Payment Registration Request (Direct Deposit) - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.8741121394786338,
-                    "traffic": 0.1600008507721706,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 1
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2022-10-26",
-                "tokens_count": 330
-            },
-            {
-                "id": "6244fbae-8d68-4187-a999-9c531915cf7a",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5569/eng/1525348978914/1525348979523",
-                "score": 2.503099633484605,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5569 - Veterinarian's application for an import permit for a prescription platform product or autogenous veterinary biologic - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.9865200342648371,
-                    "traffic": 0.15554504042220785,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.19608677158655893
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2023-05-10",
-                "tokens_count": 330
-            },
-            {
-                "id": "c5fff63c-ef4f-4446-8cf3-0921ea3c6cc0",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5087/eng/1434981086781/1434981087203",
-                "score": 2.498024442870367,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5087 - Plant Breeders' Rights - Application for Filing Purposes - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.9963056206807178,
-                    "traffic": 0.1406842633920893,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.19608677158655893
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2023-05-26",
-                "tokens_count": 330
-            },
-            {
-                "id": "396391ef-e970-4893-853b-1923f1c06bae",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-5616/eng/1434981047736/1434981048173",
-                "score": 2.485953526815571,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5616 - Plant Breeders' Rights Fee Payment - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.9624713731448594,
-                    "traffic": 0.18830893047502342,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.06678009357720119
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2023-03-31",
-                "tokens_count": 330
-            },
-            {
-                "id": "6eae1252-d952-4515-9a1e-b7911b726073",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5844/eng/1553629948258/1553629948570",
-                "score": 2.3170082635221148,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5844 \u2013 CVS Facility Risk Profile \u2013 Commercial Food Mill - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.7686914077001402,
-                    "traffic": 0.1445770652081662,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.40961293066780097
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2022-04-01",
-                "tokens_count": 330
-            },
-            {
-                "id": "f84a5c4f-faae-452d-8322-23b811b34cdb",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5670/eng/1413291957940/1413291959675",
-                "score": 2.1910158979752987,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5670 - Application for Permit to Import Aquatic Animals and/or their Offal - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.6128630305487655,
-                    "traffic": 0.2508061010577269,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.027647809442790303
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2021-03-31",
-                "tokens_count": 330
-            },
-            {
-                "id": "7f80d516-51f5-4680-ab8d-0fd3e9fbed54",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-5811/eng/1543237923530/1543237923798",
-                "score": 2.0027344392021718,
-                "title": "Form CFIA/ACIA 5811 \u2013 Variety Registration Office (VRO) - Description of Variety (DoV) for Soybean - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.5494874079448079,
-                    "traffic": 0.13142982677711562,
-                    "similarity": 0.8218172044802481
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2020-10-06",
-                "tokens_count": 330
-            },
-            {
-                "id": "fe2d45ef-4baa-4bad-872d-25482c157202",
-                "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-1113/eng/1420563731710/1420563732788",
-                "score": 1.646662019957537,
-                "title": "Privacy Notice Statement applicable to form CFIA/ACIA 1113 - Seed Analysis Certificate for Export Purposes - Canadian Food Inspection Agency",
-                "scores": {
-                    "current": 1,
-                    "recency": 0.1497891845376439,
-                    "traffic": 0.1358382766223333,
-                    "similarity": 0.8218172044802481,
-                    "typicality": 0.19608677158655893
-                },
-                "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
-                "query_id": "4ffc04fc-d6b4-4fc7-9737-b958600e81e0",
-                "subtitle": "How to sign a form digitally",
-                "last_updated": "2015-02-10",
-                "tokens_count": 330
-            }
-        ]
+        "id": "7c81e61b-ba48-4fb9-9184-57949ac87cba",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-4625/eng/1683208352430/1683208671023",
+        "score": 2.589613673910529,
+        "title": "Privacy Notice Statement applicable to Form CFIA/ACIA 4625: Application for poultry grading service - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.9828750825503562,
+            "traffic": 0.08492138687992515,
+            "similarity": 0.8218172044802481,
+            "typicality": 1
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2023-05-04",
+        "tokens_count": 330
+    },
+    {
+        "id": "c5fff63c-ef4f-4446-8cf3-0921ea3c6cc0",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5087/eng/1434981086781/1434981087203",
+        "score": 2.498024442870367,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5087 - Plant Breeders' Rights - Application for Filing Purposes - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.9963056206807178,
+            "traffic": 0.1406842633920893,
+            "similarity": 0.8218172044802481,
+            "typicality": 0.19608677158655893
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2023-05-26",
+        "tokens_count": 330
+    },
+    {
+        "id": "396391ef-e970-4893-853b-1923f1c06bae",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-5616/eng/1434981047736/1434981048173",
+        "score": 2.485953526815571,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5616 - Plant Breeders' Rights Fee Payment - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.9624713731448594,
+            "traffic": 0.18830893047502342,
+            "similarity": 0.8218172044802481,
+            "typicality": 0.06678009357720119
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2023-03-31",
+        "tokens_count": 330
+    },
+    {
+        "id": "d1dd6300-ac0b-4585-9808-7332bca014f3",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-0065/eng/1432728106651/1432728108542",
+        "score": 2.4426338374643715,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 0065 - Application for Permit to Operate a Rendering Plant - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.9004063890376955,
+            "traffic": 0.1384876578128679,
+            "similarity": 0.8218172044802481,
+            "typicality": 0.40961293066780097
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2022-12-13",
+        "tokens_count": 330
+    },
+    {
+        "id": "a2f845f5-a84f-4ce2-8522-5b6df3bf1551",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-1524/eng/1441216821889/1441216822639",
+        "score": 2.192758856054181,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 1524 - Report of Intradermal Test - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.5193017972253728,
+            "traffic": 0.15163985434856012,
+            "similarity": 0.8218172044802481,
+            "typicality": 1
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2020-07-07",
+        "tokens_count": 330
+    },
+    {
+        "id": "bf878bab-7a09-4899-8616-84911713878f",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-1634/eng/1519836886327/1519836887201",
+        "score": 2.1842029614381677,
+        "title": "Form CFIA/ACIA 1634 - Certificate of Health for Entry Into A Semen Production Centre / Supplementary Declaration For Entry of Bulls Into A Semen Production Centre - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.6971204604494589,
+            "traffic": 0.16526529650846075,
+            "similarity": 0.8218172044802481
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2021-10-25",
+        "tokens_count": 330
+    },
+    {
+        "id": "8e905ce9-4ca9-455a-9856-e153f1c2a2f6",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5789/eng/1551991179725/1551991180006",
+        "score": 2.0086129723178527,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5789 - Request for Exemption from the Minimum Growth and Monitoring Period \u2013 United States \u2013 Canada Greenhouse-Grown Plant Certification Program (GCP) - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.5721017669954749,
+            "traffic": 0.11469400084212972,
+            "similarity": 0.8218172044802481
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2020-12-10",
+        "tokens_count": 330
+    },
+    {
+        "id": "25953e1d-d821-4f6a-b86b-7997a8a9db90",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-5864/eng/1585052333487/1585052333971",
+        "score": 1.929943198065311,
+        "title": "Form CFIA/ACIA 5864 - Variety Registration Office (VRO) Description of Variety (DoV) for Canola and Rapeseed - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.48649916394393194,
+            "traffic": 0.1216268296411309,
+            "similarity": 0.8218172044802481
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2020-03-24",
+        "tokens_count": 330
+    },
+    {
+        "id": "1394ca77-2424-40a6-9475-06ce07902cc8",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-5785/eng/1475521852193/1475521852668",
+        "score": 1.845643229329217,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 5785 - Checklist for Audit of Canadian Beef Export Establishment Slaughter and Processing Plant - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.34352934513880135,
+            "traffic": 0.14107932539285595,
+            "similarity": 0.8218172044802481,
+            "typicality": 0.19608677158655893
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2018-09-13",
+        "tokens_count": 330
+    },
+    {
+        "id": "fe2d45ef-4baa-4bad-872d-25482c157202",
+        "url": "https://inspection.canada.ca/about-cfia/find-a-form/form-cfia-acia-1113/eng/1420563731710/1420563732788",
+        "score": 1.646662019957537,
+        "title": "Privacy Notice Statement applicable to form CFIA/ACIA 1113 - Seed Analysis Certificate for Export Purposes - Canadian Food Inspection Agency",
+        "scores": {
+            "current": 1,
+            "recency": 0.1497891845376439,
+            "traffic": 0.1358382766223333,
+            "similarity": 0.8218172044802481,
+            "typicality": 0.19608677158655893
+        },
+        "content": "How to sign a form digitally Note: Not all Canadian Food Inspection Agency (CFIA) forms accept digital signatures at this time. Follow these steps: install Adobe Reader 10 or higher to your device download and save the form you wish to complete to your device create a Digital ID sign the form using a Digital ID Create a Digital ID open the PDF form you wish to sign and click the Signature box select Configure Digital ID or Configure New Digital ID select Create a new Digital ID as the type of Digital ID and click Continue select Save to file as the destination of the Digital ID and click Continue enter your identity information and click Continue fill in your name and email address from the Key Algorithm menu, choose an option (the 2048-bit RSA option offers more security than 1024-bit RSA, but 1024-bit RSA is more universally compatible) from the Use Digital ID For menu, choose whether you want to use the Digital ID for signatures, data encryption, or both click Browse to select where you would like to save the Digital ID on your device or use the default location as shown in the File Name field remember where you saved the Digital ID so that you can copy it or back it up enter and confirm a password to protect your Digital ID and click Save you will need this password when you sign a document using your Digital ID Sign a form using a Digital ID open the PDF form you wish to sign and click the Signature box choose the Digital ID that you want to use for signing and click Continue enter the password for your Digital ID and click Sign save the completed form to your device remember where you saved the form so you can access it later",
+        "query_id": "2bc01fd5-40c6-41a6-a4ed-ac5efb5e9f38",
+        "subtitle": "How to sign a form digitally",
+        "last_updated": "2015-02-10",
+        "tokens_count": 330
     }
 ]
