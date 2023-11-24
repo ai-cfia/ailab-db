@@ -6,7 +6,7 @@ This assumes:
 
 * you are running WSL
 * you are running a dockerized version of Postgresql 15 under WSL
-* you are running louis-db in a DevContainer under Visual Studio Code
+* you are running ailab-db in a DevContainer under Visual Studio Code
 * your source is on WSL under ~/src
 
 ## configuration
