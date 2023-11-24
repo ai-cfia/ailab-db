@@ -1,9 +1,7 @@
 """test database functions"""
 import unittest
-
-import testing_utils as test
 import ailab.db as db
-
+import tests.testing_utils as test 
 
 class TestDBUtils(unittest.TestCase):
     """Test the database functions"""

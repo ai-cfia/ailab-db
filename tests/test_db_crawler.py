@@ -3,8 +3,7 @@ import unittest
 
 import ailab.db as db
 import ailab.db.crawler as crawler
-
-import testing_utils as test
+import tests.testing_utils as test
 
 class TestDBCrawler(unittest.TestCase):
     """Test the database functions"""
