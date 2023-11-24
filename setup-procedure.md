@@ -8,9 +8,9 @@ Once you're on VS Code, you have to do the following :
 - Type "cd" to return to your $HOME folder.
 - Create a new directory by typing "mkdir src" (if this folder already exist, skip this step).
 
-Once you did that, you can move to your src folder with `cd src` and then clone the repository of your choice. Here, we will use the [louis-db repository](https://github.com/ai-cfia/louis-db). **Don't forget to configure your git globally.**
+Once you did that, you can move to your src folder with `cd src` and then clone the repository of your choice. Here, we will use the [ailab-db repository](https://github.com/ai-cfia/ailab-db). **Don't forget to configure your git globally.**
 
-Move inside of this folder with `cd louis-db`. Then, ensure that you are inside of the "Dev Container : Python3" (this should appear at the **bottom left** of your VS Code window):
+Move inside of this folder with `cd ailab-db`. Then, ensure that you are inside of the "Dev Container : Python3" (this should appear at the **bottom left** of your VS Code window):
 
 ![devcontainer.PNG](img/devcontainer.PNG)
 
@@ -19,7 +19,7 @@ If not, run the following command in the command palette (Ctrl+Shift+P) :
 Dev Containers: Rebuild and Reopen in container
 ```
 
-**If it's still not working**, ensure that you are inside the louis-db folder and not src. If you are indeed in src, do the following : `cd src/louis-db` and then `code .`
+**If it's still not working**, ensure that you are inside the ailab-db folder and not src. If you are indeed in src, do the following : `cd src/ailab-db` and then `code .`
 
 When done, open a terminal **outside** of VS Code (should be a Windows PowerShell) and change it to the ubuntu one:
 
@@ -27,7 +27,7 @@ When done, open a terminal **outside** of VS Code (should be a Windows PowerShel
 
 Then enter these commands one after another (it will allow you to launch the container for the database):
 ```shell
-cd src/louis-db/postgres
+cd src/ailab-db/postgres
 ./build-louis-postgres.sh
 ```
 

@@ -1,10 +1,9 @@
 """test database functions"""
 import unittest
 
-import louis.db as db
-import louis.db.crawler as crawler
-
-import testing_utils as test
+import ailab.db as db
+import ailab.db.crawler as crawler
+import tests.testing_utils as test
 
 class TestDBCrawler(unittest.TestCase):
     """Test the database functions"""

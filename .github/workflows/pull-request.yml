@@ -10,7 +10,7 @@ on:
 jobs:
   lint-test:
     # uses: ai-cfia/github-workflows/.github/workflows/workflow-lint-test-node.yml@main
-    uses: ai-cfia/github-workflows/.github/workflows/workflow-lint-test-python.yml@main
+    uses: ai-cfia/github-workflows/.github/workflows/workflow-lint-test-python.yml@issue-34-add-environment-variable-for-ailab-db-lint-test
     secrets: inherit
 
   build:

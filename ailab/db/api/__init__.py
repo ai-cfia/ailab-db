@@ -1,14 +1,14 @@
-import louis.models.openai as openai
+import ailab.models.openai as openai
 import os
 import json
 import sys
-import louis.db as db
+import ailab.db as db
 import dotenv
 # This is used to load the .env file
 dotenv.load_dotenv()
 
 FINESSE_WEIGHTS = os.environ.get("FINESSE_WEIGHTS") \
-    or db.raise_db_error("FINESSE_WEIGHTS is not set")
+    or db.raise_error("FINESSE_WEIGHTS is not set")
 
 
 if FINESSE_WEIGHTS:
@@ -71,7 +71,7 @@ def search(cursor, query_embedding):
         'text': ' '.join(sys.argv[1:]),
         'query_embedding': query_embedding,
         'match_threshold': 0.5,
-        'match_count': 1,
+        'match_count': 10,
         'weights': json.dumps(FINESSE_JSON_PARSED_WEIGHTS)
     }
 
