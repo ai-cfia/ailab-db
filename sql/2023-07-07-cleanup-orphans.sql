@@ -1,4 +1,4 @@
-set search_path to "louis_v003", public;
+set search_path to louis_v003, public;
 
 ALTER TABLE louis_v003.chunk DISABLE TRIGGER ALL;
 
