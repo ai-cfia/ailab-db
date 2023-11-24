@@ -1,7 +1,6 @@
 import unittest
 
-import psycopg
-from psycopg.rows import dict_row
+import ailab.db as db
 
 import testing_utils as test
 
@@ -12,8 +11,8 @@ class TestDBData(unittest.TestCase):
         self.cursor.execute(query)
 
     def setUp(self):
-        self.connection = psycopg.connect(test.LOUIS_DSN)
-        self.cursor = self.connection.cursor(row_factory=dict_row)
+        self.connection = db.connect_db()
+        self.cursor = db.cursor(self.connection)
         self.cursor.execute("SET search_path TO louis_v005, public")
 
     def tearDown(self):
@@ -23,14 +22,14 @@ class TestDBData(unittest.TestCase):
 
     def upgrade_schema(self):
         return
-        if test.LOUIS_SCHEMA == 'louis_v005':
-            self.execute('sql/2023-07-11-hotfix-xml-not-well-formed.sql')
-            self.execute('sql/2023-07-11-populate-link.sql')
-            self.execute('sql/2023-07-12-score-current.sql')
-            self.execute('sql/2023-07-19-modify-score_type-add-similarity.sql')
-            self.execute('sql/2023-07-19-modified-documents.sql')
-            self.execute('sql/2023-07-19-weighted_search.sql')
-            self.execute('sql/2023-07-21-default_chunk.sql')
+        # if test.LOUIS_SCHEMA == 'louis_v005':
+        #     self.execute('sql/2023-07-11-hotfix-xml-not-well-formed.sql')
+        #     self.execute('sql/2023-07-11-populate-link.sql')
+        #     self.execute('sql/2023-07-12-score-current.sql')
+        #     self.execute('sql/2023-07-19-modify-score_type-add-similarity.sql')
+        #     self.execute('sql/2023-07-19-modified-documents.sql')
+        #     self.execute('sql/2023-07-19-weighted_search.sql')
+        #     self.execute('sql/2023-07-21-default_chunk.sql')
 
     def test_well_formed_xml(self):
         self.upgrade_schema()
