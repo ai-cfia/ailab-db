@@ -2,8 +2,6 @@ import unittest
 
 import ailab.db as db
 
-import testing_utils as test
-
 class TestDBData(unittest.TestCase):
 
     def execute(self, filename):
