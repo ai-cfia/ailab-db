@@ -24,7 +24,7 @@
 
   * OPENAI_API_KEY: The API key required for authentication when making requests to the OpenAI API. It can be found [here](https://portal.azure.com/#home).
 
-  * AZURE_OPENAI_ENDPOINT: The link used to call into Azure OpenAI endpoints. It can be found at the same place as the OPENAI_API_KEY.
+  * OPENAI_ENDPOINT: The link used to call into Azure OpenAI endpoints. It can be found at the same place as the OPENAI_API_KEY.
 
   * OPENAI_API_ENGINE: The name of the model deployment you want to use (ex:ailab-gpt-35-turbo).
 

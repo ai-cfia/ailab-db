@@ -1,4 +1,4 @@
-"""Database functions for the Louis project."""
+"""Database functions for the ailab project."""
 import hashlib
 import logging
 import os

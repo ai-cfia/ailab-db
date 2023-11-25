@@ -1,4 +1,3 @@
-
 set -x
 
 SCHEMA_CHANGES=sql/schema2.sql
