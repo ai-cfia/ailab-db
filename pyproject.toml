@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "louis_db"
+name = "ailab_db"
 version = "0.0.5"
 authors = [
   { name="Ricky Ng-Adam", email="ricky.ng-adam@inspection.gc.ca" },
 ]
-description = "Database python layer for Louis project"
+description = "Database python layer"
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
@@ -19,15 +19,15 @@ classifiers = [
 dynamic = ["dependencies"]
 
 [tool.setuptools]
-packages = ["louis", "louis.db", "louis.models"]
+packages = ["ailab", "ailab.db", "ailab.models", "ailab.db.api", "ailab.db.crawler"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
 
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
 # [tool.setuptools.packages.find]
-# where = ["louis"]
+# where = ["ailab"]
 
 [project.urls]
-"Homepage" = "https://github.com/ai-cfia/louis-db"
-"Bug Tracker" = "https://github.com/ai-cfia/louis-db/issues"
+"Homepage" = "https://github.com/ai-cfia/ailab-db"
+"Bug Tracker" = "https://github.com/ai-cfia/ailab-db/issues"
