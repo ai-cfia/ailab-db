@@ -1,15 +1,16 @@
 import os
 import sys
 import json
+from datetime import date
 
 import ailab.db as db
 import ailab.db.finesse as finesse
 from ailab.models import openai
 
-from ailab.db.finesse.test_queries import get_random_chunk
+from ailab.db.finesse.test_queries import chunk_test_quality
 
-TEST_VERSION = "v001"
-WANTED_GENERATED_QUESTIONS = 10
+TEST_VERSION = date.today()
+WANTED_GENERATED_QUESTIONS = 5
 CHARACTER_LIMIT = 14383
 
 
@@ -34,7 +35,15 @@ def main():
     print("System Prompt:", system_prompt + "\n")
     print("User Prompt:", user_prompt + "\n")
 
-    average_tokens_by_chunk = 0
+    AVERAGE_TOKENS_BY_CHUNK = 0
+
+    ### WIP - TESTING NEW QUERY - WIP ###
+    with project_db.cursor() as cursor:
+        random_chunk = chunk_test_quality(cursor)
+        print(random_chunk)
+    ### WIP - TESTING NEW QUERY - WIP ###
+    
+    """
     for i in range(WANTED_GENERATED_QUESTIONS):
         random_chunk = ""
 
@@ -57,9 +66,7 @@ def main():
             )
 
             total_length = len(system_prompt) + len(constructed_user_prompt)
-            print("Token limit : " + str(CHARACTER_LIMIT))
-            print("Prompt character : " + str(total_length) + "\n")
-            average_tokens_by_chunk += total_length
+            AVERAGE_TOKENS_BY_CHUNK += total_length
             if total_length < CHARACTER_LIMIT:
                 response = openai.get_chat_answer(
                     system_prompt, constructed_user_prompt, 2000
@@ -86,8 +93,9 @@ def main():
                         print("File saved into: " + file_path)
                         json.dump(data, json_file, ensure_ascii=False, indent=4)
 
-    average_tokens_by_chunk = average_tokens_by_chunk / WANTED_GENERATED_QUESTIONS
-    print("Average Tokens send to the API : " + str(average_tokens_by_chunk))
+    AVERAGE_TOKENS_BY_CHUNK = AVERAGE_TOKENS_BY_CHUNK / WANTED_GENERATED_QUESTIONS
+    print("Average Tokens send to the API : " + str(AVERAGE_TOKENS_BY_CHUNK))
+    """
 
 
 if __name__ == "__main__":
