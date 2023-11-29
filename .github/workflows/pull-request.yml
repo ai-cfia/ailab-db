@@ -2,9 +2,6 @@ name: Docker Image CI
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
   # Absence of the branches property under pull_request means it will apply to all branches
 
 jobs:
