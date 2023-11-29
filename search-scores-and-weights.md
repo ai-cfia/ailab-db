@@ -5,24 +5,36 @@ At the re-ranking stage, our search system uses scoring to assign values to each
 document based on different parameters. The interplay between clustering and
 scoring helps optimize the search process, ensuring that the system considers
 both the content and context to deliver more accurate and relevant results for
-the user.
+the user. 
 
 This task becomes challenging when dealing with a large number of documents,
 creating the need for optimization strategies. A good approach is the
-utilization of clustering techniques, which categorize documents based on their
-topics, facilitating a more streamlined and efficient search process. We also
-use scoring, which involves the assignment of numerical values and weights to
-documents based on various parameters, influencing their ranking in the search
-results. Here is our different scores, each serving a unique purpose:
+utilization of an indexing method called clustering, which categorize documents
+based on their topics, facilitating a more streamlined and efficient search
+process. We also use scoring, which involves the assignment of numerical values
+and weights to documents based on various parameters, influencing their ranking
+in the search results. Here is our different scores, each serving a unique
+purpose:
+
+1. **Similarity**: Represents the primary signal in our scoring mechanism. It
+   denotes the measurement of how closely a document aligns with the user's
+   query, reflecting the relevance of the document to the search criteria. It is
+   not a static precomputed score but a dynamic metric that is computed on the
+   fly from the search results. This ensures that the relevance is tied to the
+   specific query, going beyond simple keyword matching. Documents with higher
+   similarity scores are considered more relevant. By prioritizing similarity as
+   the first signal in our scoring process, we aim to deliver search results
+   that are more accurate.
 
 1. **Recency**: This score considers the temporal aspect of documents,
    prioritizing recently added or updated content. A document's recency is
    crucial in reflecting the latest information available to users.
 
 1. **Traffic**: The frequency with which users consult a document influences its
-   score. Popular or frequently accessed documents are given higher scores,
-   indicating their relevance and importance to users. Warning: The home page is
-   rated really high since it's where every user land at first.
+   score. Popular or frequently accessed documents are given higher scores with
+   the help of web traffic logs, indicating their relevance and importance to
+   users. Warning: The home page is rated really high since it's where every
+   user land at first.
 
 1. **Current**: This score determines whether a document is currently accessible
    (current=1) or if it has been archived (current=0). It helps users
