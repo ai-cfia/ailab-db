@@ -11,7 +11,6 @@ jobs:
     secrets: inherit
 
   build:
-    if: github.ref == 'refs/heads/main'
     needs: lint-test
     uses: ai-cfia/github-workflows/.github/workflows/workflow-build-container.yml@main
     with:
@@ -20,7 +19,6 @@ jobs:
     secrets: inherit
 
   deploy:
-    if: github.ref == 'refs/heads/main'
     needs: build
     uses: ai-cfia/github-workflows/.github/workflows/workflow-deploy-gcp.yml@main
     with:
