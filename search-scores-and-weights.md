@@ -1,7 +1,8 @@
-Our search system uses scoring to assign values to each document based on
-different parameters. The interplay between clustering and scoring helps
-optimize the search process, ensuring that the system considers both the content
-and context to deliver more accurate and relevant results for the user.
+At the re-ranking stage, our search system uses scoring to assign values to each
+document based on different parameters. The interplay between clustering and
+scoring helps optimize the search process, ensuring that the system considers
+both the content and context to deliver more accurate and relevant results for
+the user.
 
 This task becomes challenging when dealing with a large number of documents,
 creating the need for optimization strategies. A good approach is the
@@ -24,12 +25,29 @@ results. Here is our different scores, each serving a unique purpose:
    (current=1) or if it has been archived (current=0). It helps users
    distinguish between active and inactive content.
 
-1. **Typicality**: This score assesses whether a document is a typical
-   informative representation of the broader concept or topic being queried.
-   Typical documents are considered representative examples within a given
-   context and are assigned higher scores. This ensures that the search results
-   prioritize documents that serve as typical and informative instances within
-   the targeted topic.
+1. **Typicality**: This score evaluates how closely the number of site
+   references for a document aligns with the average within a given thematic
+   context. Documents with typicality scores reflect a level of correspondence
+   with the average number of references, indicating their alignment with the
+   common standards within the specified topic. This ensures that the search
+   results prioritize documents not only based on their relevance to the user's
+   query but also considering how well they conform to the typical reference
+   patterns within the targeted theme.
+
+1. **Didactic**: This score evaluates the informational value within content
+   chunks that lack a defined structure such as tables. It focuses on the
+   quality and depth of information provided without relying on tabular formats
+   for organization or presentation. Documents with high didactic scores often
+   contain rich textual information, explanations, and details without reliance
+   on tabulated data.
+
+1. **Guidance**: This score pertains to content chunks extracted from
+   guidance-oriented pages, emphasizing their significance and relevance.
+   Guidance pages typically offer comprehensive direction, instruction, or
+   expert advice within a specific domain. As these pages tend to provide
+   crucial information or instructions sought by users, they are given priority
+   to ensure users can readily access the most helpful and directive content.
+
 
 
 By incorporating these scoring parameters, we fine-tune the document retrieval
