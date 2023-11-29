@@ -1,3 +1,6 @@
+# Scores and weights for search function
+### Last updated: 2023-11-29
+
 At the re-ranking stage, our search system uses scoring to assign values to each
 document based on different parameters. The interplay between clustering and
 scoring helps optimize the search process, ensuring that the system considers
