@@ -46,11 +46,10 @@ purpose:
    score evaluates how closely the number of site references for a document
    aligns with the average within a given thematic context. Documents with
    typicality scores reflect a level of correspondence with the average number
-   of references, indicating their alignment with the common standards within
-   the specified topic. This ensures that the search results prioritize
-   documents not only based on their relevance to the user's query but also
-   considering how well they conform to the typical reference patterns within
-   the targeted theme.
+   of references, indicating their alignment within the specified topic. This
+   ensures that the search results prioritize documents not only based on their
+   relevance to the user's query but also considering how well they conform to
+   the typical reference patterns within the targeted theme.
 
 1. **Didactic**: This score evaluates the informational value within content
    chunks that lack a defined structure such as tables. It focuses on the
