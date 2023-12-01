@@ -1,5 +1,4 @@
 # Scores and weights for search function
-### Last updated: 2023-11-29
 
 At the re-ranking stage, our search system uses scoring to assign values to each
 document based on different parameters. The interplay between clustering and
@@ -16,38 +15,42 @@ and weights to documents based on various parameters, influencing their ranking
 in the search results. Here is our different scores, each serving a unique
 purpose:
 
-1. **Similarity**: Represents the primary signal in our scoring mechanism. It
-   denotes the measurement of how closely a document aligns with the user's
-   query, reflecting the relevance of the document to the search criteria. It is
-   not a static precomputed score but a dynamic metric that is computed on the
-   fly from the search results. This ensures that the relevance is tied to the
+1. [**Similarity**](sql/2023-07-19-modify-score_type-add-similarity.sql):
+   Represents the primary signal in our scoring mechanism. It denotes the
+   measurement of how closely a document aligns with the user's query,
+   reflecting the relevance of the document to the search criteria. It is not a
+   static precomputed score but a dynamic metric that is computed on the fly
+   from the search results. This ensures that the relevance is tied to the
    specific query, going beyond simple keyword matching. Documents with higher
    similarity scores are considered more relevant. By prioritizing similarity as
    the first signal in our scoring process, we aim to deliver search results
    that are more accurate.
 
-1. **Recency**: This score considers the temporal aspect of documents,
-   prioritizing recently added or updated content. A document's recency is
-   crucial in reflecting the latest information available to users.
+1. [**Recency**](sql/schema2.sql.public_new.sql): This score considers the
+   temporal aspect of documents, prioritizing recently added or updated content.
+   A document's recency is crucial in reflecting the latest information
+   available to users.
 
-1. **Traffic**: The frequency with which users consult a document influences its
-   score. Popular or frequently accessed documents are given higher scores with
-   the help of web traffic logs, indicating their relevance and importance to
-   users. Warning: The home page is rated really high since it's where every
-   user land at first.
+1. [**Traffic**](sql/compute-traffic-score.sql): The frequency with which users
+   consult a document influences its score. Popular or frequently accessed
+   documents are given higher scores with the help of web traffic logs,
+   indicating their relevance and importance to users. Warning: The home page is
+   rated really high since it's where every user land at first.
 
-1. **Current**: This score determines whether a document is currently accessible
-   (current=1) or if it has been archived (current=0). It helps users
-   distinguish between active and inactive content.
+1. [**Current**](sql/2023-07-12-score-current.sql): This score determines
+   whether a document is currently accessible (current=1) or if it has been
+   archived (current=0). It helps users distinguish between active and inactive
+   content.
 
-1. **Typicality**: This score evaluates how closely the number of site
-   references for a document aligns with the average within a given thematic
-   context. Documents with typicality scores reflect a level of correspondence
-   with the average number of references, indicating their alignment with the
-   common standards within the specified topic. This ensures that the search
-   results prioritize documents not only based on their relevance to the user's
-   query but also considering how well they conform to the typical reference
-   patterns within the targeted theme.
+1. [**Typicality**](sql/2023-07-12-calculate-incoming-outgoing-counts.sql): This
+   score evaluates how closely the number of site references for a document
+   aligns with the average within a given thematic context. Documents with
+   typicality scores reflect a level of correspondence with the average number
+   of references, indicating their alignment with the common standards within
+   the specified topic. This ensures that the search results prioritize
+   documents not only based on their relevance to the user's query but also
+   considering how well they conform to the typical reference patterns within
+   the targeted theme.
 
 1. **Didactic**: This score evaluates the informational value within content
    chunks that lack a defined structure such as tables. It focuses on the
