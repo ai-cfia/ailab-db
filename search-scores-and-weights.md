@@ -60,14 +60,15 @@ purpose:
         document
 
 1. **Didactic**: This score evaluates the informational value within content
-   chunks that lack a defined structure such as tables. It focuses on the
-   quality and depth of information provided without relying on tabular formats
-   for organization or presentation. Documents with high didactic scores often
-   contain rich textual information, explanations, and details without reliance
-   on tabulated data.
-      - Scaling: FROM 0.0 = doesn't contain really rich textual information,
-        explanations, and details TO 1.0 = contains rich textual information,
-        explanations, and details
+   chunk. It scores higher based the quality and readability of information
+   provided. Documents with high didactic scores often contain rich textual
+   information, explanations, and details. Implementation of the score looks for
+   signs of the opposite to compute its score - for example, the presence of a
+   large proportion of tabular data which indicate data dumps from spreadsheets
+   or databases.
+      - Scaling: FROM 0.0 = mostly tabular data or information that is not
+        expected to be read sequentially by a user TO 1.0 = contains rich
+        textual information, explanations, and details
 
 1. **Guidance**: This score pertains to content chunks extracted from
    guidance-oriented pages, emphasizing their significance and relevance.
