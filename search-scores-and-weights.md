@@ -50,12 +50,10 @@ purpose:
 
 1. [**Typicality**](sql/2023-07-12-calculate-incoming-outgoing-counts.sql): This
    score evaluates how closely the number of site references for a document
-   aligns with the average within a given thematic context. Documents with
-   typicality scores reflect a level of correspondence with the average number
-   of references, indicating their alignment within the specified topic. This
-   ensures that the search results prioritize documents not only based on their
-   relevance to the user's query but also considering how well they conform to
-   the typical reference patterns within the targeted theme.
+   aligns with the average. Documents with typicality scores reflect a level of
+   correspondence with the average number of references. This ensures that the
+   search results prioritize documents considering how well they conform to the
+   typical reference patterns within the targeted theme.
       - Scaling: FROM 0.0 = least referenced document TO 1.0 = most referenced
         document
 
@@ -79,11 +77,20 @@ purpose:
       - FROM Scaling: 0.0 = doesn't include crucial information or instructions
         TO 1.0 = includes crucial information or instructions
 
-
-
 By incorporating these scoring parameters, we fine-tune the document retrieval
 process to align with user needs. It allows us to prioritize documents that are
 not only recent, popular, and representative but also closely related to the
 user's specific search criteria. This multi-faceted approach enhances the
 efficiency and effectiveness of our document retrieval system, ensuring a more
 tailored and user-friendly experience.
+
+## Future
+
+In addition to our current considerations, we can explore the integration of
+thematic context into our scoring system. Thematic context involves a specific
+focus on the subject or theme related to the user's query, ensuring that the
+context is taken into account during the initial score calculation. To implement
+this, we would need to incorporate topic labels for documents, a feature not yet
+incorporated in our system. Planning for such additional scores allows us to
+enhance the depth and relevance of our responses by considering the specific
+themes associated with user queries.
