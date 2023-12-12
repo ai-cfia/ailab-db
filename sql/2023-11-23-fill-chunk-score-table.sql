@@ -1,3 +1,7 @@
+-- Set the search path to the louis_006 schema
+SET
+    search_path TO "louis_0.0.6";
+    
 INSERT INTO
     chunk_score (id, score, score_type)
 SELECT
@@ -14,7 +18,7 @@ BEGIN
 SELECT
     COUNT(*) INTO tr_count
 FROM
-    louis_006.chunk
+    "louis_0.0.6".chunk
 WHERE
     id = chunk_id
     AND html_content LIKE '%<tr>%';
