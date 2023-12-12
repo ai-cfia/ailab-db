@@ -1,3 +1,18 @@
+"""
+Script Purpose:
+This script generates questions based on provided prompts
+and stores the responses as JSON files.
+It interacts with the AI model to create questions
+and saves the relevant data for each question in a JSON file.
+
+Usage:
+./search-function-test-utilizing-llm.sh PROMPT_PATH
+
+Parameters:
+- PROMPT_PATH: Directory containing the API prompt files
+(qna_system_prompt.txt, qna_user_prompt.txt, and JSON template)
+"""
+
 import os
 import sys
 import json
@@ -11,7 +26,7 @@ from ailab.db.finesse.test_queries import get_random_chunk
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 1
+REQUIRED_QUESTIONS = 50
 CHARACTER_LIMIT = 14383
 STORAGE_PATH = "/home/vscode/finesse-data-2/qna"
 
@@ -26,7 +41,7 @@ def load_prompts_and_template(prompt_path):
 
 
 def construct_user_prompt(user_prompt, random_chunk_str, json_template):
-    """Constructs the user prompt using the user prompt, random chunk and json template"""
+    """Constructs the user prompt using prompt, chunk and json template"""
     return (
         f"{user_prompt}\n\nHere is the JSON containing the search:\n{random_chunk_str}"
         f"\n\nAnd here is the JSON template:\n{json_template}"
@@ -42,26 +57,54 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
             if not random_chunk:
                 print("No chunk found in the database.")
                 sys.exit(1)  # exit the program if chunk is empty
+            
+            chunk_title = ""
+            for chunk in random_chunk:
+                chunk_title = chunk["title"]
 
-        constructed_user_prompt = construct_user_prompt(
-            user_prompt, str(random_chunk), json_template
-        )
-        total_length = len(system_prompt) + len(constructed_user_prompt)
-        average_tokens += total_length
+            ### TO REMOVE ###
+            words_to_check = [
+                "This page is part",
+                "Cette page fait partie",
+                "Archivée",
+                "archivée",
+                "Archived",
+                "archived"
+            ]
+            
+            found_words = []
+            
+            for word in words_to_check:
+                if word.lower() in chunk_title.lower():
+                    found_words.append(word)
+            
+            if found_words:
+                print("The following words were found in the string:")
+                for found_word in found_words:
+                    print("-", found_word)
+                print("Skipping...")
+            else:
+            ### TO REMOVE ###
 
-        if total_length < CHARACTER_LIMIT:
-            response = openai.get_chat_answer(
-                system_prompt, constructed_user_prompt, 2000
-            )
-            data = json.loads(response.choices[0].message.content)
-            if isinstance(data, dict):
-                for chunk in random_chunk:
-                    data["text_content"] = chunk["text_content"]
-                save_response_to_file(data)
+                constructed_user_prompt = construct_user_prompt(
+                    user_prompt, str(random_chunk), json_template
+                )
+                total_length = len(system_prompt) + len(constructed_user_prompt)
+                average_tokens += total_length
+
+                if total_length < CHARACTER_LIMIT:
+                    response = openai.get_chat_answer(
+                        system_prompt, constructed_user_prompt, 2000
+                    )
+                    data = json.loads(response.choices[0].message.content)
+                    if isinstance(data, dict):
+                        for chunk in random_chunk:
+                            data["text_content"] = chunk["text_content"]
+                        save_response_to_file(data)
 
     return average_tokens / REQUIRED_QUESTIONS
 
-
+ 
 def save_response_to_file(data):
     """Saves the provided data to a new file"""
     file_number = 1
