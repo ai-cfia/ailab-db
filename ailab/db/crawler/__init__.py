@@ -78,10 +78,12 @@ def store_chunk_item(cursor, item):
             """,
             data
         )
-        data['chunk_id'] = cursor.fetchone()['id']
+        row = cursor.fetchone()
+        if row is not None:
+            data['chunk_id'] = row['id']
         cursor.execute(
             """
-            INSERT INTO html_content_to_chunk (html_content_md5hash, chunk_id)
+            INSERT INTO html_content_to_chunk (md5hash, chunk_id)
             VALUES(%(md5hash)s, %(chunk_id)s::UUID)
             ON CONFLICT DO NOTHING
             """,
@@ -103,7 +105,9 @@ def store_chunk_item(cursor, item):
             """,
             data
         )
-        data['token_id'] = cursor.fetchone()['id']
+        res = cursor.fetchone()
+        if res is not None:
+            data['token_id'] = res['id']
         return data
     except psycopg.IntegrityError as e:
         raise db.DBError("Error storing chunk item for %s" % item['url']) from e
@@ -163,7 +167,7 @@ def fetch_crawl_ids_without_chunk(cursor):
         """
         SELECT crawl.id FROM crawl
          LEFT JOIN html_content_to_chunk
-         ON crawl.md5hash = html_content_to_chunk.html_content_md5hash
+         ON crawl.md5hash = html_content_to_chunk.md5hash
          WHERE chunk_id IS NULL
         """
     ).as_string(cursor)

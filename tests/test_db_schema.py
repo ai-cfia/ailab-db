@@ -1,7 +1,7 @@
 """test database functions"""
 import unittest
 
-#import testing_utils as test
+import testing_utils as test
 import ailab.db as db
 
 
@@ -22,3 +22,14 @@ class TestDBSchema(unittest.TestCase):
     #     with db.cursor(self.connection) as cursor:
     #         cursor.execute(schema)
     #         self.connection.rollback()
+
+    # def test_schema_exist(self):
+    #     """sample test to check if the schema exists"""
+    #     with db.cursor(self.connection) as cursor:
+    #         cursor.execute(
+    #             "SELECT EXISTS(SELECT * FROM )",
+    #             (test.LOUIS_SCHEMA,)
+    #             )
+    #         self.connection.rollback()
+    #         row = cursor.fetchone()
+    #     self.assertTrue(row[0])
