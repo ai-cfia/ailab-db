@@ -1,3 +1,7 @@
+-- Set the search path to the louis_0.0.6 schema
+SET
+    search_path TO "louis_0.0.6";
+    
 WITH tr_counts AS (
     SELECT
         id,
