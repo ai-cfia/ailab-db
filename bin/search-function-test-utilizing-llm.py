@@ -14,6 +14,7 @@ Parameters:
 """
 
 import os
+import re
 import sys
 import json
 from datetime import date
@@ -26,18 +27,21 @@ from ailab.db.finesse.test_queries import get_random_chunk
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 50
+REQUIRED_QUESTIONS = 1
 CHARACTER_LIMIT = 14383
 STORAGE_PATH = "/home/vscode/finesse-data-2/qna"
+SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
+USER_PROMPT_FILENAME = "qna_user_prompt.txt"
 
-
-def load_prompts_and_template(prompt_path):
+def load_prompts_and_template(prompt_path, system_prompt_filename=SYSTEM_PROMPT_FILENAME, user_prompt_filename=USER_PROMPT_FILENAME):
     """Loads prompts and template from provided path"""
-    system_prompt = finesse.load_prompt(prompt_path, "qna_system_prompt.txt")
-    user_prompt = finesse.load_prompt(prompt_path, "qna_user_prompt.txt")
+    system_prompt = finesse.load_prompt(prompt_path, system_prompt_filename)
+    user_prompt = finesse.load_prompt(prompt_path, user_prompt_filename)
     json_template = finesse.load_json_template(prompt_path)
 
     return system_prompt, user_prompt, json_template
+
+
 
 
 def construct_user_prompt(user_prompt, random_chunk_str, json_template):
@@ -47,16 +51,22 @@ def construct_user_prompt(user_prompt, random_chunk_str, json_template):
         f"\n\nAnd here is the JSON template:\n{json_template}"
     )
 
-
 def generate_question(system_prompt, user_prompt, json_template, project_db):
     """Generates a question and saves it to a file"""
-    average_tokens = 0
+    average_character_length = 0
     for i in range(REQUIRED_QUESTIONS):
         with project_db.cursor() as cursor:
-            random_chunk = get_random_chunk(cursor)
+            # Access the LOUIS_SCHEMA environment variable
+            louis_schema = os.getenv('LOUIS_SCHEMA')
+
+            # Extract version part from the schema name
+            schema_version = re.search(r'(\d+\.\d+\.\d+)', louis_schema).group(1)
+
+            random_chunk = get_random_chunk(cursor, schema_version)
             if not random_chunk:
                 print("No chunk found in the database.")
                 sys.exit(1)  # exit the program if chunk is empty
+
             
             chunk_title = ""
             for chunk in random_chunk:
@@ -90,7 +100,7 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                     user_prompt, str(random_chunk), json_template
                 )
                 total_length = len(system_prompt) + len(constructed_user_prompt)
-                average_tokens += total_length
+                average_character_length += total_length
 
                 if total_length < CHARACTER_LIMIT:
                     response = openai.get_chat_answer(
@@ -102,7 +112,7 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                             data["text_content"] = chunk["text_content"]
                         save_response_to_file(data)
 
-    return average_tokens / REQUIRED_QUESTIONS
+    return average_character_length / REQUIRED_QUESTIONS
 
  
 def save_response_to_file(data):
