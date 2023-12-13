@@ -51,11 +51,13 @@ def construct_user_prompt(user_prompt, random_chunk_str, json_template):
         f"\n\nAnd here is the JSON template:\n{json_template}"
     )
 
+
 def generate_question(system_prompt, user_prompt, json_template, project_db):
     """Generates a question and saves it to a file"""
     average_character_length = 0
-    for i in range(REQUIRED_QUESTIONS):
-        with project_db.cursor() as cursor:
+
+    with project_db.cursor() as cursor:  # Open the cursor here
+        for i in range(REQUIRED_QUESTIONS):
             # Access the LOUIS_SCHEMA environment variable
             louis_schema = os.getenv('LOUIS_SCHEMA')
 
@@ -67,7 +69,6 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                 print("No chunk found in the database.")
                 sys.exit(1)  # exit the program if chunk is empty
 
-            
             chunk_title = ""
             for chunk in random_chunk:
                 chunk_title = chunk["title"]
@@ -81,13 +82,13 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                 "Archived",
                 "archived"
             ]
-            
+
             found_words = []
-            
+
             for word in words_to_check:
                 if word.lower() in chunk_title.lower():
                     found_words.append(word)
-            
+
             if found_words:
                 print("The following words were found in the string:")
                 for found_word in found_words:
@@ -113,6 +114,7 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                         save_response_to_file(data)
 
     return average_character_length / REQUIRED_QUESTIONS
+
 
  
 def save_response_to_file(data):
