@@ -1,4 +1,4 @@
--- Set the search path to the louis_006 schema
+-- Set the search path to the louis_0.0.6 schema
 SET
     search_path TO "louis_0.0.6";
 
@@ -25,9 +25,9 @@ SELECT
     ) AS tr_proportion,
     'didactic' AS score_type
 FROM
-    "louis_0.0.6".chunk ch
-    INNER JOIN "louis_0.0.6".html_content_to_chunk hctc ON ch.id = hctc.chunk_id
-    INNER JOIN "louis_0.0.6".html_content hc ON hctc.md5hash = hc.md5hash
+    chunk ch
+    INNER JOIN html_content_to_chunk hctc ON ch.id = hctc.chunk_id
+    INNER JOIN html_content hc ON hctc.md5hash = hc.md5hash
     CROSS JOIN (
         SELECT
             MIN(
@@ -37,9 +37,9 @@ FROM
                 LENGTH(content) - LENGTH(REPLACE(content, '<tr>', ''))
             ) / LENGTH('<tr>') AS max_val
         FROM
-            "louis_0.0.6".chunk ch
-            INNER JOIN "louis_0.0.6".html_content_to_chunk hctc ON ch.id = hctc.chunk_id
-            INNER JOIN "louis_0.0.6".html_content hc ON hctc.md5hash = hc.md5hash
+            chunk ch
+            INNER JOIN html_content_to_chunk hctc ON ch.id = hctc.chunk_id
+            INNER JOIN html_content hc ON hctc.md5hash = hc.md5hash
     ) AS length_values
 ORDER BY
     tr_proportion DESC;

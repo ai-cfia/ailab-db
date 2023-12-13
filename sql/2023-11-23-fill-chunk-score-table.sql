@@ -18,7 +18,7 @@ BEGIN
 SELECT
     COUNT(*) INTO tr_count
 FROM
-    "louis_0.0.6".chunk
+    chunk
 WHERE
     id = chunk_id
     AND html_content LIKE '%<tr>%';
