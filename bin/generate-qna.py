@@ -1,167 +1,158 @@
+"""
+Script Purpose:
+This script generates questions based on provided prompts
+and stores the responses as JSON files.
+It interacts with the AI model to create questions
+and saves the relevant data for each question in a JSON file.
+
+Usage:
+./generate-qna.sh PROMPT_PATH
+
+Parameters:
+- PROMPT_PATH: Directory containing the API prompt files
+(qna_system_prompt.txt, qna_user_prompt.txt, and JSON template)
+"""
+
 import os
-import json
-import logging
+import re
 import sys
+import json
+from datetime import date
 
 import ailab.db as db
-import ailab.db.nachet as nachet
 from ailab.models import openai
+import ailab.db.finesse as finesse
 
-from ailab.db.nachet.seed_queries import seeds_urls
-from ailab.db.nachet.seed_queries import get_seed_name
-from ailab.db.nachet.seed_queries import get_webpage
-from ailab.db.nachet.seed_queries import get_images
+from ailab.db.finesse.test_queries import get_random_chunk
 
-logging.basicConfig(
-    filename="mylog.log",
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-WEBSITE_URL = "https://inspection.canada.ca"
+# Constants
+TEST_VERSION = date.today()
+REQUIRED_QUESTIONS = 1
+CHARACTER_LIMIT = 14383
+STORAGE_PATH = "/home/vscode/finesse-data-2/qna"
+SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
+USER_PROMPT_FILENAME = "qna_user_prompt.txt"
 
+def load_prompts_and_template(prompt_path, system_prompt_filename=SYSTEM_PROMPT_FILENAME, user_prompt_filename=USER_PROMPT_FILENAME):
+    """Loads prompts and template from provided path"""
+    system_prompt = finesse.load_prompt(prompt_path, system_prompt_filename)
+    user_prompt = finesse.load_prompt(prompt_path, user_prompt_filename)
+    json_template = finesse.load_json_template(prompt_path)
 
-def create_seed_url_mapping(cursor, list_seed_url):
-    ### Get a name from the seed URL
-    url_to_seed_mapping = {}
-
-    for rows in list_seed_url:
-        seed_full_url = WEBSITE_URL + rows["seeds_url"]
-        seed_name_query = get_seed_name(cursor, seed_full_url)
-
-        if seed_name_query:
-            seed_name = seed_name_query[0]["sd_nme"]
-            url_to_seed_mapping[seed_full_url] = seed_name
-    return url_to_seed_mapping
+    return system_prompt, user_prompt, json_template
 
 
-def transform_seed_data_into_json(
-    cursor,
-    url_to_seed_mapping,
-    system_prompt,
-    load_user_prompt,
-    json_template,
-    seed_data_path,
-):
-    """
-    Process seed data using Azure OpenAI endpoint and save results as JSON files.
 
-    Args:
-        system_prompt (str): A system prompt for the OpenAI conversation.
-        user_prompt (str): A user prompt for the OpenAI conversation.
-        json_template (json): A JSON template for the OpenAI request.
 
-    This function performs the following steps:
-    1. Iterates through a list of seed values.
-    2. Checks if a JSON file for each seed exists and skips if it does.
-    3. Constructs an SQL query to retrieve data related to the seed from a database.
-    4. Sends the query to the database and fetches the retrieved data.
-    5. Concatenates the cleaned content into a single 'page.'
-    6. Sends a request to the Azure OpenAI endpoint to get a response.
-    7. Processes the response, extracting the name and saving it as a JSON file.
-    """
-    for url, seed_name in url_to_seed_mapping.items():
-        logging.info("Current seed: %s", seed_name)
+def construct_user_prompt(user_prompt, random_chunk_str, json_template):
+    """Constructs the user prompt using prompt, chunk and json template"""
+    return (
+        f"{user_prompt}\n\nHere is the JSON containing the search:\n{random_chunk_str}"
+        f"\n\nAnd here is the JSON template:\n{json_template}"
+    )
 
-        seed_json_path = seed_name + ".json"
+def generate_question(system_prompt, user_prompt, json_template, project_db):
+    """Generates a question and saves it to a file"""
+    average_character_length = 0
+    for i in range(REQUIRED_QUESTIONS):
+        with project_db.cursor() as cursor:
+            # Access the LOUIS_SCHEMA environment variable
+            louis_schema = os.getenv('LOUIS_SCHEMA')
 
-        file_path = os.path.join(seed_data_path, seed_json_path)
+            # Extract version part from the schema name
+            schema_version = re.search(r'(\d+\.\d+\.\d+)', louis_schema).group(1)
 
-        if os.path.exists(file_path):
-            logging.info(
-                "JSON file %s exists in %s, skipping", seed_json_path, seed_data_path
-            )
-        else:
-            web_pages = get_webpage(cursor, url)
+            random_chunk = get_random_chunk(cursor, schema_version)
+            if not random_chunk:
+                print("No chunk found in the database.")
+                sys.exit(1)  # exit the program if chunk is empty
 
-            all_language_seed_page = ""
-            for row in web_pages:
-                web_text = row.get("cleaned_content")
-                all_language_seed_page += web_text
-            page = all_language_seed_page
-            md5hash = row.get("md5hash")
+            
+            chunk_title = ""
+            for chunk in random_chunk:
+                chunk_title = chunk["title"]
 
-            ### Get the images corresponding to the current page
-            images_fetch = get_images(cursor, md5hash)
-
-            image_information = ""
-
-            for row in images_fetch:
-                image_links = row["photo_link"]
-                image_descriptions = row["photo_description"]
-                image_information += f"Image link: {image_links}"
-                image_information += f"\nImage description: {image_descriptions}\n\n"
-
-            logging.info("Sending request for summary to Azure OpenAI endpoint...\n")
-
-            user_prompt = (
-                load_user_prompt
-                + "Return a JSON file that follows this template:\n\n"
-                + json_template
-                + "\n\nhere is the text to parse:\n"
-                + page
-                + "\n\nhere is the source url of the page:\n"
-                + url
-                + "\n\nAnd here is the images descriptions:\n"
-                + image_information
-            )
-
-            response = openai.get_chat_answer(system_prompt, user_prompt, 2000)
-
-            data = json.loads(response.choices[0].message.content)
-
-            if isinstance(data, dict):
-                file_name = seed_name
-                file_name = file_name.encode("latin1").decode("unicode-escape")
-                file_name += ".json"
-
-                file_path = os.path.join(seed_data_path, file_name)
-                with open(file_path, "w") as json_file:
-                    json.dump(data, json_file, ensure_ascii=False, indent=4)
-
-                logging.info("JSON data written to %s", file_path)
+            ### TO REMOVE ###
+            words_to_check = [
+                "This page is part",
+                "Cette page fait partie",
+                "Archivée",
+                "archivée",
+                "Archived",
+                "archived"
+            ]
+            
+            found_words = []
+            
+            for word in words_to_check:
+                if word.lower() in chunk_title.lower():
+                    found_words.append(word)
+            
+            if found_words:
+                print("The following words were found in the string:")
+                for found_word in found_words:
+                    print("-", found_word)
+                print("Skipping...")
             else:
-                logging.error(
-                    "Error: not a dictionary, so it cannot be serialized to JSON."
+            ### TO REMOVE ###
+
+                constructed_user_prompt = construct_user_prompt(
+                    user_prompt, str(random_chunk), json_template
                 )
+                total_length = len(system_prompt) + len(constructed_user_prompt)
+                average_character_length += total_length
+
+                if total_length < CHARACTER_LIMIT:
+                    response = openai.get_chat_answer(
+                        system_prompt, constructed_user_prompt, 2000
+                    )
+                    data = json.loads(response.choices[0].message.content)
+                    if isinstance(data, dict):
+                        for chunk in random_chunk:
+                            data["text_content"] = chunk["text_content"]
+                        save_response_to_file(data)
+
+    return average_character_length / REQUIRED_QUESTIONS
+
+ 
+def save_response_to_file(data):
+    """Saves the provided data to a new file"""
+    file_number = 1
+    while True:
+        file_name = f"qna_{TEST_VERSION}_{file_number}.json"
+        file_path = os.path.join(STORAGE_PATH, file_name)
+        if not os.path.exists(file_path):
+            break
+        file_number += 1
+
+    with open(file_path, "w") as json_file:
+        print("File saved into: " + file_path)
+        json.dump(data, json_file, ensure_ascii=False, indent=4)
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: " + sys.argv[0] + " SEED_DATA_PATH PROMPT_PATH")
-        print("SEED_DATA_PATH: Directory for storing seeds")
+def main():
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} PROMPT_PATH")
         print("PROMPT_PATH: Directory containing the API prompt")
         sys.exit(1)
 
-    SEED_DATA_PATH = sys.argv[1]
-    PROMPT_PATH = sys.argv[2]
-
-    if not os.path.exists(SEED_DATA_PATH):
-        print(f"The directory '{SEED_DATA_PATH}' does not exist.")
+    prompt_path = sys.argv[1]
+    if not os.path.exists(prompt_path):
+        print(f"The directory '{prompt_path}' does not exist.")
         sys.exit(1)
 
-    if not os.path.exists(PROMPT_PATH):
-        print(f"The directory '{PROMPT_PATH}' does not exist.")
+    system_prompt, user_prompt, json_template = load_prompts_and_template(prompt_path)
+    project_db = db.connect_db()
+
+    average_tokens_per_chunk = generate_question(
+        system_prompt, user_prompt, json_template, project_db
+    )
+    if average_tokens_per_chunk is None:
+        print("No questions were generated.")
         sys.exit(1)
 
-    system_prompt = nachet.load_prompt(PROMPT_PATH, "system_prompt.txt")
-    load_user_prompt = nachet.load_prompt(PROMPT_PATH, "user_prompt.txt")
-    json_template = nachet.load_json_template(PROMPT_PATH)
+    print("Average Tokens sent to the API : " + str(average_tokens_per_chunk))
 
-    nachet_db = db.connect_db()
-    with nachet_db.cursor() as cursor:
-        seed_urls = seeds_urls(cursor, 10)
-        url_to_seed_mapping = create_seed_url_mapping(cursor, seed_urls)
-        logging.info("%s", url_to_seed_mapping)
 
-        logging.info("\nList of selected seeds :")
-        for url, seed_name in url_to_seed_mapping.items():
-            logging.info("%s", seed_name)
-
-        transform_seed_data_into_json(
-            cursor,
-            url_to_seed_mapping,
-            system_prompt,
-            load_user_prompt,
-            json_template,
-            SEED_DATA_PATH,
-        )
+if __name__ == "__main__":
+    main()
