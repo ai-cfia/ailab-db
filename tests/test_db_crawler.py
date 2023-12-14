@@ -75,8 +75,6 @@ class TestDBCrawler(unittest.TestCase):
             _entity_id = rows[0]
             self.connection.rollback()
 
-# generated tests
-
     def test_store_chunk_item(self):
         """Test storing a chunk item."""
         with db.cursor(self.connection) as cursor:
@@ -88,7 +86,7 @@ class TestDBCrawler(unittest.TestCase):
             }
             crawler.store_chunk_item(cursor, item)
             self.connection.rollback()
-        self.assertTrue(item["title"], "This is an example.")
+        self.assertEqual(item["title"], "À propos de l'ACIA - Agence canadienne d'inspection des aliments")
 
     def test_store_crawl_item(self):
         """Test storing a crawl item."""
@@ -103,7 +101,7 @@ class TestDBCrawler(unittest.TestCase):
             }
             crawler.store_crawl_item(cursor, item)
             self.connection.rollback()
-        self.assertTrue(item["url"], "https://example.com")
+        self.assertEqual(item["url"], "https://example.com")
 
     def test_store_embedding_item(self):
         """Test storing an embedding item."""
@@ -115,7 +113,7 @@ class TestDBCrawler(unittest.TestCase):
             }
             crawler.store_embedding_item(cursor, item)
             self.connection.rollback()
-        self.assertTrue(item["token_id"], "1")
+        self.assertEqual(item["token_id"], "be612259-9b52-42fd-8d0b-d72120efa3b6")
 
     # def test_fetch_crawl_ids_without_chunk(self):
     #     """Test fetching crawl IDs without a chunk."""
@@ -138,4 +136,3 @@ class TestDBCrawler(unittest.TestCase):
     #         crawler.fetch_chunk_token_row(cursor, "https://example.com")
     #         self.connection.rollback()
     #     self.assertFalse()
-        
