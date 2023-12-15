@@ -1,6 +1,5 @@
 """test database functions"""
 import unittest
-
 import ailab.db as db
 import ailab.db.crawler as crawler
 import tests.testing_utils as test
@@ -115,10 +114,15 @@ class TestDBCrawler(unittest.TestCase):
             self.connection.rollback()
         self.assertEqual(row['title'], "Mandat - Agence canadienne d'inspection des aliments")
         
-
     def test_fetch_chunk_token_row(self):
         """Test fetching a chunk token row."""
         with db.cursor(self.connection) as cursor:
             row = crawler.fetch_chunk_token_row(cursor, "469812c5-190c-4e56-9f88-c8621592bcb5")
             self.connection.rollback()
         self.assertEqual(str(row['chunk_id']), "469812c5-190c-4e56-9f88-c8621592bcb5")
+
+    def test_fetch_crawl_row_with_invalid_url(self):
+        """Test fetching a crawl row with an invalid URL."""
+        with db.cursor(self.connection) as cursor:
+            with self.assertRaises(db.DBError):
+                crawler.fetch_crawl_row(cursor, "invalid_url")
