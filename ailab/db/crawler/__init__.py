@@ -210,15 +210,13 @@ def fetch_crawl_row(cursor, url):
     assert 'html_content' in row.keys()
     return row
 
-def fetch_chunk_token_row(cursor, url):
+def fetch_chunk_token_row(cursor, id):
     """Fetch the most recent chunk token for a given chunk id."""
-    data = db.parse_postgresql_url(url)
+    data = {'id': id}
     cursor.execute(
-        "SELECT chunk.id as chunk_id, token.id as token_id, tokens FROM chunk"
-        " JOIN token ON chunk.id = token.chunk_id"
-        " WHERE chunk.id = %(id)s LIMIT 1",
+        """SELECT chunk.id as chunk_id, token.id as token_id, tokens FROM chunk
+        JOIN token ON chunk.id = token.chunk_id
+        WHERE chunk.id = %(id)s LIMIT 1""",
         data
     )
-    # psycopg.extras.DictRow is not a real dict and will convert
-    # to string as a list so we force convert to dict
     return cursor.fetchone()

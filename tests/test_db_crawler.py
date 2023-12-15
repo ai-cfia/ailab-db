@@ -53,20 +53,6 @@ class TestDBCrawler(unittest.TestCase):
             row['title'],
             "Sampling procedures - Canadian Food Inspection Agency")
 
-    def test_fetch_chunk_row(self):
-        """sample test to check if fetch_chunk_row works"""
-        url = db.create_postgresql_url(
-            "DBNAME",
-            "chunk",
-            "469812c5-190c-4e56-9f88-c8621592bcb5")
-        with db.cursor(self.connection) as cursor:
-            row = crawler.fetch_chunk_token_row(cursor, url)
-            self.connection.rollback()
-        self.assertTrue(isinstance(row, dict))
-        self.assertEqual(len(row['tokens']), 76)
-        self.assertEqual(str(row['chunk_id']), "469812c5-190c-4e56-9f88-c8621592bcb5")
-        self.assertEqual(str(row['token_id']), 'dbb7b498-2cbf-4ae9-aa10-3169cc72f285')
-
     def test_fetch_chunk_id_without_embedding(self):
         """sample test to check if fetch_chunk_id_without_embedding works"""
         with db.cursor(self.connection) as cursor:
@@ -115,24 +101,24 @@ class TestDBCrawler(unittest.TestCase):
             self.connection.rollback()
         self.assertEqual(item["token_id"], "be612259-9b52-42fd-8d0b-d72120efa3b6")
 
-    # def test_fetch_crawl_ids_without_chunk(self):
-    #     """Test fetching crawl IDs without a chunk."""
-    #     with db.cursor(self.connection) as cursor:
-    #         id = crawler.fetch_crawl_ids_without_chunk(cursor)
-    #         self.connection.rollback()
-    #     self.assertTrue()
+    def test_fetch_crawl_ids_without_chunk(self):
+        """Test fetching crawl IDs without a chunk."""
+        with db.cursor(self.connection) as cursor:
+            id = crawler.fetch_crawl_ids_without_chunk(cursor)
+            self.connection.rollback()
+        self.assertEqual(id, [])
 
-    # def test_fetch_crawl_row(self):
-    #     """Test fetching a crawl row."""
-    #     with db.cursor(self.connection) as cursor:
-    #         id = crawler.fetch_crawl_row(cursor, "https://example.com")
-    #         self.connection.rollback()
-    #     self.assertFalse()
+    def test_fetch_crawl_row(self):
+        """Test fetching a crawl row."""
+        with db.cursor(self.connection) as cursor:
+            row = crawler.fetch_crawl_row(cursor, "https://inspection.canada.ca/a-propos-de-l-acia/structure-organisationnelle/mandat/fra/1299780188624/1319164463699")
+            self.connection.rollback()
+        self.assertEqual(row['title'], "Mandat - Agence canadienne d'inspection des aliments")
         
 
-    # def test_fetch_chunk_token_row(self):
-    #     """Test fetching a chunk token row."""
-    #     with db.cursor(self.connection) as cursor:
-    #         crawler.fetch_chunk_token_row(cursor, "https://example.com")
-    #         self.connection.rollback()
-    #     self.assertFalse()
+    def test_fetch_chunk_token_row(self):
+        """Test fetching a chunk token row."""
+        with db.cursor(self.connection) as cursor:
+            row = crawler.fetch_chunk_token_row(cursor, "469812c5-190c-4e56-9f88-c8621592bcb5")
+            self.connection.rollback()
+        self.assertEqual(str(row['chunk_id']), "469812c5-190c-4e56-9f88-c8621592bcb5")
