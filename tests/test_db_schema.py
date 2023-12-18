@@ -1,6 +1,8 @@
 """test database functions"""
 import unittest
 
+import psycopg
+
 import ailab.db as db
 
 
@@ -11,6 +13,30 @@ class TestDBSchema(unittest.TestCase):
 
     def tearDown(self):
         self.connection.close()
+
+    def test_crawl_exists(self):
+        """Test if a specific table exists in the database."""
+        table_name = "crawl" 
+        with db.cursor(self.connection) as cursor:
+            cursor.execute(f"""SELECT * FROM {table_name};""")
+            result = cursor.fetchone()
+            self.assertIsNotNone(result)
+    
+    def test_false_table_not_exists(self):
+        """Test if a specific table does not exists in the database."""
+        table_name = "false_table" 
+        with db.cursor(self.connection) as cursor:
+            with self.assertRaises(psycopg.errors.UndefinedTable):
+                cursor.execute(f"""SELECT * FROM {table_name};""")
+
+    def test_table_has_correct_columns(self):
+        """Test if a specific table has the correct columns."""
+        table_name = "chunk"  
+        expected_columns = ["id", "title", "text_content"]  
+        with db.cursor(self.connection) as cursor:
+            cursor.execute(f"""SELECT * FROM {table_name} LIMIT 0;""")
+            actual_columns = [desc[0] for desc in cursor.description]
+            self.assertCountEqual(actual_columns, expected_columns, f"Table {table_name} does not have the correct columns.")
 
     # def test_schema(self):
     #     """sample test to check if the schema is correct and idempotent"""
