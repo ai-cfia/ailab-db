@@ -45,6 +45,62 @@ def fetch_links(cursor, url):
     data['destination_urls'] = [r['url'] for r in cursor.fetchall()]
     return data['destination_urls']
 
+def get_md5hash(cursor, data):
+    cursor.execute(
+        """SELECT md5hash FROM crawl WHERE url = %(url)s
+           ORDER BY last_updated DESC LIMIT 1""",
+        data
+    )
+    return cursor.fetchone()['md5hash']
+
+def get_chunk_id(cursor, data):
+    cursor.execute(
+        """
+        WITH e as(
+            INSERT INTO chunk (title, text_content)
+                VALUES(%(title)s, %(text_content)s)
+            ON CONFLICT DO NOTHING
+            RETURNING id
+        )
+        SELECT id FROM e
+        UNION ALL
+        SELECT id FROM chunk WHERE text_content = %(text_content)s
+        """,
+        data
+    )
+    row = cursor.fetchone()
+    return row['id'] if row is not None else None
+
+def insert_html_content_to_chunk(cursor, data):
+    cursor.execute(
+        """
+        INSERT INTO html_content_to_chunk (md5hash, chunk_id)
+        VALUES(%(md5hash)s, %(chunk_id)s::UUID)
+        ON CONFLICT DO NOTHING
+        """,
+        data)
+
+def get_token_id(cursor, data):
+    cursor.execute(
+        """
+        WITH e as(
+            INSERT INTO token (chunk_id, tokens, encoding)
+                VALUES (%(chunk_id)s::UUID, %(tokens)s, %(encoding)s)
+            ON CONFLICT DO NOTHING
+            RETURNING *
+        )
+        SELECT id FROM e
+        UNION ALL
+        SELECT id FROM token
+            WHERE chunk_id = %(chunk_id)s::UUID
+            and tokens = %(tokens)s::INTEGER[]
+            and encoding = %(encoding)s
+        """,
+        data
+    )
+    res = cursor.fetchone()
+    return res['id'] if res is not None else None
+
 def store_chunk_item(cursor, item):
     """Process a ChunkItem and insert it into the database."""
     try:
@@ -55,63 +111,13 @@ def store_chunk_item(cursor, item):
                 'tokens': item["tokens"],
                 'encoding': 'cl100k_base'
         }
-        cursor.execute(
-            """SELECT md5hash FROM crawl WHERE url = %(url)s
-               ORDER BY last_updated DESC LIMIT 1""",
-            data
-        )
-        data['md5hash'] = cursor.fetchone()['md5hash']
-
-        # TODO: should probably update the title even if the text_content
-        # is already present as we may have changed how we create the title
-        cursor.execute(
-            """
-            WITH e as(
-                INSERT INTO chunk (title, text_content)
-                    VALUES(%(title)s, %(text_content)s)
-                ON CONFLICT DO NOTHING
-                RETURNING id
-            )
-            SELECT id FROM e
-            UNION ALL
-            SELECT id FROM chunk WHERE text_content = %(text_content)s
-            """,
-            data
-        )
-        row = cursor.fetchone()
-        if row is not None:
-            data['chunk_id'] = row['id']
-        cursor.execute(
-            """
-            INSERT INTO html_content_to_chunk (md5hash, chunk_id)
-            VALUES(%(md5hash)s, %(chunk_id)s::UUID)
-            ON CONFLICT DO NOTHING
-            """,
-            data)
-        cursor.execute(
-            """
-            WITH e as(
-                INSERT INTO token (chunk_id, tokens, encoding)
-                    VALUES (%(chunk_id)s::UUID, %(tokens)s, %(encoding)s)
-                ON CONFLICT DO NOTHING
-                RETURNING *
-            )
-            SELECT id FROM e
-            UNION ALL
-            SELECT id FROM token
-                WHERE chunk_id = %(chunk_id)s::UUID
-                and tokens = %(tokens)s::INTEGER[]
-                and encoding = %(encoding)s
-            """,
-            data
-        )
-        res = cursor.fetchone()
-        if res is not None:
-            data['token_id'] = res['id']
+        data['md5hash'] = get_md5hash(cursor, data)
+        data['chunk_id'] = get_chunk_id(cursor, data)
+        insert_html_content_to_chunk(cursor, data)
+        data['token_id'] = get_token_id(cursor, data)
         return data
     except psycopg.IntegrityError as e:
         raise db.DBError("Error storing chunk item for %s" % item['url']) from e
-
 
 def store_crawl_item(cursor, item):
     """Process a CrawlItem and insert it into the database."""
