@@ -137,7 +137,9 @@ def store_crawl_item(cursor, item):
             """,
             item
         )
-        return item
+        cursor.execute("""SELECT * FROM crawl 
+                       WHERE url = %(url)s ORDER BY last_updated DESC LIMIT 1""", item)
+        return cursor.fetchone()
     except psycopg.IntegrityError as e:
         raise db.DBError("Error storing crawl item for %s" % item['url']) from e
 
@@ -162,7 +164,7 @@ def store_embedding_item(cursor, item):
            query,
             data
         )
-        return item
+        return data['token_id']
     except psycopg.IntegrityError as e:
         raise db.DBError(
             "Error storing embedding item for token %s" % item['token_id']) from e
