@@ -111,10 +111,20 @@ def store_chunk_item(cursor, item):
                 'tokens': item["tokens"],
                 'encoding': 'cl100k_base'
         }
-        data['md5hash'] = get_md5hash(cursor, data)
-        data['chunk_id'] = get_chunk_id(cursor, data)
+        new_md5hash = get_md5hash(cursor, data)
+        if new_md5hash is not None:
+            data['md5hash'] = new_md5hash
+        
+        new_chunk_id = get_chunk_id(cursor, data)
+        if new_chunk_id is not None: 
+            data['chunk_id'] = new_chunk_id
+        
         insert_html_content_to_chunk(cursor, data)
-        data['token_id'] = get_token_id(cursor, data)
+
+        new_token_id = get_token_id(cursor, data)
+        if new_token_id is not None:
+            data['token_id'] = new_token_id
+        
         return data
     except psycopg.IntegrityError as e:
         raise db.DBError("Error storing chunk item for %s" % item['url']) from e
