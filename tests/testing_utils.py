@@ -1,4 +1,7 @@
 import os
+import random
+import uuid
+import hashlib
 import dotenv
 dotenv.load_dotenv()
 
@@ -19,3 +22,16 @@ create table if not exists "{embedding_model}" (
 	unique(token_id)
 );
 """
+
+# Generate a random UUID
+test_uuid = uuid.uuid4()
+test_item = {
+                "id": test_uuid,
+                "title": "Title exemple",
+                "text_content": "This is an example content.",
+                }
+
+test_hash = hashlib.md5("test".encode()).hexdigest()[:31]
+
+def generate_random_embedding(dimensions=100):
+    return [random.uniform(0, 100000) for _ in range(dimensions)]
