@@ -114,6 +114,25 @@ class TestDBCrawler(unittest.TestCase):
             row = crawler.fetch_crawl_row(cursor, "https://inspection.canada.ca/a-propos-de-l-acia/structure-organisationnelle/mandat/fra/1299780188624/1319164463699")
             self.connection.rollback()
         self.assertEqual(row['title'], "Mandat - Agence canadienne d'inspection des aliments")
+
+    # def test_fetch_crawl_row_with_test_data(self):
+    #     """Test fetching a crawl row."""
+    #     with db.cursor(self.connection) as cursor:
+    #         test_chunk_id = test.test_uuid
+    #         test_crawl_id = test.test_uuid
+    #         test_md5hash = test.test_hash
+
+
+    #         cursor.execute(f"""
+    #         INSERT INTO html_content VALUES ('<html><body>Test Content</body></html>', '{test_md5hash}');
+    #         INSERT INTO crawl (id, url, title, lang, last_crawled, last_updated, last_updated_date, md5hash)
+    #         VALUES ('{test_chunk_id}', 'http://example.com', 'Test Title', 'en', NOW(), NOW(), NOW(), '{test_md5hash}');
+    #         INSERT INTO html_content_to_chunk VALUES ('{test_crawl_id}', '{test_md5hash}');
+    #         """
+    #             )
+    #         row = crawler.fetch_crawl_row(cursor, "http://example.com")
+    #         self.connection.rollback()
+    #     self.assertEqual(row['title'], "Test Title")
         
     def test_fetch_chunk_token_row(self):
         """Test fetching a chunk token row."""
