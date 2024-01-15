@@ -104,9 +104,9 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                     user_prompt, str(random_chunk), json_template
                 )
                 total_length = len(system_prompt) + len(constructed_user_prompt)
-                average_character_length += total_length
-
+                
                 if total_length < CHARACTER_LIMIT:
+                    average_character_length += total_length
                     response = openai.get_chat_answer(
                         system_prompt, constructed_user_prompt, 2000
                     )
