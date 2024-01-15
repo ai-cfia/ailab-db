@@ -1,15 +1,11 @@
 """
-Script Purpose:
-This script generates questions based on provided prompts
-and stores the responses as JSON files.
-It interacts with the AI model to create questions
-and saves the relevant data for each question in a JSON file.
+Script Purpose: This script generates questions based on provided prompts and
+stores the responses as JSON files. It interacts with the AI model to create
+questions and saves the relevant data for each question in a JSON file.
 
-Usage:
-./generate-qna.sh PROMPT_PATH
+Usage: ./generate-qna.sh PROMPT_PATH
 
-Parameters:
-- PROMPT_PATH: Directory containing the API prompt files
+Parameters: - PROMPT_PATH: Directory containing the API prompt files
 (qna_system_prompt.txt, qna_user_prompt.txt, and JSON template)
 """
 
@@ -18,6 +14,7 @@ import re
 import sys
 import json
 from datetime import date
+import argparse
 
 import ailab.db as db
 from ailab.models import openai
@@ -29,7 +26,7 @@ from ailab.db.finesse.test_queries import get_random_chunk
 TEST_VERSION = date.today()
 REQUIRED_QUESTIONS = 1
 CHARACTER_LIMIT = 14383
-STORAGE_PATH = "/home/vscode/finesse-data-2/qna"
+DEFAULT_STORAGE_PATH = "/home/vscode/finesse-data-2/qna"
 SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
 USER_PROMPT_FILENAME = "qna_user_prompt.txt"
 
@@ -55,7 +52,9 @@ def construct_user_prompt(user_prompt, random_chunk_str, json_template):
     )
 
 
-def generate_question(system_prompt, user_prompt, json_template, project_db):
+def generate_question(
+    system_prompt, user_prompt, json_template, project_db, STORAGE_PATH
+):
     """Generates a question and saves it to a file"""
     average_character_length = 0
 
@@ -104,7 +103,7 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                     user_prompt, str(random_chunk), json_template
                 )
                 total_length = len(system_prompt) + len(constructed_user_prompt)
-                
+
                 if total_length < CHARACTER_LIMIT:
                     average_character_length += total_length
                     response = openai.get_chat_answer(
@@ -114,12 +113,12 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
                     if isinstance(data, dict):
                         for chunk in random_chunk:
                             data["text_content"] = chunk["text_content"]
-                        save_response_to_file(data)
+                        save_response_to_file(data, STORAGE_PATH)
 
     return average_character_length / REQUIRED_QUESTIONS
 
 
-def save_response_to_file(data):
+def save_response_to_file(data, STORAGE_PATH):
     """Saves the provided data to a new file"""
     file_number = 1
     while True:
@@ -134,13 +133,7 @@ def save_response_to_file(data):
         json.dump(data, json_file, ensure_ascii=False, indent=4)
 
 
-def main():
-    if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} PROMPT_PATH")
-        print("PROMPT_PATH: Directory containing the API prompt")
-        sys.exit(1)
-
-    prompt_path = sys.argv[1]
+def main(prompt_path, storage_path):
     if not os.path.exists(prompt_path):
         print(f"The directory '{prompt_path}' does not exist.")
         sys.exit(1)
@@ -149,7 +142,7 @@ def main():
     project_db = db.connect_db()
 
     average_tokens_per_chunk = generate_question(
-        system_prompt, user_prompt, json_template, project_db
+        system_prompt, user_prompt, json_template, project_db, storage_path
     )
     if average_tokens_per_chunk is None:
         print("No questions were generated.")
@@ -158,5 +151,15 @@ def main():
     print("Average Tokens sent to the API : " + str(average_tokens_per_chunk))
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Generate questions based on prompts.")
+    parser.add_argument("prompt_path", help="Directory containing the API prompt")
+    parser.add_argument(
+        "--storage_path", default=DEFAULT_STORAGE_PATH, help="Path to storage"
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    main()
+    args = parse_arguments()
+    main(args.prompt_path, args.storage_path)
