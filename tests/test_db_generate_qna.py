@@ -5,11 +5,11 @@ import sys
 from unittest.mock import patch
 import tempfile
 import shutil
+from bin.generate_qna import generate_question
+
 
 # Add the project root directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from bin.generate_qna import generate_question
 
 
 class TestScript(unittest.TestCase):
