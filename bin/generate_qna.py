@@ -24,9 +24,9 @@ from ailab.db.finesse.test_queries import get_random_chunk
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 1
+REQUIRED_QUESTIONS = 3
 CHARACTER_LIMIT = 14383
-DEFAULT_STORAGE_PATH = "/home/vscode/finesse-data-2/qna"
+DEFAULT_STORAGE_PATH = "../qna-test"
 SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
 USER_PROMPT_FILENAME = "qna_user_prompt.txt"
 
@@ -60,11 +60,8 @@ def generate_question(
 
     with project_db.cursor() as cursor:  # Open the cursor here
         for i in range(REQUIRED_QUESTIONS):
-            # Access the LOUIS_SCHEMA environment variable
-            louis_schema = os.getenv("LOUIS_SCHEMA")
-
-            # Extract version part from the schema name
-            schema_version = re.search(r"(\d+\.\d+\.\d+)", louis_schema).group(1)
+            # Access the AILAB_SCHEMA_VERSION environment variable
+            schema_version = os.getenv("AILAB_SCHEMA_VERSION")
 
             random_chunk = get_random_chunk(cursor, schema_version)
             if not random_chunk:
