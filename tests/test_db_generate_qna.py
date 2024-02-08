@@ -1,14 +1,13 @@
 import unittest
 import json
+import os
 import sys
 from unittest.mock import patch
 
+# Add the project root directory to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from bin.generate_qna import generate_question
-
-
-# Assuming the test script is located in the same directory as the project root
-# This adds the current directory to the path
-sys.path.append("..")
 
 class TestScript(unittest.TestCase):
     def setUp(self):
