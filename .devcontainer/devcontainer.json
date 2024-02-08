@@ -19,7 +19,8 @@
 			"extensions": [
 				"timonwong.shellcheck",
 				"GitHub.vscode-pull-request-github",
-				"charliermarsh.ruff"
+				"charliermarsh.ruff",
+				"ms-python.black-formatter"
 			]
 		}
 	},
