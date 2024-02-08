@@ -3,7 +3,6 @@ import unittest
 import json
 
 import ailab.db as db
-import ailab.db.api as api
 
 import testing_utils as test
 
