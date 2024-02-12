@@ -50,6 +50,8 @@ def construct_user_prompt(user_prompt, random_chunk_str, json_template):
         f"\n\nAnd here is the JSON template:\n{json_template}"
     )
 
+class NoChunkFoundError(Exception):
+    pass
 
 def generate_question(
     system_prompt, user_prompt, json_template, project_db, STORAGE_PATH
@@ -68,8 +70,7 @@ def generate_question(
 
             random_chunk = get_random_chunk(cursor, schema_version)
             if not random_chunk:
-                print("No chunk found in the database.")
-                sys.exit(1)  # exit the program if chunk is empty
+                raise NoChunkFoundError("No chunk found in the database.")
 
             chunk_title = ""
             for chunk in random_chunk:
@@ -133,10 +134,17 @@ def save_response_to_file(data, STORAGE_PATH):
         json.dump(data, json_file, ensure_ascii=False, indent=4)
 
 
+class DirectoryNotFoundError(Exception):
+    pass
+
+
+class NoQuestionsGeneratedError(Exception):
+    pass
+
+
 def main(prompt_path, storage_path):
     if not os.path.exists(prompt_path):
-        print(f"The directory '{prompt_path}' does not exist.")
-        sys.exit(1)
+        raise DirectoryNotFoundError(f"The directory '{prompt_path}' does not exist.")
 
     system_prompt, user_prompt, json_template = load_prompts_and_template(prompt_path)
     project_db = db.connect_db()
@@ -144,11 +152,11 @@ def main(prompt_path, storage_path):
     average_tokens_per_chunk = generate_question(
         system_prompt, user_prompt, json_template, project_db, storage_path
     )
-    if average_tokens_per_chunk is None:
-        print("No questions were generated.")
-        sys.exit(1)
 
-    print("Average Tokens sent to the API : " + str(average_tokens_per_chunk))
+    if average_tokens_per_chunk is None:
+        raise NoQuestionsGeneratedError("No questions were generated.")
+
+    print("Average Tokens sent to the API: " + str(average_tokens_per_chunk))
 
 
 def parse_arguments():
