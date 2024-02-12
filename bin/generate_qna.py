@@ -55,9 +55,13 @@ def generate_question(
     system_prompt, user_prompt, json_template, project_db, STORAGE_PATH
 ):
     """Generates a question and saves it to a file"""
+    if project_db is None:
+        print("Database connection failed.")
+        return None
+
     average_character_length = 0
 
-    with project_db.cursor() as cursor:  # Open the cursor here
+    with project_db.cursor() as cursor:
         for i in range(REQUIRED_QUESTIONS):
             # Access the AILAB_SCHEMA_VERSION environment variable
             schema_version = os.getenv("AILAB_SCHEMA_VERSION")
