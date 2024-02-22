@@ -10,7 +10,6 @@ Parameters: - PROMPT_PATH: Directory containing the API prompt files
 """
 
 import os
-import sys
 import json
 from datetime import date
 import argparse
