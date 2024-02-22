@@ -22,7 +22,7 @@ from ailab.db.finesse.test_queries import get_random_chunk
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 3
+REQUIRED_QUESTIONS = 100
 CHARACTER_LIMIT = 14383
 DEFAULT_STORAGE_PATH = "../qna-test"
 SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
@@ -49,11 +49,13 @@ def construct_user_prompt(user_prompt, random_chunk_str, json_template):
         f"\n\nAnd here is the JSON template:\n{json_template}"
     )
 
+
 class NoChunkFoundError(Exception):
     pass
 
+
 def generate_question(
-    system_prompt, user_prompt, json_template, project_db, STORAGE_PATH
+    system_prompt, user_prompt, json_template, project_db
 ):
     """Generates a question and saves it to a file"""
     if project_db is None:
@@ -63,6 +65,7 @@ def generate_question(
     average_character_length = 0
 
     with project_db.cursor() as cursor:
+        responses = []  # create an empty list to hold the responses
         for i in range(REQUIRED_QUESTIONS):
             # Access the AILAB_SCHEMA_VERSION environment variable
             schema_version = os.getenv("AILAB_SCHEMA_VERSION")
@@ -75,7 +78,7 @@ def generate_question(
             for chunk in random_chunk:
                 chunk_title = chunk["title"]
 
-            ### TO REMOVE ###
+            ### BAN WORDS ###
             words_to_check = [
                 "This page is part",
                 "Cette page fait partie",
@@ -97,7 +100,7 @@ def generate_question(
                     print("-", found_word)
                 print("Skipping...")
             else:
-                ### TO REMOVE ###
+                ### BAN WORDS ###
 
                 constructed_user_prompt = construct_user_prompt(
                     user_prompt, str(random_chunk), json_template
@@ -113,9 +116,9 @@ def generate_question(
                     if isinstance(data, dict):
                         for chunk in random_chunk:
                             data["text_content"] = chunk["text_content"]
-                        save_response_to_file(data, STORAGE_PATH)
+                        responses.append(data)  # add the data to the responses list
 
-    return average_character_length / REQUIRED_QUESTIONS
+    return responses, average_character_length / REQUIRED_QUESTIONS
 
 
 def save_response_to_file(data, STORAGE_PATH):
@@ -148,12 +151,18 @@ def main(prompt_path, storage_path):
     system_prompt, user_prompt, json_template = load_prompts_and_template(prompt_path)
     project_db = db.connect_db()
 
-    average_tokens_per_chunk = generate_question(
-        system_prompt, user_prompt, json_template, project_db, storage_path
+    # Call generate_question function
+    responses, average_tokens_per_chunk = generate_question(
+        system_prompt, user_prompt, json_template, project_db
     )
 
+    # If no questions were generated, raise an error
     if average_tokens_per_chunk is None:
         raise NoQuestionsGeneratedError("No questions were generated.")
+
+    # Save each response to a file
+    for response in responses:
+        save_response_to_file(response, storage_path)
 
     print("Average Tokens sent to the API: " + str(average_tokens_per_chunk))
 
