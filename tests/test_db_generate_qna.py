@@ -6,10 +6,10 @@ import tempfile
 import shutil
 from unittest.mock import patch
 
-# Add the project root directory to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from bin.generate_qna import generate_question
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)  # noqa: E402
+from bin.generate_qna import generate_question  # noqa: E402
 
 
 class TestScript(unittest.TestCase):
