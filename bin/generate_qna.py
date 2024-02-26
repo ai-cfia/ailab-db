@@ -22,7 +22,7 @@ from ailab.db.finesse.test_queries import get_random_chunk
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 100
+REQUIRED_QUESTIONS = 10
 CHARACTER_LIMIT = 14383
 DEFAULT_STORAGE_PATH = "../qna-test"
 SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
@@ -54,9 +54,7 @@ class NoChunkFoundError(Exception):
     pass
 
 
-def generate_question(
-    system_prompt, user_prompt, json_template, project_db
-):
+def generate_question(system_prompt, user_prompt, json_template, project_db):
     """Generates a question and saves it to a file"""
     if project_db is None:
         print("Database connection failed.")
@@ -65,58 +63,60 @@ def generate_question(
     average_character_length = 0
 
     with project_db.cursor() as cursor:
-        responses = []  # create an empty list to hold the responses
-        for i in range(REQUIRED_QUESTIONS):
-            # Access the AILAB_SCHEMA_VERSION environment variable
-            schema_version = os.getenv("AILAB_SCHEMA_VERSION")
+            responses = []  # create an empty list to hold the responses
+            compteur = 0
+            while compteur < REQUIRED_QUESTIONS:
+                # Access the AILAB_SCHEMA_VERSION environment variable
+                schema_version = os.getenv("AILAB_SCHEMA_VERSION")
 
-            random_chunk = get_random_chunk(cursor, schema_version)
-            if not random_chunk:
-                raise NoChunkFoundError("No chunk found in the database.")
+                random_chunk = get_random_chunk(cursor, schema_version)
+                if not random_chunk:
+                    raise NoChunkFoundError("No chunk found in the database.")
 
-            chunk_title = ""
-            for chunk in random_chunk:
-                chunk_title = chunk["title"]
+                chunk_title = ""
+                for chunk in random_chunk:
+                    chunk_title = chunk["title"]
 
-            ### BAN WORDS ###
-            words_to_check = [
-                "This page is part",
-                "Cette page fait partie",
-                "Archivée",
-                "archivée",
-                "Archived",
-                "archived",
-            ]
-
-            found_words = []
-
-            for word in words_to_check:
-                if word.lower() in chunk_title.lower():
-                    found_words.append(word)
-
-            if found_words:
-                print("The following words were found in the string:")
-                for found_word in found_words:
-                    print("-", found_word)
-                print("Skipping...")
-            else:
                 ### BAN WORDS ###
+                words_to_check = [
+                    "This page is part",
+                    "Cette page fait partie",
+                    "Archivée",
+                    "archivée",
+                    "Archived",
+                    "archived",
+                ]
 
-                constructed_user_prompt = construct_user_prompt(
-                    user_prompt, str(random_chunk), json_template
-                )
-                total_length = len(system_prompt) + len(constructed_user_prompt)
+                found_words = []
 
-                if total_length < CHARACTER_LIMIT:
-                    average_character_length += total_length
-                    response = openai.get_chat_answer(
-                        system_prompt, constructed_user_prompt, 2000
+                for word in words_to_check:
+                    if word.lower() in chunk_title.lower():
+                        found_words.append(word)
+
+                if found_words:
+                    print("The following words were found in the string:")
+                    for found_word in found_words:
+                        print("-", found_word)
+                    print("Skipping...")
+                else:
+                    ### BAN WORDS ###
+
+                    constructed_user_prompt = construct_user_prompt(
+                        user_prompt, str(random_chunk), json_template
                     )
-                    data = json.loads(response.choices[0].message.content)
-                    if isinstance(data, dict):
-                        for chunk in random_chunk:
-                            data["text_content"] = chunk["text_content"]
-                        responses.append(data)  # add the data to the responses list
+                    total_length = len(system_prompt) + len(constructed_user_prompt)
+
+                    if total_length < CHARACTER_LIMIT:
+                        average_character_length += total_length
+                        response = openai.get_chat_answer(
+                            system_prompt, constructed_user_prompt, 2000
+                        )
+                        data = json.loads(response.choices[0].message.content)
+                        if isinstance(data, dict):
+                            for chunk in random_chunk:
+                                data["text_content"] = chunk["text_content"]
+                            compteur += 1
+                            responses.append(data)  # add the data to the responses list
 
     return responses, average_character_length / REQUIRED_QUESTIONS
 
