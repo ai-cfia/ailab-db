@@ -2,8 +2,11 @@ import time
 import semver
 import math
 
+
 def get_random_chunk(cursor, schema_version, seed=None):
-    assert semver.compare(schema_version, "0.0.6") >= 0, "Schema version must be >= 0.0.6"
+    assert (
+        semver.compare(schema_version, "0.0.6") >= 0
+    ), "Schema version must be >= 0.0.6"
     schema_version = "louis_" + schema_version
 
     if seed is None:
@@ -11,7 +14,7 @@ def get_random_chunk(cursor, schema_version, seed=None):
 
     # Execute the SET commands separately
     cursor.execute(f'SET SEARCH_PATH TO "{schema_version}", public;')
-    cursor.execute(f'SET SEED TO {seed};')
+    cursor.execute(f"SET SEED TO {seed};")
 
     query = """
         SELECT
@@ -29,7 +32,12 @@ def get_random_chunk(cursor, schema_version, seed=None):
         WHERE
             dc.score > 0.01
         ORDER BY
-            RANDOM()
+            floor(random() * (
+                SELECT
+                    COUNT(*)
+                FROM
+                    Chunk
+            ))
         LIMIT
             1;
     """
