@@ -4,4 +4,4 @@ DIRNAME=$(dirname "$0")
 
 PROMPT_PATH=$PROJECT_DIR/ailab/db/finesse/prompt
 
-PYTHONPATH=$PROJECT_DIR python "$DIRNAME"/generate_qna.py "$PROMPT_PATH"
+PYTHONPATH=$PROJECT_DIR python "$DIRNAME"/generate_qna.py "$PROMPT_PATH" --storage_path "../qna-test"
