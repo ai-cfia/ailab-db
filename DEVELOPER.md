@@ -32,6 +32,8 @@
 
   * DB_SERVER_CONTAINER_NAME: The name of your database server container (ex: louis-db-server).
 
+  * AILAB_SCHEMA_VERSION: The version of the schema you want to use.
+
 * Run database locally (see bin/postgres.sh)
 * Restore latest schema dump
 

@@ -19,7 +19,7 @@ classifiers = [
 dynamic = ["dependencies"]
 
 [tool.setuptools]
-packages = ["ailab", "ailab.db", "ailab.models", "ailab.db.api", "ailab.db.crawler"]
+packages = ["louis", "ailab.db", "louis.models"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
