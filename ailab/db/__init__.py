@@ -23,22 +23,22 @@ class DBMissingEnvironmentVariable(DBError):
 def raise_error(message):
     raise DBMissingEnvironmentVariable(message)
 
-LOUIS_DSN = os.environ.get("LOUIS_DSN")
-if LOUIS_DSN is None:
+AILAB_DSN = os.environ.get("AILAB_DSN")
+if AILAB_DSN is None:
     raise ValueError("LOUIS_DSN is not set")
 
-LOUIS_SCHEMA = os.environ.get("LOUIS_SCHEMA")
-if LOUIS_SCHEMA is None:
-    raise ValueError("LOUIS_SCHEMA is not set")
+AILAB_SCHEMA = os.environ.get("AILAB_SCHEMA")
+if AILAB_SCHEMA is None:
+    raise ValueError("AILAB_SCHEMA is not set")
 
 def connect_db():
     """Connect to the postgresql database and return the connection."""
-    logger.info(f"Connecting to {LOUIS_DSN}")
+    logger.info(f"Connecting to {AILAB_DSN}")
     connection = psycopg.connect(
-        conninfo=LOUIS_DSN,
+        conninfo=AILAB_DSN,
         row_factory=dict_row,
         autocommit=False,
-        options=f"-c search_path={LOUIS_SCHEMA},public")
+        options=f"-c search_path={AILAB_SCHEMA},public")
     assert connection.info.encoding == 'utf-8', (
         'Encoding is not UTF8: ' + connection.info.encoding)
     # psycopg.extras.register_uuid()
@@ -49,10 +49,10 @@ def cursor(connection):
     """Return a cursor for the given connection."""
     return connection.cursor()
 
-def create_postgresql_url(dbname, tablename, entity_id, parameters=None):
+def create_postgresql_url(dbname, tablename, entity_id, parameters=None,schema=AILAB_SCHEMA):
     if parameters is None:
-        return f'postgresql://{dbname}/{LOUIS_SCHEMA}/{tablename}/{entity_id}'
-    return f'postgresql://{dbname}/{LOUIS_SCHEMA}/{tablename}/{entity_id}?{urllib.parse.urlencode(parameters)}'
+        return f'postgresql://{dbname}/{schema}/{tablename}/{entity_id}'
+    return f'postgresql://{dbname}/{schema}/{tablename}/{entity_id}?{urllib.parse.urlencode(parameters)}'
 
 
 def parse_postgresql_url(url):
