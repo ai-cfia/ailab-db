@@ -28,11 +28,9 @@ class TestDBAPI(unittest.TestCase):
                 query, embeddings, test.MATCH_THRESHOLD, test.MATCH_COUNT, weights))
         results = self.cursor.fetchall()
         result = results[0]['search']
-        # Accuracy testing are part of a larger scheme: 
-        # https://github.com/ai-cfia/api-test
-        # self.assertEqual(
-        #     result[0]['title'],
-        #     "Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency")
+        self.assertEqual(
+            result[0]['title'],
+            "Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency")
 
         query_id = result[0]['query_id']
         self.cursor.execute("SELECT * FROM query where id = %s::uuid", (query_id,))
