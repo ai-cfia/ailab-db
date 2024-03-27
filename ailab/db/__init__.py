@@ -1,6 +1,5 @@
 """Database functions for the ailab project."""
 import hashlib
-import logging
 import os
 import urllib
 
@@ -10,9 +9,6 @@ from psycopg.rows import dict_row
 
 import dotenv
 dotenv.load_dotenv()
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 class DBError(Exception):
     pass
@@ -33,7 +29,6 @@ if LOUIS_SCHEMA is None:
 
 def connect_db():
     """Connect to the postgresql database and return the connection."""
-    logger.info(f"Connecting to {LOUIS_DSN}")
     connection = psycopg.connect(
         conninfo=LOUIS_DSN,
         row_factory=dict_row,
