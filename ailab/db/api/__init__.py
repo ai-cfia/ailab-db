@@ -81,7 +81,7 @@ def search(cursor, query_embedding):
                    %(match_count)s, %(weights)s::JSONB)
     """, data)
     # turn into list of dict now to preserve dictionaries
-    return [dict(r) for r in cursor.fetchall()]
+    return [dict(r) for r in cursor.fetchall()[0]["search"]]
 
 def search_from_text_query(cursor, query):
     """Encode the query before doing the search and return a dict."""
