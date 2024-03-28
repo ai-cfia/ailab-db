@@ -22,7 +22,7 @@ from ailab.db.finesse.test_queries import get_random_crawl
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 1
+REQUIRED_QUESTIONS = 10
 CHARACTER_LIMIT = 14383
 MAX_TOKEN = 2000
 DEFAULT_STORAGE_PATH = "../qna-test"
@@ -116,18 +116,18 @@ def save_response_to_file(data, STORAGE_PATH):
     while True:
         file_name = f"qna_{TEST_VERSION}_{file_number}.json"
         file_path = os.path.join(STORAGE_PATH, file_name)
-        
+
         # Check if the directory exists, if not, create it
         if not os.path.exists(STORAGE_PATH):
             os.makedirs(STORAGE_PATH)
-        
+
         # Check if the file exists, if not, create it
         if not os.path.exists(file_path):
             with open(file_path, "w") as json_file:
                 print("New file created at: " + file_path)
                 json.dump(data, json_file, ensure_ascii=False, indent=4)
             break
-        
+
         file_number += 1
 
     if file_number == 1:
