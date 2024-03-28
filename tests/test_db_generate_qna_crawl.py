@@ -68,16 +68,21 @@ class TestScript(unittest.TestCase):
         json_template = "test json template"
         mock_connect_db.return_value = None  # Simulate a failed DB connection
 
-        # Call the function, but store its return value without unpacking
-        result = generate_question(
-            system_prompt,
-            user_prompt,
-            json_template,
-            project_db=None,  # Pass None instead of the database connection
-        )
+        # Create a temporary directory
+        test_dir = tempfile.mkdtemp()
 
-        # Assert that the function returns None
-        self.assertIsNone(result)
+        try:
+            self.assertIsNone(
+                generate_question(
+                    system_prompt,
+                    user_prompt,
+                    json_template,
+                    mock_connect_db.return_value,
+                )
+            )
+        finally:
+            # Remove the temporary directory after the test
+            shutil.rmtree(test_dir)
 
 
 if __name__ == "__main__":
