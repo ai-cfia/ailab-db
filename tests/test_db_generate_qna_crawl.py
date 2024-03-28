@@ -4,13 +4,14 @@ import unittest
 import json
 import tempfile
 import shutil
-from unittest.mock import patch, MagicMock, mock_open
 from datetime import date
+from unittest.mock import patch
 
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)  # noqa: E402
-from bin.generate_qna_crawl import generate_question, NoChunkFoundError
+)
+
+from bin.generate_qna_crawl import generate_question
 
 
 class TestScript(unittest.TestCase):
