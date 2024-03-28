@@ -11,7 +11,7 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
 
-from bin.generate_qna_crawl import generate_question
+from bin.generate_qna_crawl import generate_question # noqa
 
 
 class TestScript(unittest.TestCase):
