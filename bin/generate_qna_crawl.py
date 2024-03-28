@@ -3,7 +3,7 @@ Script Purpose: This script generates questions based on provided prompts and
 stores the responses as JSON files. It interacts with the AI model to create
 questions and saves the relevant data for each question in a JSON file.
 
-Usage: ./generate-qna.sh PROMPT_PATH
+Usage: ./generate_qna_crawl.sh PROMPT_PATH
 
 Parameters: - PROMPT_PATH: Directory containing the API prompt files
 (qna_system_prompt.txt, qna_user_prompt.txt, and JSON template)
@@ -18,12 +18,13 @@ import ailab.db as db
 from ailab.models import openai
 import ailab.db.finesse as finesse
 
-from ailab.db.finesse.test_queries import get_random_chunk
+from ailab.db.finesse.test_queries import get_random_crawl
 
 # Constants
 TEST_VERSION = date.today()
-REQUIRED_QUESTIONS = 10
+REQUIRED_QUESTIONS = 1
 CHARACTER_LIMIT = 14383
+MAX_TOKEN = 2000
 DEFAULT_STORAGE_PATH = "../qna-test"
 SYSTEM_PROMPT_FILENAME = "qna_system_prompt.txt"
 USER_PROMPT_FILENAME = "qna_user_prompt.txt"
@@ -37,7 +38,7 @@ def load_prompts_and_template(
     """Loads prompts and template from provided path"""
     system_prompt = finesse.load_prompt(prompt_path, system_prompt_filename)
     user_prompt = finesse.load_prompt(prompt_path, user_prompt_filename)
-    json_template = finesse.load_json_template(prompt_path)
+    json_template = finesse.load_json_template("json_template_crawl", prompt_path)
 
     return system_prompt, user_prompt, json_template
 
@@ -63,60 +64,48 @@ def generate_question(system_prompt, user_prompt, json_template, project_db):
     average_character_length = 0
 
     with project_db.cursor() as cursor:
-            responses = []  # create an empty list to hold the responses
-            compteur = 0
-            while compteur < REQUIRED_QUESTIONS:
-                # Access the AILAB_SCHEMA_VERSION environment variable
-                schema_version = os.getenv("AILAB_SCHEMA_VERSION")
+        responses = []  # create an empty list to hold the responses
+        compteur = 0
 
-                random_chunk = get_random_chunk(cursor, schema_version)
-                if not random_chunk:
-                    raise NoChunkFoundError("No chunk found in the database.")
+        while compteur < REQUIRED_QUESTIONS:
+            schema_version = "louis_v005"
 
-                chunk_title = ""
-                for chunk in random_chunk:
-                    chunk_title = chunk["title"]
+            print("----------" + str(compteur) + "------------")
+            random_crawls = get_random_crawl(cursor, schema_version)
+            if not random_crawls:
+                raise NoChunkFoundError("No chunk found in the database.")
 
-                ### BAN WORDS ###
-                words_to_check = [
-                    "This page is part",
-                    "Cette page fait partie",
-                    "Archivée",
-                    "archivée",
-                    "Archived",
-                    "archived",
-                ]
+            # Get the first element
+            first_chunk = random_crawls[0]
+            crawl_id = str(
+                first_chunk["crawl_id"]
+            )  # Convertir l'UUID en chaîne de caractères
+            crawl_url = first_chunk["crawl_url"]
+            html_content = first_chunk["html_content"]
 
-                found_words = []
+            # Get the score
+            crawl_string = "crawl_id: " + crawl_id + "; crawl_url: " + crawl_url
+            for crawl in random_crawls:
+                crawl_string += "; " + crawl["score_type"] + ": "
+                crawl_string += str(
+                    crawl["score"]
+                )  # Assurez-vous que le score est également une chaîne de caractères
+            crawl_string += "; html_content: " + html_content
 
-                for word in words_to_check:
-                    if word.lower() in chunk_title.lower():
-                        found_words.append(word)
+            constructed_user_prompt = construct_user_prompt(
+                user_prompt, crawl_string, json_template
+            )
+            total_length = len(system_prompt) + len(constructed_user_prompt)
 
-                if found_words:
-                    print("The following words were found in the string:")
-                    for found_word in found_words:
-                        print("-", found_word)
-                    print("Skipping...")
-                else:
-                    ### BAN WORDS ###
-
-                    constructed_user_prompt = construct_user_prompt(
-                        user_prompt, str(random_chunk), json_template
-                    )
-                    total_length = len(system_prompt) + len(constructed_user_prompt)
-
-                    if total_length < CHARACTER_LIMIT:
-                        average_character_length += total_length
-                        response = openai.get_chat_answer(
-                            system_prompt, constructed_user_prompt, 2000
-                        )
-                        data = json.loads(response.choices[0].message.content)
-                        if isinstance(data, dict):
-                            for chunk in random_chunk:
-                                data["text_content"] = chunk["text_content"]
-                            compteur += 1
-                            responses.append(data)  # add the data to the responses list
+            if total_length < CHARACTER_LIMIT:
+                average_character_length += total_length
+                response = openai.get_chat_answer(
+                    system_prompt, constructed_user_prompt, MAX_TOKEN
+                )
+                data = json.loads(response.choices[0].message.content)
+                if isinstance(data, dict):
+                    compteur += 1
+                    responses.append(data)  # add the data to the responses list
 
     return responses, average_character_length / REQUIRED_QUESTIONS
 
@@ -127,13 +116,24 @@ def save_response_to_file(data, STORAGE_PATH):
     while True:
         file_name = f"qna_{TEST_VERSION}_{file_number}.json"
         file_path = os.path.join(STORAGE_PATH, file_name)
+        
+        # Check if the directory exists, if not, create it
+        if not os.path.exists(STORAGE_PATH):
+            os.makedirs(STORAGE_PATH)
+        
+        # Check if the file exists, if not, create it
         if not os.path.exists(file_path):
+            with open(file_path, "w") as json_file:
+                print("New file created at: " + file_path)
+                json.dump(data, json_file, ensure_ascii=False, indent=4)
             break
+        
         file_number += 1
 
-    with open(file_path, "w") as json_file:
+    if file_number == 1:
         print("File saved into: " + file_path)
-        json.dump(data, json_file, ensure_ascii=False, indent=4)
+    else:
+        print("File appended into: " + file_path)
 
 
 class DirectoryNotFoundError(Exception):
