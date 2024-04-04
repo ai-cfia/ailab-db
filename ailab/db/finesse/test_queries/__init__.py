@@ -1,3 +1,4 @@
+import random
 import time
 import math
 
@@ -44,23 +45,32 @@ def get_random_crawl(cursor, schema_version):
     # Execute the SET commands separately
     cursor.execute(f'SET SEARCH_PATH TO "{schema_version}", public;')
 
-    query = """
-        WITH random_crawl AS (  
-            SELECT id  
-            FROM crawl  
-            WHERE id IN (
-                SELECT entity_id
-                FROM score
-                WHERE score_type = 'current' AND score = 1
-            )
-            AND id IN (
-                SELECT entity_id
-                FROM score
-                WHERE score_type = 'recency' AND score > 0.5
-            )
-            ORDER BY random()
-            LIMIT 1  
-        )  
+    # Get the count of eligible rows
+    cursor.execute("""
+        SELECT count(*) AS total_count
+        FROM crawl cr
+        WHERE cr.id IN (
+            SELECT entity_id
+            FROM score
+            WHERE score_type = 'current' AND score = 1
+        )
+        AND cr.id IN (
+            SELECT entity_id
+            FROM score
+            WHERE score_type = 'recency' AND score > 0.5
+        )
+    """)
+    row = cursor.fetchone()
+    if row and row.get('total_count'):
+        total_count = row['total_count']
+    else:
+        return None  # No eligible rows found
+
+    # Get a random offset within the count
+    random_offset = random.randint(0, total_count - 1)
+
+    # Fetch the random crawl using the offset
+    cursor.execute("""
         SELECT  
             cr.id AS crawl_id, cr.url AS crawl_url, sc.score, sc.score_type, hc.content as html_content
         FROM  
@@ -70,10 +80,19 @@ def get_random_crawl(cursor, schema_version):
         INNER JOIN  
             html_content hc ON cr.md5hash = hc.md5hash  
         WHERE  
-            cr.id = (SELECT id FROM random_crawl)  
-    """
+            cr.id IN (
+                SELECT entity_id
+                FROM score
+                WHERE score_type = 'current' AND score = 1
+            )
+        AND cr.id IN (
+            SELECT entity_id
+            FROM score
+            WHERE score_type = 'recency' AND score > 0.5
+        )
+        OFFSET %s LIMIT 1
+    """, (random_offset,))
 
-    cursor.execute(query)
     return cursor.fetchall()
 
 
