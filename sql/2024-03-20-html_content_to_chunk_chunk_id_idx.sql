@@ -1,0 +1,1 @@
+create index html_content_to_chunk_chunk_id_idx on html_content_to_chunk(chunk_id);
