@@ -24,14 +24,16 @@ class TestDBAPI(unittest.TestCase):
         weights = json.dumps(
             {'similarity': 1.0, 'typicality': 0.2, 'recency': 1.0, 'traffic': 1.0, 'current': 0.5})
         self.cursor.execute(
-            "SELECT * FROM search(%s, %s::vector, %s::float, %s::integer, %s::jsonb)", (
+            "SELECT * FROM searchmodified(%s, %s::vector, %s::float, %s::integer, %s::jsonb)", (
                 query, embeddings, test.MATCH_THRESHOLD, test.MATCH_COUNT, weights))
         results = self.cursor.fetchall()
-        result = results[0]['search']
+        result = results[0]['searchmodified']
+        for res in result:
+            print(res['title'])
         self.assertEqual(
             result[0]['title'],
             "Dr. Harpreet S. Kochhar - Canadian Food Inspection Agency")
-
+        
         query_id = result[0]['query_id']
         self.cursor.execute("SELECT * FROM query where id = %s::uuid", (query_id,))
         result = self.cursor.fetchall()
