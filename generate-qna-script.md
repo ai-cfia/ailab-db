@@ -1,12 +1,39 @@
-Usage: ./bin/generate_qna_chunk.sh PROMPT_PATH
-Usage: ./bin/generate_qna_crawl.sh PROMPT_PATH
+## How to install postgresl-client-15
+```
+./bin/install-postgresl-client-15.sh
+```
+
+## How to generate question
+Usage:
+```
+./bin/generate_qna_chunk.sh PROMPT_PATH
+
+or
+
+./bin/generate_qna_crawl.sh PROMPT_PATH
+```
 PROMPT_PATH: path were you can find the user and system prompt for the openai API and the JSON template.
 
-## Example command
+### Example command
 ```
 ./bin/generate_qna_crawl.sh ailab/db/finesse/prompt
 ```
 
-La génération de questions se déroule en trois parties. Premièrement, nous récupérons une page aléatoire « crawl », dans la base de données (aléatoire mais triée en fonction d'une valeur de score précise). Ensuite, nous utilisons un modèle pour expliquer à ChatGPT ce qu'il doit faire (dans notre cas, prendre toutes les données, les analyser, puis générer une question et une réponse). Une fois toutes ces étapes accomplies, nous stockons toutes les données dans un fichier JSON et nous traitons un prochain document. Ce code est très utile pour générer toutes sortes de tests, et je l'ai réalisé pour qu'il soit le plus réutilisable possible. Si nous souhaitons changer les instructions ou les modèles, nous pouvons simplement en appeler d'autres lors de l'exécution de la fonction (il est préférable d'utiliser le script en bash plutôt qu'en python pour appeler le code).
-Nous pouvons lancer le code pour chercher en fonction des « chunks » ou des « crawls ». Je conseille fortement d’utiliser la recherche par crawl car, n’ayant pas trouvé de score pour les chunks (je ne peux garantir leur existence), la recherche par crawl génère donc de meilleures questions.
-Pour ce qui est de la récupération de données, il sera peut-être nécessaire de modifier le code pour s'adapter au mieux à un nouveau cas. Quant au nombre de questions générées, il suffit de modifier la variable globale en haut du script.
+Question generation occurs in three parts. First, we retrieve a random "crawl" page from the database (random but sorted based on a specific score value). Then, we instruct ChatGPT on what to do (in our case, gather and analyze data, then generate a question and an answer). Once these steps are completed, we store all the data in a JSON file and process the next document. This code is highly useful for generating various tests, designed to be as reusable as possible. If we want to change the instructions or models, we can simply call others during function execution with PROMPT_PATH (preferably using the script in bash rather than Python to call the code).  
+We can run the code to search based on "chunks" or "crawls." I strongly recommend using crawl-based search since, without found scores for chunks (I cannot guarantee their existence), crawl-based search generates better questions.  
+Regarding data retrieval, it may be necessary to modify the code to best fit a new scenario. As for the number of generated questions, simply modify the global variable at the top of the script.
+
+<span style="color:red"> Don't forgot to setup environnement variable or secret before use </span>
+
+### Environnement variable or secret
+
+You will need the following to run the OpenAI service:
+
+  * OPENAI_API_KEY: The API key required for authentication when making requests to the OpenAI API. It can be found [here](https://portal.azure.com/#home).
+
+  * OPENAI_ENDPOINT: The link used to call into Azure OpenAI endpoints. It can be found at the same place as the OPENAI_API_KEY.
+
+  * OPENAI_API_ENGINE: The name of the model deployment you want to use (ex:ailab-gpt-35-turbo).
+
+
+
