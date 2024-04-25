@@ -21,7 +21,7 @@ def load_json_template(filename, json_path=DEFAULT_JSON_PATH):
     Returns:
     str: A JSON-formatted string representing the loaded data.
     """
-    json_file_path = json_path + "/" + filename + ".json"
+    json_file_path = os.path.join(json_path, filename + ".json")
 
     with open(json_file_path, "r") as file:
         data = json.load(file)  # Load the JSON data as a Python dictionary
