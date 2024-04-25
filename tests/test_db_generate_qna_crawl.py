@@ -14,7 +14,7 @@ sys.path.append(
 from bin.generate_qna_crawl import generate_question # noqa
 
 
-class TestScript(unittest.TestCase):
+class TestGenerateQnA(unittest.TestCase):
     TEST_VERSION = date.today()
 
     def setUp(self):
