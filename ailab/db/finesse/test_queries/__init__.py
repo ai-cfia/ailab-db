@@ -1,14 +1,8 @@
 import time
-import semver
 import math
 
 
 def get_random_chunk(cursor, schema_version, seed=None):
-    assert (
-        semver.compare(schema_version, "0.0.6") >= 0
-    ), "Schema version must be >= 0.0.6"
-    schema_version = "louis_" + schema_version
-
     if seed is None:
         seed = math.sin(time.time())
 
@@ -43,4 +37,55 @@ def get_random_chunk(cursor, schema_version, seed=None):
     """
 
     cursor.execute(query)
+    return cursor.fetchall()
+
+
+def get_random_crawl(cursor, schema_version):
+    # Execute the SET commands separately
+    cursor.execute(f'SET SEARCH_PATH TO "{schema_version}", public;')
+
+    query = """
+        WITH random_crawl AS (  
+            SELECT id  
+            FROM crawl  
+            WHERE id IN (
+                SELECT entity_id
+                FROM score
+                WHERE score_type = 'current' AND score = 1
+            )
+            AND id IN (
+                SELECT entity_id
+                FROM score
+                WHERE score_type = 'recency' AND score > 0.5
+            )
+            ORDER BY random()
+            LIMIT 1  
+        )  
+        SELECT  
+            cr.id AS crawl_id, cr.url AS crawl_url, sc.score, sc.score_type, hc.content as html_content
+        FROM  
+            crawl cr  
+        INNER JOIN  
+            score sc ON cr.id = sc.entity_id
+        INNER JOIN  
+            html_content hc ON cr.md5hash = hc.md5hash  
+        WHERE  
+            cr.id = (SELECT id FROM random_crawl)  
+    """
+
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def print_schema_tables_and_variables(cursor, schema_version):
+    # Execute the SET commands separately
+    cursor.execute(f'SET SEARCH_PATH TO "{schema_version}", public;')
+
+    # Execute the query to retrieve all tables and variables from the schema
+    cursor.execute(
+        "SELECT * FROM information_schema.tables WHERE table_schema = %s;",
+        (schema_version,),
+    )
+
+    # Fetch all results
     return cursor.fetchall()
