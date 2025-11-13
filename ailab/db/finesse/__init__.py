@@ -14,14 +14,14 @@ def load_prompt(prompt_path, filename):
     return content
 
 
-def load_json_template(json_path=DEFAULT_JSON_PATH):
+def load_json_template(filename, json_path=DEFAULT_JSON_PATH):
     """
     Load a JSON template from the specified path.
 
     Returns:
     str: A JSON-formatted string representing the loaded data.
     """
-    json_file_path = json_path + "/json_template.json"
+    json_file_path = os.path.join(json_path, filename + ".json")
 
     with open(json_file_path, "r") as file:
         data = json.load(file)  # Load the JSON data as a Python dictionary

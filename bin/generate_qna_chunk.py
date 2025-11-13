@@ -3,7 +3,7 @@ Script Purpose: This script generates questions based on provided prompts and
 stores the responses as JSON files. It interacts with the AI model to create
 questions and saves the relevant data for each question in a JSON file.
 
-Usage: ./generate-qna.sh PROMPT_PATH
+Usage: ./generate_qna_chunk.sh PROMPT_PATH
 
 Parameters: - PROMPT_PATH: Directory containing the API prompt files
 (qna_system_prompt.txt, qna_user_prompt.txt, and JSON template)
@@ -37,7 +37,7 @@ def load_prompts_and_template(
     """Loads prompts and template from provided path"""
     system_prompt = finesse.load_prompt(prompt_path, system_prompt_filename)
     user_prompt = finesse.load_prompt(prompt_path, user_prompt_filename)
-    json_template = finesse.load_json_template(prompt_path)
+    json_template = finesse.load_json_template("json_template_chunk", prompt_path)
 
     return system_prompt, user_prompt, json_template
 
